@@ -19,8 +19,7 @@ public:
 
 private slots:
 
-    void on_quit_clicked();
-
+    void on_quitb_clicked();
 
     void on_Browse_pressed();
 

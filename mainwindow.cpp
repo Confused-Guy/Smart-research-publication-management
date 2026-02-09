@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->resize({1290,780});
+    this->resize({800,600});
 }
 
 MainWindow::~MainWindow()
@@ -17,7 +17,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_quit_clicked()
+void MainWindow::on_quitb_clicked()
 {
     this->close();
 }
@@ -33,6 +33,10 @@ void MainWindow::on_Browse_pressed()
         );
 
     if (!filePath.isEmpty()) {
+        // File was selected, do something with it
+        // For example, display it in a label or line edit:
+        // ui->label->setText(filePath);
+        // Or just for testing:
         qDebug() << "Selected file:" << filePath;
     }
 }
