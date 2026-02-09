@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-5bb35fac03986d332588.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "interface_user_first",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "interface_user_first::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interface_user_first-Debug-fceabc0020525ec53cc8.json",
+					"name" : "interface_user_first",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interface_user_first_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interface_user_first_autogen-Debug-b121ee137498e6dae96e.json",
+					"name" : "interface_user_first_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "interface_user_first_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interface_user_first_autogen_timestamp_deps-Debug-1344268b2d5ea0bf9025.json",
+					"name" : "interface_user_first_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Mounib/Documents/interface_user_first/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug",
+		"source" : "C:/Users/Mounib/Documents/interface_user_first"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
