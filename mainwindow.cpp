@@ -41,3 +41,9 @@ void MainWindow::on_CancelBTNCode_clicked()
     ui->stack->setCurrentIndex(2);
 }
 
+
+void MainWindow::on_cancelBTNRegister_clicked()
+{
+    ui->stack->setCurrentIndex(2);
+}
+

@@ -28,6 +28,8 @@ private slots:
 
     void on_CancelBTNCode_clicked();
 
+    void on_cancelBTNRegister_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
