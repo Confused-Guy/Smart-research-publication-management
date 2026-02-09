@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'collabscreation.ui'
+** Form generated from reading UI file 'temp.ui'
 **
 ** Created by: Qt User Interface Compiler version 6.7.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_COLLABSCREATION_H
-#define UI_COLLABSCREATION_H
+#ifndef UI_TEMP_H
+#define UI_TEMP_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -21,11 +21,9 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_collaborationCreationInterface
 {
 public:
-    QLabel *collaborationCreationCollaborationCreationLabel;
-    QPushButton *collaborationCreationCancelButton;
     QFrame *collaborationCreationFrame;
     QPlainTextEdit *collaborationCreationCollaborationTitileEdit;
     QTextEdit *collaborationCreationCollaborationDescriptionEdit;
@@ -33,28 +31,18 @@ public:
     QLabel *collaborationCreationCollaborationDescriptionLabel;
     QComboBox *collaboartionCreationTopicMenu;
     QPushButton *collaborationCreationAddContributorsButton;
+    QPushButton *collaborationCreationCancelButton;
     QPushButton *collaborationCreationConfirmButton;
+    QLabel *collaborationCreationCollaborationCreationLabel;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *collaborationCreationInterface)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName("Form");
-        Form->resize(1280, 720);
-        collaborationCreationCollaborationCreationLabel = new QLabel(Form);
-        collaborationCreationCollaborationCreationLabel->setObjectName("collaborationCreationCollaborationCreationLabel");
-        collaborationCreationCollaborationCreationLabel->setGeometry(QRect(120, 30, 251, 31));
-        QFont font;
-        font.setPointSize(12);
-        collaborationCreationCollaborationCreationLabel->setFont(font);
-        collaborationCreationCancelButton = new QPushButton(Form);
-        collaborationCreationCancelButton->setObjectName("collaborationCreationCancelButton");
-        collaborationCreationCancelButton->setGeometry(QRect(730, 640, 181, 61));
-        QFont font1;
-        font1.setPointSize(10);
-        collaborationCreationCancelButton->setFont(font1);
-        collaborationCreationFrame = new QFrame(Form);
+        if (collaborationCreationInterface->objectName().isEmpty())
+            collaborationCreationInterface->setObjectName("collaborationCreationInterface");
+        collaborationCreationInterface->resize(1280, 720);
+        collaborationCreationFrame = new QFrame(collaborationCreationInterface);
         collaborationCreationFrame->setObjectName("collaborationCreationFrame");
-        collaborationCreationFrame->setGeometry(QRect(120, 60, 1041, 571));
+        collaborationCreationFrame->setGeometry(QRect(140, 70, 1041, 571));
         collaborationCreationFrame->setFrameShape(QFrame::Shape::StyledPanel);
         collaborationCreationFrame->setFrameShadow(QFrame::Shadow::Raised);
         collaborationCreationCollaborationTitileEdit = new QPlainTextEdit(collaborationCreationFrame);
@@ -66,6 +54,8 @@ public:
         collaborationCreationCollaborationTitleLabel = new QLabel(collaborationCreationFrame);
         collaborationCreationCollaborationTitleLabel->setObjectName("collaborationCreationCollaborationTitleLabel");
         collaborationCreationCollaborationTitleLabel->setGeometry(QRect(80, 30, 251, 31));
+        QFont font;
+        font.setPointSize(12);
         collaborationCreationCollaborationTitleLabel->setFont(font);
         collaborationCreationCollaborationDescriptionLabel = new QLabel(collaborationCreationFrame);
         collaborationCreationCollaborationDescriptionLabel->setObjectName("collaborationCreationCollaborationDescriptionLabel");
@@ -77,34 +67,44 @@ public:
         collaborationCreationAddContributorsButton = new QPushButton(collaborationCreationFrame);
         collaborationCreationAddContributorsButton->setObjectName("collaborationCreationAddContributorsButton");
         collaborationCreationAddContributorsButton->setGeometry(QRect(540, 430, 351, 51));
+        QFont font1;
+        font1.setPointSize(10);
         collaborationCreationAddContributorsButton->setFont(font1);
-        collaborationCreationConfirmButton = new QPushButton(Form);
+        collaborationCreationCancelButton = new QPushButton(collaborationCreationInterface);
+        collaborationCreationCancelButton->setObjectName("collaborationCreationCancelButton");
+        collaborationCreationCancelButton->setGeometry(QRect(750, 650, 181, 61));
+        collaborationCreationCancelButton->setFont(font1);
+        collaborationCreationConfirmButton = new QPushButton(collaborationCreationInterface);
         collaborationCreationConfirmButton->setObjectName("collaborationCreationConfirmButton");
-        collaborationCreationConfirmButton->setGeometry(QRect(930, 640, 181, 61));
+        collaborationCreationConfirmButton->setGeometry(QRect(950, 650, 181, 61));
         collaborationCreationConfirmButton->setFont(font1);
+        collaborationCreationCollaborationCreationLabel = new QLabel(collaborationCreationInterface);
+        collaborationCreationCollaborationCreationLabel->setObjectName("collaborationCreationCollaborationCreationLabel");
+        collaborationCreationCollaborationCreationLabel->setGeometry(QRect(140, 40, 251, 31));
+        collaborationCreationCollaborationCreationLabel->setFont(font);
 
-        retranslateUi(Form);
+        retranslateUi(collaborationCreationInterface);
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(collaborationCreationInterface);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *collaborationCreationInterface)
     {
-        Form->setWindowTitle(QCoreApplication::translate("Form", "Form", nullptr));
-        collaborationCreationCollaborationCreationLabel->setText(QCoreApplication::translate("Form", "Collaboration Creation", nullptr));
-        collaborationCreationCancelButton->setText(QCoreApplication::translate("Form", "Cancel", nullptr));
-        collaborationCreationCollaborationTitleLabel->setText(QCoreApplication::translate("Form", "Collaboration Title", nullptr));
-        collaborationCreationCollaborationDescriptionLabel->setText(QCoreApplication::translate("Form", "Collaboration Description", nullptr));
-        collaborationCreationAddContributorsButton->setText(QCoreApplication::translate("Form", "Add Contributors", nullptr));
-        collaborationCreationConfirmButton->setText(QCoreApplication::translate("Form", "Confirm", nullptr));
+        collaborationCreationInterface->setWindowTitle(QCoreApplication::translate("collaborationCreationInterface", "Form", nullptr));
+        collaborationCreationCollaborationTitleLabel->setText(QCoreApplication::translate("collaborationCreationInterface", "Collaboration Title", nullptr));
+        collaborationCreationCollaborationDescriptionLabel->setText(QCoreApplication::translate("collaborationCreationInterface", "Collaboration Description", nullptr));
+        collaborationCreationAddContributorsButton->setText(QCoreApplication::translate("collaborationCreationInterface", "Add Contributors", nullptr));
+        collaborationCreationCancelButton->setText(QCoreApplication::translate("collaborationCreationInterface", "Cancel", nullptr));
+        collaborationCreationConfirmButton->setText(QCoreApplication::translate("collaborationCreationInterface", "Confirm", nullptr));
+        collaborationCreationCollaborationCreationLabel->setText(QCoreApplication::translate("collaborationCreationInterface", "Collaboration Creation", nullptr));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class collaborationCreationInterface: public Ui_collaborationCreationInterface {};
 } // namespace Ui
 
 QT_END_NAMESPACE
 
-#endif // UI_COLLABSCREATION_H
+#endif // UI_TEMP_H

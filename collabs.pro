@@ -16,8 +16,9 @@ HEADERS += \
     collabswindow.h
 
 FORMS += \
-    collabsCreation.ui \
-    collabswindow.ui
+    collabscreation.ui \
+    collabswindow.ui \
+    temp.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

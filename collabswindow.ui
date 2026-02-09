@@ -14,42 +14,158 @@
    <string>collabsWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QLabel" name="collaborationCreationCollaborationCreationLabel">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>50</y>
-      <width>391</width>
-      <height>581</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textBrowser">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>50</y>
-      <width>591</width>
-      <height>581</height>
+      <x>110</x>
+      <y>0</y>
+      <width>251</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
+    <property name="text">
+     <string>Collaboration Creation</string>
+    </property>
    </widget>
-   <widget class="QPushButton" name="button">
+   <widget class="QPushButton" name="collaborationCreationConfirmButton">
     <property name="geometry">
      <rect>
-      <x>1010</x>
-      <y>630</y>
-      <width>90</width>
-      <height>29</height>
+      <x>920</x>
+      <y>610</y>
+      <width>181</width>
+      <height>61</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Confirm</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="collaborationCreationFrame">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>30</y>
+      <width>1041</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QPlainTextEdit" name="collaborationCreationCollaborationTitileEdit">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>60</y>
+       <width>891</width>
+       <height>61</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="collaborationCreationCollaborationDescriptionEdit">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>180</y>
+       <width>891</width>
+       <height>211</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="collaborationCreationCollaborationTitleLabel">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Collaboration Title</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="collaborationCreationCollaborationDescriptionLabel">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>140</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Collaboration Description</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="collaboartionCreationTopicMenu">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>430</y>
+       <width>311</width>
+       <height>51</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="collaborationCreationAddContributorsButton">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>430</y>
+       <width>351</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add Contributors</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="collaborationCreationCancelButton">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>610</y>
+      <width>181</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
     </property>
    </widget>
   </widget>

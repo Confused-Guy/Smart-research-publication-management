@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>collaborationCreationInterface</class>
+ <widget class="QWidget" name="collaborationCreationInterface">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,47 +13,11 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="collaborationCreationCollaborationCreationLabel">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>30</y>
-     <width>251</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Collaboration Creation</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="collaborationCreationCancelButton">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>640</y>
-     <width>181</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Cancel</string>
-   </property>
-  </widget>
   <widget class="QFrame" name="collaborationCreationFrame">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>60</y>
+     <x>140</x>
+     <y>70</y>
      <width>1041</width>
      <height>571</height>
     </rect>
@@ -149,11 +113,29 @@
     </property>
    </widget>
   </widget>
+  <widget class="QPushButton" name="collaborationCreationCancelButton">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>650</y>
+     <width>181</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
   <widget class="QPushButton" name="collaborationCreationConfirmButton">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>640</y>
+     <x>950</x>
+     <y>650</y>
      <width>181</width>
      <height>61</height>
     </rect>
@@ -165,6 +147,24 @@
    </property>
    <property name="text">
     <string>Confirm</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="collaborationCreationCollaborationCreationLabel">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>40</y>
+     <width>251</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Collaboration Creation</string>
    </property>
   </widget>
  </widget>

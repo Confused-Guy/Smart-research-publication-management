@@ -11,12 +11,15 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QListWidget>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -25,9 +28,16 @@ class Ui_collabsWindow
 {
 public:
     QWidget *centralwidget;
-    QListWidget *listWidget;
-    QTextBrowser *textBrowser;
-    QPushButton *button;
+    QLabel *collaborationCreationCollaborationCreationLabel;
+    QPushButton *collaborationCreationConfirmButton;
+    QFrame *collaborationCreationFrame;
+    QPlainTextEdit *collaborationCreationCollaborationTitileEdit;
+    QTextEdit *collaborationCreationCollaborationDescriptionEdit;
+    QLabel *collaborationCreationCollaborationTitleLabel;
+    QLabel *collaborationCreationCollaborationDescriptionLabel;
+    QComboBox *collaboartionCreationTopicMenu;
+    QPushButton *collaborationCreationAddContributorsButton;
+    QPushButton *collaborationCreationCancelButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -38,18 +48,48 @@ public:
         collabsWindow->resize(1280, 720);
         centralwidget = new QWidget(collabsWindow);
         centralwidget->setObjectName("centralwidget");
-        listWidget = new QListWidget(centralwidget);
-        listWidget->setObjectName("listWidget");
-        listWidget->setGeometry(QRect(160, 50, 391, 581));
-        textBrowser = new QTextBrowser(centralwidget);
-        textBrowser->setObjectName("textBrowser");
-        textBrowser->setGeometry(QRect(590, 50, 591, 581));
+        collaborationCreationCollaborationCreationLabel = new QLabel(centralwidget);
+        collaborationCreationCollaborationCreationLabel->setObjectName("collaborationCreationCollaborationCreationLabel");
+        collaborationCreationCollaborationCreationLabel->setGeometry(QRect(110, 0, 251, 31));
         QFont font;
-        font.setPointSize(20);
-        textBrowser->setFont(font);
-        button = new QPushButton(centralwidget);
-        button->setObjectName("button");
-        button->setGeometry(QRect(1010, 630, 90, 29));
+        font.setPointSize(12);
+        collaborationCreationCollaborationCreationLabel->setFont(font);
+        collaborationCreationConfirmButton = new QPushButton(centralwidget);
+        collaborationCreationConfirmButton->setObjectName("collaborationCreationConfirmButton");
+        collaborationCreationConfirmButton->setGeometry(QRect(920, 610, 181, 61));
+        QFont font1;
+        font1.setPointSize(10);
+        collaborationCreationConfirmButton->setFont(font1);
+        collaborationCreationFrame = new QFrame(centralwidget);
+        collaborationCreationFrame->setObjectName("collaborationCreationFrame");
+        collaborationCreationFrame->setGeometry(QRect(110, 30, 1041, 571));
+        collaborationCreationFrame->setFrameShape(QFrame::Shape::StyledPanel);
+        collaborationCreationFrame->setFrameShadow(QFrame::Shadow::Raised);
+        collaborationCreationCollaborationTitileEdit = new QPlainTextEdit(collaborationCreationFrame);
+        collaborationCreationCollaborationTitileEdit->setObjectName("collaborationCreationCollaborationTitileEdit");
+        collaborationCreationCollaborationTitileEdit->setGeometry(QRect(70, 60, 891, 61));
+        collaborationCreationCollaborationDescriptionEdit = new QTextEdit(collaborationCreationFrame);
+        collaborationCreationCollaborationDescriptionEdit->setObjectName("collaborationCreationCollaborationDescriptionEdit");
+        collaborationCreationCollaborationDescriptionEdit->setGeometry(QRect(70, 180, 891, 211));
+        collaborationCreationCollaborationTitleLabel = new QLabel(collaborationCreationFrame);
+        collaborationCreationCollaborationTitleLabel->setObjectName("collaborationCreationCollaborationTitleLabel");
+        collaborationCreationCollaborationTitleLabel->setGeometry(QRect(80, 30, 251, 31));
+        collaborationCreationCollaborationTitleLabel->setFont(font);
+        collaborationCreationCollaborationDescriptionLabel = new QLabel(collaborationCreationFrame);
+        collaborationCreationCollaborationDescriptionLabel->setObjectName("collaborationCreationCollaborationDescriptionLabel");
+        collaborationCreationCollaborationDescriptionLabel->setGeometry(QRect(70, 140, 251, 31));
+        collaborationCreationCollaborationDescriptionLabel->setFont(font);
+        collaboartionCreationTopicMenu = new QComboBox(collaborationCreationFrame);
+        collaboartionCreationTopicMenu->setObjectName("collaboartionCreationTopicMenu");
+        collaboartionCreationTopicMenu->setGeometry(QRect(190, 430, 311, 51));
+        collaborationCreationAddContributorsButton = new QPushButton(collaborationCreationFrame);
+        collaborationCreationAddContributorsButton->setObjectName("collaborationCreationAddContributorsButton");
+        collaborationCreationAddContributorsButton->setGeometry(QRect(540, 430, 351, 51));
+        collaborationCreationAddContributorsButton->setFont(font1);
+        collaborationCreationCancelButton = new QPushButton(centralwidget);
+        collaborationCreationCancelButton->setObjectName("collaborationCreationCancelButton");
+        collaborationCreationCancelButton->setGeometry(QRect(720, 610, 181, 61));
+        collaborationCreationCancelButton->setFont(font1);
         collabsWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(collabsWindow);
         menubar->setObjectName("menubar");
@@ -67,7 +107,12 @@ public:
     void retranslateUi(QMainWindow *collabsWindow)
     {
         collabsWindow->setWindowTitle(QCoreApplication::translate("collabsWindow", "collabsWindow", nullptr));
-        button->setText(QCoreApplication::translate("collabsWindow", "PushButton", nullptr));
+        collaborationCreationCollaborationCreationLabel->setText(QCoreApplication::translate("collabsWindow", "Collaboration Creation", nullptr));
+        collaborationCreationConfirmButton->setText(QCoreApplication::translate("collabsWindow", "Confirm", nullptr));
+        collaborationCreationCollaborationTitleLabel->setText(QCoreApplication::translate("collabsWindow", "Collaboration Title", nullptr));
+        collaborationCreationCollaborationDescriptionLabel->setText(QCoreApplication::translate("collabsWindow", "Collaboration Description", nullptr));
+        collaborationCreationAddContributorsButton->setText(QCoreApplication::translate("collabsWindow", "Add Contributors", nullptr));
+        collaborationCreationCancelButton->setText(QCoreApplication::translate("collabsWindow", "Cancel", nullptr));
     } // retranslateUi
 
 };
