@@ -1391,6 +1391,23 @@ QTabBar::tab:hover {
         <normaloff>icons/zap.svg</normaloff>icons/zap.svg</iconset>
       </property>
      </widget>
+     <widget class="QPushButton" name="modeSwitch4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>660</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>icons/sun.svg</normaloff>icons/sun.svg</iconset>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page">
      <widget class="QPushButton" name="quit">
@@ -3444,6 +3461,23 @@ QTabBar::tab:hover {
       <property name="icon">
        <iconset>
         <normaloff>icons/zap.svg</normaloff>icons/zap.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="modeSwitch2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>660</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>icons/sun.svg</normaloff>icons/sun.svg</iconset>
       </property>
      </widget>
     </widget>
@@ -5988,6 +6022,23 @@ QTabBar::tab:hover {
       <property name="icon">
        <iconset>
         <normaloff>icons/hard-drive.svg</normaloff>icons/hard-drive.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="modeSwitch3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>660</y>
+        <width>41</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>icons/sun.svg</normaloff>icons/sun.svg</iconset>
       </property>
      </widget>
     </widget>

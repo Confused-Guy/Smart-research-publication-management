@@ -50,6 +50,7 @@ public:
     QFrame *line_3;
     QPushButton *pushButton_28;
     QPushButton *pushButton_29;
+    QPushButton *modeSwitch4;
     QWidget *page;
     QPushButton *quit;
     QPushButton *pushButton;
@@ -85,6 +86,7 @@ public:
     QLabel *pic_2;
     QPushButton *pushButton_11;
     QPushButton *pushButton_12;
+    QPushButton *modeSwitch2;
     QWidget *page_3;
     QLabel *label_6;
     QTextEdit *textEdit;
@@ -125,6 +127,7 @@ public:
     QPushButton *reveiw3;
     QLabel *pic_3;
     QPushButton *pushButton_22;
+    QPushButton *modeSwitch3;
     QWidget *page_9;
     QFrame *frame_3;
     QWidget *layoutWidget_3;
@@ -1283,15 +1286,21 @@ public:
         QIcon icon6;
         icon6.addFile(QString::fromUtf8("icons/zap.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         pushButton_29->setIcon(icon6);
+        modeSwitch4 = new QPushButton(page_5);
+        modeSwitch4->setObjectName("modeSwitch4");
+        modeSwitch4->setGeometry(QRect(20, 660, 41, 41));
+        QIcon icon7;
+        icon7.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        modeSwitch4->setIcon(icon7);
         stackedWidget->addWidget(page_5);
         page = new QWidget();
         page->setObjectName("page");
         quit = new QPushButton(page);
         quit->setObjectName("quit");
         quit->setGeometry(QRect(710, 620, 81, 41));
-        QIcon icon7;
-        icon7.addFile(QString::fromUtf8("icons/log-out.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        quit->setIcon(icon7);
+        QIcon icon8;
+        icon8.addFile(QString::fromUtf8("icons/log-out.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        quit->setIcon(icon8);
         quit->setIconSize(QSize(25, 25));
         pushButton = new QPushButton(page);
         pushButton->setObjectName("pushButton");
@@ -1337,8 +1346,8 @@ public:
 #endif
         pushButton->setPalette(palette2);
         pushButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon8(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSend));
-        pushButton->setIcon(icon8);
+        QIcon icon9(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSend));
+        pushButton->setIcon(icon9);
         groupBox = new QGroupBox(page);
         groupBox->setObjectName("groupBox");
         groupBox->setGeometry(QRect(260, 50, 781, 541));
@@ -2042,8 +2051,8 @@ public:
         pushButton_43->setObjectName("pushButton_43");
         pushButton_43->setGeometry(QRect(140, 20, 41, 41));
         pushButton_43->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon9(QIcon::fromTheme(QIcon::ThemeIcon::GoPrevious));
-        pushButton_43->setIcon(icon9);
+        QIcon icon10(QIcon::fromTheme(QIcon::ThemeIcon::GoPrevious));
+        pushButton_43->setIcon(icon10);
         pic = new QLabel(page);
         pic->setObjectName("pic");
         pic->setGeometry(QRect(20, 10, 41, 41));
@@ -2053,9 +2062,7 @@ public:
         modeSwitch = new QPushButton(page);
         modeSwitch->setObjectName("modeSwitch");
         modeSwitch->setGeometry(QRect(20, 660, 41, 41));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        modeSwitch->setIcon(icon10);
+        modeSwitch->setIcon(icon7);
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName("page_2");
@@ -2128,6 +2135,10 @@ public:
         pushButton_12->setObjectName("pushButton_12");
         pushButton_12->setGeometry(QRect(20, 500, 41, 41));
         pushButton_12->setIcon(icon6);
+        modeSwitch2 = new QPushButton(page_2);
+        modeSwitch2->setObjectName("modeSwitch2");
+        modeSwitch2->setGeometry(QRect(20, 660, 41, 41));
+        modeSwitch2->setIcon(icon7);
         stackedWidget->addWidget(page_2);
         page_3 = new QWidget();
         page_3->setObjectName("page_3");
@@ -4373,6 +4384,10 @@ public:
         pushButton_22->setObjectName("pushButton_22");
         pushButton_22->setGeometry(QRect(20, 420, 41, 41));
         pushButton_22->setIcon(icon5);
+        modeSwitch3 = new QPushButton(page_4);
+        modeSwitch3->setObjectName("modeSwitch3");
+        modeSwitch3->setGeometry(QRect(20, 660, 41, 41));
+        modeSwitch3->setIcon(icon7);
         stackedWidget->addWidget(page_4);
         page_9 = new QWidget();
         page_9->setObjectName("page_9");
@@ -4478,6 +4493,7 @@ public:
         profile4->setText(QString());
         pushButton_28->setText(QString());
         pushButton_29->setText(QString());
+        modeSwitch4->setText(QString());
 #if QT_CONFIG(tooltip)
         quit->setToolTip(QCoreApplication::translate("MainWindow", "Exit", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -4538,6 +4554,7 @@ public:
         pic_2->setText(QString());
         pushButton_11->setText(QString());
         pushButton_12->setText(QString());
+        modeSwitch2->setText(QString());
         label_6->setText(QCoreApplication::translate("MainWindow", "Email :", nullptr));
         label_7->setText(QCoreApplication::translate("MainWindow", "Password :", nullptr));
         label_8->setText(QCoreApplication::translate("MainWindow", "Forgot password?", nullptr));
@@ -4569,6 +4586,7 @@ public:
         reveiw3->setText(QString());
         pic_3->setText(QString());
         pushButton_22->setText(QString());
+        modeSwitch3->setText(QString());
         label_25->setText(QCoreApplication::translate("MainWindow", "Topic", nullptr));
         label_26->setText(QCoreApplication::translate("MainWindow", "Date", nullptr));
         label_27->setText(QCoreApplication::translate("MainWindow", "Location", nullptr));

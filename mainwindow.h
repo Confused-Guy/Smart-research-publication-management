@@ -43,7 +43,13 @@ private slots:
 
     void on_addConferenceBtn_clicked();
 
-    void on_modeSwitch_clicked();
+    void toggleDarkMode();
+
+    void on_modeSwitch_clicked(){ toggleDarkMode();}
+    void on_modeSwitch2_clicked(){ toggleDarkMode();}
+    void on_modeSwitch3_clicked(){ toggleDarkMode();}
+    void on_modeSwitch4_clicked(){ toggleDarkMode();}
+
 
 
 

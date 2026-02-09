@@ -1,1 +1,0 @@
-# Smart-research-publication-management

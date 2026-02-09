@@ -8,6 +8,8 @@ reveiw_autogen/timestamp: \
 	/home/ayoub/Documents/qt/reveiw/main.cpp \
 	/home/ayoub/Documents/qt/reveiw/mainwindow.cpp \
 	/home/ayoub/Documents/qt/reveiw/mainwindow.h \
+	/home/ayoub/Documents/qt/reveiw/style.qrc \
+	/home/ayoub/Documents/qt/reveiw/styleLight.qrc \
 	/home/ayoub/Qt/6.7.3/gcc_64/include/QtCore/q20functional.h \
 	/home/ayoub/Qt/6.7.3/gcc_64/include/QtCore/q20memory.h \
 	/home/ayoub/Qt/6.7.3/gcc_64/include/QtCore/q20type_traits.h \

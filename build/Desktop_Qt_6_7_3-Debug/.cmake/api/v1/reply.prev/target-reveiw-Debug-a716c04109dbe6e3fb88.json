@@ -71,13 +71,13 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 63,
+				"line" : 65,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 46,
+				"line" : 48,
 				"parent" : 0
 			},
 			{
@@ -298,7 +298,9 @@
 			[
 				0,
 				1,
-				2
+				2,
+				9,
+				10
 			]
 		}
 	],
@@ -386,7 +388,9 @@
 			[
 				0,
 				1,
-				2
+				2,
+				9,
+				10
 			]
 		},
 		{
@@ -394,7 +398,7 @@
 			"sourceIndexes" : 
 			[
 				3,
-				5
+				7
 			]
 		},
 		{
@@ -405,17 +409,27 @@
 			]
 		},
 		{
+			"name" : "Resources",
+			"sourceIndexes" : 
+			[
+				5,
+				6
+			]
+		},
+		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				6
+				8
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				7
+				11,
+				12,
+				13
 			]
 		}
 	],
@@ -451,6 +465,16 @@
 			"sourceGroupIndex" : 2
 		},
 		{
+			"backtrace" : 4,
+			"path" : "style.qrc",
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 4,
+			"path" : "styleLight.qrc",
+			"sourceGroupIndex" : 3
+		},
+		{
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/include/ui_mainwindow.h",
@@ -460,13 +484,39 @@
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/timestamp",
-			"sourceGroupIndex" : 3
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/EWIEGA46WW/qrc_style.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/EWIEGA46WW/qrc_styleLight.cpp",
+			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/timestamp.rule",
-			"sourceGroupIndex" : 4
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/EWIEGA46WW/qrc_style.cpp.rule",
+			"sourceGroupIndex" : 5
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_7_3-Debug/reveiw_autogen/EWIEGA46WW/qrc_styleLight.cpp.rule",
+			"sourceGroupIndex" : 5
 		}
 	],
 	"type" : "EXECUTABLE"

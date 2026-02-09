@@ -368,7 +368,9 @@
 		"/home/ayoub/Qt/6.7.3/gcc_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
 		"/home/ayoub/Qt/Tools/CMake/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
 		"/home/ayoub/Qt/6.7.3/gcc_64/lib/cmake/Qt6/Qt6Dependencies.cmake",
-		"/home/ayoub/Qt/Tools/CMake/share/cmake-3.30/Modules/GNUInstallDirs.cmake"
+		"/home/ayoub/Qt/Tools/CMake/share/cmake-3.30/Modules/GNUInstallDirs.cmake",
+		"/home/ayoub/Documents/qt/reveiw/style.qrc",
+		"/home/ayoub/Documents/qt/reveiw/styleLight.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "/home/ayoub/Documents/qt/reveiw",
 	"CROSS_CONFIG" : false,

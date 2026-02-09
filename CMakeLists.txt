@@ -23,6 +23,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(reveiw
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        style.qrc
+        styleLight.qrc
 
     )
 # Define target properties for Android with Qt 6 as:
