@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Publishing Management</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: #f5f5f5;
+    }
+
+    QGroupBox {
+        background-color: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-top: 10px;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #00ACC1;
+    }
+
+    QGroupBox::title {
+        subcontrol-origin: margin;
+        left: 10px;
+        padding: 0 5px;
+    }
+
+    QLineEdit, QTextEdit, QComboBox {
+        border: 1px solid #00ACC1;
+        border-radius: 4px;
+        padding: 8px;
+        background-color: white;
+        font-size: 12px;
+    }
+
+    QLineEdit:focus, QTextEdit:focus, QComboBox:focus {
+        border: 2px solid #00ACC1;
+    }
+
+    QPushButton {
+        background-color: #00ACC1;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 12px;
+        font-weight: bold;
+        min-width: 100px;
+    }
+
+    QPushButton:hover {
+        background-color: #0097A7;
+    }
+
+    QPushButton:pressed {
+        background-color: #00838F;
+    }
+
+    QPushButton#deleteButton {
+        background-color: #e0e0e0;
+        color: #333;
+    }
+
+    QPushButton#deleteButton:hover {
+        background-color: #d0d0d0;
+    }
+
+    QListWidget {
+        border: 1px solid #00ACC1;
+        border-radius: 4px;
+        background-color: white;
+        padding: 5px;
+    }
+
+    QListWidget::item {
+        padding: 8px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    QListWidget::item:selected {
+        background-color: #E0F7FA;
+        color: #00838F;
+    }
+
+    QLabel#statusLabel {
+        color: #666;
+        font-size: 11px;
+        padding: 5px;
+    }
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_main">
+    <item>
+     <widget class="QWidget" name="sidebar" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+        QWidget#sidebar {
+            background-color: #37474F;
+        }
+        QPushButton {
+            background-color: #E3F2FD;
+            color: #00ACC1;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 5px;
+        }
+        QPushButton:hover {
+            background-color: #B3E5FC;
+        }
+       </string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_sidebar">
+       <item>
+        <widget class="QPushButton" name="menuButton">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>☰</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="homeButton">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>📄</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="clockButton">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>🕐</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="fileButton">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>📋</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="printButton">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>🖨</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="userButton">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>👤</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="mainContent" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_main">
+       <item>
+        <widget class="QGroupBox" name="publicationInfoGroup">
+         <property name="title">
+          <string>Publication Information</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="titleLabel">
+            <property name="text">
+             <string>Publication Title :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="titleEdit">
+            <property name="placeholderText">
+             <string>Enter publication title</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="descriptionLabel">
+            <property name="text">
+             <string>Publication Description :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QTextEdit" name="descriptionEdit">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Enter publication description</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="categoryLabel">
+            <property name="text">
+             <string>Publication Category :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="categoryCombo">
+            <item>
+             <property name="text">
+              <string>Computer Science</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Biology</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Physics</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Mathematics</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Engineering</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Medicine</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Social Sciences</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Other</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+            <item>
+             <widget class="QPushButton" name="addButton">
+              <property name="text">
+               <string> Add Publication</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="deleteButton">
+              <property name="text">
+               <string>Delete Selected</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="publicationListGroup">
+         <property name="title">
+          <string>Publications List</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_list">
+          <item>
+           <widget class="QListWidget" name="publicationList"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="innovativeFeaturesGroup">
+         <property name="title">
+          <string>Innovative Features</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_features">
+          <item>
+           <widget class="QPushButton" name="summaryButton">
+            <property name="text">
+             <string>Summary</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="emailButton">
+            <property name="text">
+             <string>Send Email Notification</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="statusLabel">
+         <property name="text">
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
