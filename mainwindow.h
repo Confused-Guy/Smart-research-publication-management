@@ -19,11 +19,36 @@ public:
 
 private slots:
 
-    void on_quitb_clicked();
+    void on_quit_clicked();
+
+    void on_reveiw1_clicked();
+    void on_reveiw2_clicked();
+    void on_reveiw3_clicked();
+    void on_reveiw4_clicked();
+
+    void on_profile1_clicked();
+    void on_profile2_clicked();
+    void on_profile3_clicked();
+    void on_profile4_clicked();
+
+    void on_homeButton_clicked();
+    void on_homeButton2_clicked();
+    void on_homeButton3_clicked();
+    void on_homeButton4_clicked();
+
+    void on_temp_clicked();
+
 
     void on_Browse_pressed();
 
+    void on_addConferenceBtn_clicked();
+
+    void on_modeSwitch_clicked();
+
+
+
 private:
     Ui::MainWindow *ui;
+    bool mode;
 };
 #endif // MAINWINDOW_H
