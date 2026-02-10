@@ -1179,7 +1179,7 @@ QTabBar::tab:hover {
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QPushButton" name="reveiw4">
@@ -3800,7 +3800,7 @@ QTabBar::tab:hover {
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="movable">
        <bool>false</bool>
@@ -3966,9 +3966,69 @@ QTabBar::tab:hover {
          <rect>
           <x>510</x>
           <y>80</y>
-          <width>391</width>
+          <width>321</width>
           <height>27</height>
          </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="geometry">
+         <rect>
+          <x>1040</x>
+          <y>70</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/trash-2.svg</normaloff>icons/trash-2.svg</iconset>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="geometry">
+         <rect>
+          <x>990</x>
+          <y>70</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/edit.svg</normaloff>icons/edit.svg</iconset>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_8">
+        <property name="geometry">
+         <rect>
+          <x>850</x>
+          <y>40</y>
+          <width>131</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>[ AI Percentage ]</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_13">
+        <property name="geometry">
+         <rect>
+          <x>890</x>
+          <y>80</y>
+          <width>70</width>
+          <height>19</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>20% &lt;</string>
         </property>
        </widget>
       </widget>
@@ -4046,6 +4106,40 @@ QTabBar::tab:hover {
         </property>
         <property name="text">
          <string>// [ RESEARCH DOCUMENTS ] //</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_6">
+        <property name="geometry">
+         <rect>
+          <x>1000</x>
+          <y>70</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/trash-2.svg</normaloff>icons/trash-2.svg</iconset>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_7">
+        <property name="geometry">
+         <rect>
+          <x>950</x>
+          <y>70</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/edit.svg</normaloff>icons/edit.svg</iconset>
         </property>
        </widget>
       </widget>
