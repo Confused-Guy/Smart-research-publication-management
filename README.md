@@ -1,4 +1,4 @@
-# # Smart Research & Publication Management System
+# Smart Research & Publication Management System
 
 A desktop application developed with Qt to help researchers, students and academics organize, track and manage their research lifecycle from idea to publication.
 
