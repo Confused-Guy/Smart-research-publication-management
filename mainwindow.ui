@@ -1179,7 +1179,7 @@ QTabBar::tab:hover {
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QPushButton" name="reveiw4">
@@ -1211,6 +1211,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -1227,6 +1230,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Conference</string>
       </property>
       <property name="text">
        <string/>
@@ -1329,6 +1335,9 @@ QTabBar::tab:hover {
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -1378,6 +1387,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -1395,6 +1407,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Posts</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -1411,6 +1426,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
       </property>
       <property name="text">
        <string/>
@@ -3020,6 +3038,9 @@ QTabBar::tab:hover {
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3037,6 +3058,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Conference</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3053,6 +3077,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
       </property>
       <property name="text">
        <string/>
@@ -3150,6 +3177,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3166,6 +3196,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Posts</string>
       </property>
       <property name="text">
        <string/>
@@ -3238,6 +3271,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3292,6 +3328,9 @@ QTabBar::tab:hover {
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3308,6 +3347,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
       </property>
       <property name="text">
        <string/>
@@ -3345,6 +3387,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Conference</string>
       </property>
       <property name="text">
        <string/>
@@ -3444,6 +3489,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3461,6 +3509,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Posts</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -3477,6 +3528,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
       </property>
       <property name="text">
        <string/>
@@ -4179,7 +4233,7 @@ QTabBar::tab:hover {
           </rect>
          </property>
          <property name="text">
-          <string>  </string>
+          <string/>
          </property>
         </widget>
         <widget class="QLabel" name="label_37">
@@ -4217,6 +4271,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -4236,6 +4293,9 @@ QTabBar::tab:hover {
       </property>
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="toolTip">
+       <string>User Page</string>
       </property>
       <property name="text">
        <string/>
@@ -4355,6 +4415,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Conference</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -4371,6 +4434,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Posts</string>
       </property>
       <property name="text">
        <string/>
@@ -4389,6 +4455,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -4405,6 +4474,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
       </property>
       <property name="text">
        <string/>
@@ -6763,6 +6835,9 @@ QTabBar::tab:hover {
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -6850,6 +6925,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Posts</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -6867,6 +6945,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -6883,6 +6964,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Conference</string>
       </property>
       <property name="text">
        <string/>
@@ -7002,6 +7086,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -7018,6 +7105,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
       </property>
       <property name="text">
        <string/>
@@ -7344,6 +7434,9 @@ QTabBar::tab:hover {
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -7393,6 +7486,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -7410,6 +7506,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Conference</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -7426,6 +7525,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
       </property>
       <property name="text">
        <string/>
@@ -7523,6 +7625,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -7561,6 +7666,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Posts</string>
       </property>
       <property name="text">
        <string/>
@@ -8890,6 +8998,9 @@ QTabBar::tab:hover {
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -8939,6 +9050,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Mode Toggle</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -8956,6 +9070,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Conference</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -8972,6 +9089,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Add to Research</string>
       </property>
       <property name="text">
        <string/>
@@ -9069,6 +9189,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="toolTip">
+       <string>Collaborations</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -9107,6 +9230,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Posts</string>
       </property>
       <property name="text">
        <string/>

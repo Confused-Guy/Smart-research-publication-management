@@ -5912,7 +5912,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(4);
+        stackedWidget->setCurrentIndex(1);
         tabWidget->setCurrentIndex(1);
 
 
@@ -5926,16 +5926,34 @@ public:
         reveiw4->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
         reveiw4->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research7->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research7->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf6->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf6->setText(QString());
 #if QT_CONFIG(tooltip)
         homeButton4->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
 #endif // QT_CONFIG(tooltip)
         homeButton4->setText(QString());
         pic_4->setText(QString());
+#if QT_CONFIG(tooltip)
+        profile4->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile4->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab7->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab7->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication7->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication7->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch4->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch4->setText(QString());
         chart->setText(QString());
         bar->setText(QString());
@@ -5967,8 +5985,17 @@ public:
         comboBox_3->setItemText(2, QCoreApplication::translate("MainWindow", "Physics", nullptr));
 
         comboBox_3->setCurrentText(QCoreApplication::translate("MainWindow", "Chemistry", nullptr));
+#if QT_CONFIG(tooltip)
+        profile->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research->setText(QString());
 #if QT_CONFIG(tooltip)
         reveiw->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
@@ -5978,24 +6005,51 @@ public:
         homeButton->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
 #endif // QT_CONFIG(tooltip)
         homeButton->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication->setText(QString());
         pic->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch->setText(QString());
+#if QT_CONFIG(tooltip)
+        profile2->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile2->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research2->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research2->setText(QString());
 #if QT_CONFIG(tooltip)
         reveiw2->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
         reveiw2->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf2->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf2->setText(QString());
 #if QT_CONFIG(tooltip)
         homeButton2->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
 #endif // QT_CONFIG(tooltip)
         homeButton2->setText(QString());
         pic_2->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab2->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab2->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication2->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication2->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch2->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch2->setText(QString());
         label_17->setText(QCoreApplication::translate("MainWindow", "Collaborations: ", nullptr));
         collabsGroupChatButton->setText(QCoreApplication::translate("MainWindow", "  Group Chat", nullptr));
@@ -6033,7 +6087,13 @@ public:
         lineEdit_4->setText(QString());
         label_37->setText(QCoreApplication::translate("MainWindow", "[ Collaborators ]", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "Personal Collaborations", nullptr));
+#if QT_CONFIG(tooltip)
+        Research3->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research3->setText(QString());
+#if QT_CONFIG(tooltip)
+        profile7->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile7->setText(QString());
 #if QT_CONFIG(tooltip)
         reveiw7->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
@@ -6044,9 +6104,21 @@ public:
         homeButton6->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
 #endif // QT_CONFIG(tooltip)
         homeButton6->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf7->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf7->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication3->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication3->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch7->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch7->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab3->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab3->setText(QString());
         userPic->setText(QString());
         label_6->setText(QCoreApplication::translate("MainWindow", "[ Username ]", nullptr));
@@ -6061,11 +6133,23 @@ public:
         pushButton_16->setText(QCoreApplication::translate("MainWindow", "View Map", nullptr));
         editConferenceBtn->setText(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         pushButton_17->setText(QCoreApplication::translate("MainWindow", "Delete", nullptr));
+#if QT_CONFIG(tooltip)
+        profile3->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile3->setText(QString());
         pushButton_18->setText(QCoreApplication::translate("MainWindow", "View Calendar", nullptr));
         addConferenceBtn->setText(QCoreApplication::translate("MainWindow", "Add Conference", nullptr));
+#if QT_CONFIG(tooltip)
+        publication4->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication4->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research4->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research4->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf3->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf3->setText(QString());
 #if QT_CONFIG(tooltip)
         homeButton3->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
@@ -6076,7 +6160,13 @@ public:
 #endif // QT_CONFIG(tooltip)
         reveiw3->setText(QString());
         pic_3->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab4->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab4->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch3->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch3->setText(QString());
         label_25->setText(QCoreApplication::translate("MainWindow", "Topic", nullptr));
         topicCombo->setPlaceholderText(QCoreApplication::translate("MainWindow", "Topic of Conference", nullptr));
@@ -6107,9 +6197,21 @@ public:
         summaryButton->setText(QCoreApplication::translate("MainWindow", "Summary", nullptr));
         emailButton->setText(QCoreApplication::translate("MainWindow", "Send Email Notification", nullptr));
         statusLabel->setText(QString());
+#if QT_CONFIG(tooltip)
+        profile5->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile5->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch5->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch5->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf4->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf4->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research5->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research5->setText(QString());
 #if QT_CONFIG(tooltip)
         reveiw5->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
@@ -6119,8 +6221,14 @@ public:
         homeButton5->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
 #endif // QT_CONFIG(tooltip)
         homeButton5->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab5->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab5->setText(QString());
         pic_5->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication5->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication5->setText(QString());
 #if QT_CONFIG(tooltip)
         backHome2->setToolTip(QCoreApplication::translate("MainWindow", "Quit", nullptr));
@@ -6142,9 +6250,21 @@ public:
         comboBox_2->setItemText(1, QCoreApplication::translate("MainWindow", "Research 2", nullptr));
         comboBox_2->setItemText(2, QCoreApplication::translate("MainWindow", "Research 3", nullptr));
 
+#if QT_CONFIG(tooltip)
+        profile6->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
         profile6->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch6->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
         modeSwitch6->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf5->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
         conf5->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research6->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
         Research6->setText(QString());
 #if QT_CONFIG(tooltip)
         homeButton7->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
@@ -6154,8 +6274,14 @@ public:
         reveiw6->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
         reveiw6->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab6->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
         collab6->setText(QString());
         pic_6->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication6->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
         publication6->setText(QString());
         groupBox_2->setTitle(QString());
         lineEdit_8->setText(QString());
