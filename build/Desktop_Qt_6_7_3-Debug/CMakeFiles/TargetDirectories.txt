@@ -1,0 +1,9 @@
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/reveiw.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/edit_cache.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/rebuild_cache.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/list_install_components.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/install.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/install/local.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/install/strip.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/reveiw_autogen_timestamp_deps.dir
+/home/ayoub/Documents/qt/reveiw/build/Desktop_Qt_6_7_3-Debug/CMakeFiles/reveiw_autogen.dir
