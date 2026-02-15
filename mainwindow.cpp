@@ -646,6 +646,8 @@ void MainWindow::on_homeButton6_clicked(){ui->stackedWidget->setCurrentIndex(0);
 void MainWindow::on_homeButton7_clicked(){ui->stackedWidget->setCurrentIndex(0);}
 void MainWindow::on_backHome_clicked(){   ui->stackedWidget->setCurrentIndex(0);}
 
+
+
 void MainWindow::on_reveiw_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
 void MainWindow::on_reveiw2_clicked(){ui->stackedWidget->setCurrentIndex(1);}
 void MainWindow::on_reveiw3_clicked(){ui->stackedWidget->setCurrentIndex(1);}
@@ -653,6 +655,7 @@ void MainWindow::on_reveiw4_clicked(){ui->stackedWidget->setCurrentIndex(1);}
 void MainWindow::on_reveiw5_clicked(){ui->stackedWidget->setCurrentIndex(1);}
 void MainWindow::on_reveiw6_clicked(){ui->stackedWidget->setCurrentIndex(1);}
 void MainWindow::on_reveiw7_clicked(){ui->stackedWidget->setCurrentIndex(1);}
+
 
 
 void MainWindow::on_collab_clicked(){ ui->stackedWidget->setCurrentIndex(2);}
@@ -664,16 +667,20 @@ void MainWindow::on_collab6_clicked(){ui->stackedWidget->setCurrentIndex(2);}
 void MainWindow::on_collab7_clicked(){ui->stackedWidget->setCurrentIndex(2);}
 
 
-void MainWindow::on_profile_clicked(){     ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile2_clicked(){    ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile3_clicked(){    ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile4_clicked(){    ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile5_clicked(){    ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile6_clicked(){    ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile7_clicked(){    ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_login_clicked(){       ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_cancelBtnReg_clicked(){ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_cancelBtnFor_clicked(){ui->stackedWidget->setCurrentIndex(3);}
+
+void MainWindow::on_profile_clicked(){           ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_profile2_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_profile3_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_profile4_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_profile5_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_profile6_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_profile7_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_login_clicked(){             ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_cancelBtnReg_clicked(){      ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_cancelBtnFor_clicked(){      ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_userSearchBackBTN_clicked(){ ui->stackedWidget->setCurrentIndex(3);}
+
+
 
 
 void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
@@ -685,6 +692,7 @@ void MainWindow::on_conf6_clicked(){ui->stackedWidget->setCurrentIndex(4); loadC
 void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
 
+
 void MainWindow::on_publication_clicked(){ ui->stackedWidget->setCurrentIndex(6);}
 void MainWindow::on_publication2_clicked(){ui->stackedWidget->setCurrentIndex(6);}
 void MainWindow::on_publication3_clicked(){ui->stackedWidget->setCurrentIndex(6);}
@@ -692,6 +700,7 @@ void MainWindow::on_publication4_clicked(){ui->stackedWidget->setCurrentIndex(6)
 void MainWindow::on_publication5_clicked(){ui->stackedWidget->setCurrentIndex(6);}
 void MainWindow::on_publication6_clicked(){ui->stackedWidget->setCurrentIndex(6);}
 void MainWindow::on_publication7_clicked(){ui->stackedWidget->setCurrentIndex(6);}
+
 
 
 void MainWindow::on_Research_clicked(){ ui->stackedWidget->setCurrentIndex(7);}
@@ -708,10 +717,16 @@ void MainWindow::on_temp_clicked(){ui->stackedWidget->setCurrentIndex(0);}
 void MainWindow::on_temp2_clicked(){ui->stackedWidget->setCurrentIndex(8);}
 
 
+
 void MainWindow::on_mkUser_clicked(){ui->stackedWidget->setCurrentIndex(9);}
 
 
+
 void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
+
+
+
+void MainWindow::on_searchUserBTN_clicked(){ui->stackedWidget->setCurrentIndex(11);}
 
 
 
@@ -1993,3 +2008,9 @@ void MainWindow::toggleDarkMode(){
     }
 //end
 }
+
+
+
+
+
+

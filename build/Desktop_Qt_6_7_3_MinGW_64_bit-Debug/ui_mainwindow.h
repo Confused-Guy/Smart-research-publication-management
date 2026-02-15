@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDoubleSpinBox>
@@ -164,6 +165,7 @@ public:
     QPushButton *temp;
     QPushButton *temp2;
     QPushButton *mkUser;
+    QPushButton *searchUserBTN;
     QWidget *page_4;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
@@ -524,6 +526,14 @@ public:
     QPushButton *verifyBtnForgot;
     QPushButton *cancelBtnFor;
     QLineEdit *lineEdit_14;
+    QWidget *page_23;
+    QGroupBox *groupBox_11;
+    QLineEdit *lineEdit_16;
+    QCheckBox *userCheckBox;
+    QCheckBox *userCheckBox_2;
+    QCheckBox *userCheckBox_3;
+    QPushButton *userSearchBackBTN;
+    QListView *useListView;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -2891,6 +2901,9 @@ public:
         mkUser = new QPushButton(page_3);
         mkUser->setObjectName("mkUser");
         mkUser->setGeometry(QRect(910, 30, 141, 41));
+        searchUserBTN = new QPushButton(page_3);
+        searchUserBTN->setObjectName("searchUserBTN");
+        searchUserBTN->setGeometry(QRect(1080, 100, 121, 41));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");
@@ -8097,11 +8110,35 @@ public:
         lineEdit_14->setObjectName("lineEdit_14");
         lineEdit_14->setGeometry(QRect(60, 200, 231, 41));
         stackedWidget->addWidget(page_11);
+        page_23 = new QWidget();
+        page_23->setObjectName("page_23");
+        groupBox_11 = new QGroupBox(page_23);
+        groupBox_11->setObjectName("groupBox_11");
+        groupBox_11->setGeometry(QRect(230, 70, 811, 561));
+        lineEdit_16 = new QLineEdit(groupBox_11);
+        lineEdit_16->setObjectName("lineEdit_16");
+        lineEdit_16->setGeometry(QRect(130, 110, 211, 41));
+        userCheckBox = new QCheckBox(groupBox_11);
+        userCheckBox->setObjectName("userCheckBox");
+        userCheckBox->setGeometry(QRect(370, 100, 151, 61));
+        userCheckBox_2 = new QCheckBox(groupBox_11);
+        userCheckBox_2->setObjectName("userCheckBox_2");
+        userCheckBox_2->setGeometry(QRect(480, 100, 151, 61));
+        userCheckBox_3 = new QCheckBox(groupBox_11);
+        userCheckBox_3->setObjectName("userCheckBox_3");
+        userCheckBox_3->setGeometry(QRect(600, 100, 151, 61));
+        userSearchBackBTN = new QPushButton(groupBox_11);
+        userSearchBackBTN->setObjectName("userSearchBackBTN");
+        userSearchBackBTN->setGeometry(QRect(150, 470, 131, 31));
+        useListView = new QListView(groupBox_11);
+        useListView->setObjectName("useListView");
+        useListView->setGeometry(QRect(120, 210, 561, 192));
+        stackedWidget->addWidget(page_23);
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(4);
+        stackedWidget->setCurrentIndex(11);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -8323,6 +8360,7 @@ public:
         temp->setText(QCoreApplication::translate("MainWindow", "Home page", nullptr));
         temp2->setText(QCoreApplication::translate("MainWindow", "Login Page", nullptr));
         mkUser->setText(QCoreApplication::translate("MainWindow", "Make a New User", nullptr));
+        searchUserBTN->setText(QCoreApplication::translate("MainWindow", "Search user", nullptr));
         searchConfEdit->setText(QString());
         searchConfEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search for something...", nullptr));
         searchConfBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
@@ -8893,10 +8931,17 @@ public:
         cancelBtnReg->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
         groupBox_4->setTitle(QString());
         label_41->setText(QCoreApplication::translate("MainWindow", "Forgot your password?", nullptr));
-        label_43->setText(QCoreApplication::translate("MainWindow", "[ Security Question ]", nullptr));
+        label_43->setText(QCoreApplication::translate("MainWindow", "Check your email!", nullptr));
         verifyBtnForgot->setText(QCoreApplication::translate("MainWindow", "Verify", nullptr));
         cancelBtnFor->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
-        lineEdit_14->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter your Answer", nullptr));
+        lineEdit_14->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter your Code", nullptr));
+        groupBox_11->setTitle(QCoreApplication::translate("MainWindow", "GroupBox", nullptr));
+        lineEdit_16->setText(QString());
+        lineEdit_16->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search", nullptr));
+        userCheckBox->setText(QCoreApplication::translate("MainWindow", "CheckBox", nullptr));
+        userCheckBox_2->setText(QCoreApplication::translate("MainWindow", "CheckBox", nullptr));
+        userCheckBox_3->setText(QCoreApplication::translate("MainWindow", "CheckBox", nullptr));
+        userSearchBackBTN->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
     } // retranslateUi
 
 };

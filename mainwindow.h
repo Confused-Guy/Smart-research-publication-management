@@ -53,6 +53,9 @@ private slots:
     void on_profile7_clicked();
     void on_login_clicked();
     void on_cancelBtnFor_clicked();
+    void on_searchUserBTN_clicked();
+    void on_userSearchBackBTN_clicked();
+
 
     void on_conf_clicked();
     void on_conf2_clicked();
@@ -114,6 +117,11 @@ private slots:
                              const QString& location, double price,
                              const QString& description);
     //************CONFERENCE END***************************//
+
+
+
+
+
 
 
 private:
