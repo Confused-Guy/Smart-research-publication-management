@@ -14,14 +14,13 @@ private:
     QDate date;
     QString location;
     double price;
-    QString description;
 
 
 public:
     Conference();
     Conference(int id, QString title, int topicId,
                QDate date, QString location,
-               double price, QString description);
+               double price);
 
     // Getters
     int getId() const;
@@ -30,7 +29,6 @@ public:
     QDate getDate() const;
     QString getLocation() const;
     double getPrice() const;
-    QString getDescription() const;
 
     // CRUD
     bool add();

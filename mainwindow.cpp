@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "conference.h"
-#include "review.h"
 #include <QSqlQuery>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintDialog>
@@ -24,6 +23,17 @@
 #include <QPrinter>
 #include <QFileDialog>
 #include <QDir>
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+#include <QtCore/QUrlQuery>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pic_6->setPixmap(logo);
     ui->pic_7->setPixmap(logo);//logo stuff!
 
+    ui->stackedWidget->setCurrentIndex(3);
 
     QPixmap userPic("user.png"); //temporary until user gets an actual db
     ui->userPic->setPixmap(userPic);
@@ -68,15 +79,17 @@ MainWindow::~MainWindow()
 
 //********************CONFERENCE START***********************************************************************************************************//
 
+//1 LOAD
 void MainWindow::loadConferences(bool ascending, QString searchFilter)
 {
-    // Clear old cards
+    // Clear
     QLayoutItem* item;
     while ((item = ui->conferenceLayout->takeAt(0)) != nullptr) {
         delete item->widget();
         delete item;
     }
 
+    //Query
     QString queryStr = "SELECT ID, TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE";
 
     if (!searchFilter.trimmed().isEmpty())
@@ -94,6 +107,7 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
 
     bool anyResults = false;
 
+    //Display
     while (query.next()) {
         anyResults = true;
         int id = query.value(0).toInt();
@@ -134,8 +148,8 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
         // Delete
         connect(deleteBtn, &QPushButton::clicked, this, [=]() {
             QSqlQuery del;
-            del.prepare("DELETE FROM CONFERENCE WHERE ID=:id");
-            del.bindValue(":id", id);
+            del.prepare("DELETE FROM CONFERENCE WHERE ID = ?");
+            del.addBindValue(id);
             del.exec();
             loadConferences(sortAscending, ui->searchConfEdit->text());
         });
@@ -152,7 +166,6 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
                 ui->dateEdit->setDate(q.value(2).toDate());
                 ui->locationEdit->setText(q.value(3).toString());
                 ui->priceSpin->setValue(q.value(4).toDouble());
-                ui->descriptionEdit->setPlainText(q.value(5).toString());
                 ui->stackedWidget->setCurrentIndex(5);
             }
         });
@@ -175,14 +188,12 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
                     q.value(0).toString(),
                     q.value(1).toDate(),
                     q.value(2).toString(),
-                    q.value(3).toDouble(),
-                    q.value(4).toString()
-                    );
+                    q.value(3).toDouble());
             }
         });
     }
 
-    // Show a "no results" label if search returned nothing
+    // "no results" if search returns nothing
     if (!anyResults) {
         QLabel* noResults = new QLabel("No conferences found.");
         noResults->setAlignment(Qt::AlignCenter);
@@ -192,13 +203,22 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
     ui->conferenceLayout->addStretch();
 }
 
-//CALENDAR
-void MainWindow::on_viewCalendarBtn_clicked()
-{
-    showConferenceCalendar();
+//2 ADD EDIT
+void MainWindow::on_cancelConfBtn_clicked() {
+    editingConferenceId = -1;
+    ui->stackedWidget->setCurrentIndex(4);
 }
 
-void MainWindow::on_saveButton_clicked()
+void MainWindow::on_addConferenceBtn_clicked() {
+    editingConferenceId = -1;
+    ui->cTitleEdit->clear();
+    ui->dateEdit->setDate(QDate::currentDate());
+    ui->locationEdit->clear();
+    ui->priceSpin->setValue(0);
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+void MainWindow::on_saveConfBtn_clicked()
 {
     Conference c(
         editingConferenceId,
@@ -206,8 +226,7 @@ void MainWindow::on_saveButton_clicked()
         1,
         ui->dateEdit->date(),
         ui->locationEdit->text(),
-        ui->priceSpin->text().toDouble(),
-        ui->descriptionEdit->toPlainText()
+        ui->priceSpin->value()
         );
 
     bool success = false;
@@ -218,58 +237,588 @@ void MainWindow::on_saveButton_clicked()
         success = c.update();
 
     if (success) {
-        qDebug() << (editingConferenceId == -1 ? "Added!" : "Updated!");
+        qDebug() << (editingConferenceId == -1 ? "Conference added" : "Conference updated");
         editingConferenceId = -1;
         loadConferences(sortAscending, "");
         ui->stackedWidget->setCurrentIndex(4);
     } else {
-        qDebug() << "Failed!";
+        qDebug() << "Conference failed";
     }
+}
+
+//3 STATS
+void MainWindow::on_confStatsBtn_clicked()
+{
+    showConferenceStats();
+}
+
+void MainWindow::showConferenceStats()
+{
+    //clazy-qcolor-from-literal warnings FIX
+    const QColor cTeal    (0x30, 0xb9, 0xbf);
+    const QColor cIndigo  (0x63, 0x66, 0xf1);
+    const QColor cAmber   (0xf5, 0x9e, 0x0b);
+    const QColor cRed     (0xdc, 0x26, 0x26);
+    const QColor cGreen   (0x16, 0xa3, 0x4a);
+    const QColor cPink    (0xec, 0x48, 0x99);
+    const QColor cPurple  (0x8b, 0x5c, 0xf6);
+    const QColor cWhite   (0xff, 0xff, 0xff);
+    const QColor cGray    (0x6b, 0x72, 0x80);
+    const QColor cLightBg (0xf1, 0xf5, 0xf9);
+    const QColor cText    (0x1f, 0x29, 0x37);
+    const QColor cSubText (0x9c, 0xa3, 0xaf);
+    const QColor cShadow  (0x00, 0x00, 0x00, 18);
+
+    //Queries
+    QSqlQuery query;
+    query.exec("SELECT COUNT(*), AVG(PRICE), MIN(PRICE), MAX(PRICE) FROM CONFERENCE");
+    int totalConferences = 0;
+    double avgPrice = 0, minPrice = 0, maxPrice = 0;
+    if (query.next()) {
+        totalConferences = query.value(0).toInt();
+        avgPrice         = query.value(1).toDouble();
+        minPrice         = query.value(2).toDouble();
+        maxPrice         = query.value(3).toDouble();
+    }
+
+    QSqlQuery upcomingQuery;
+    upcomingQuery.exec(
+        "SELECT COUNT(*) FROM CONFERENCE WHERE CONF_DATE >= TRUNC(SYSDATE)"
+        );
+    int upcoming = 0;
+    if (upcomingQuery.next())
+        upcoming = upcomingQuery.value(0).toInt();
+    int past = totalConferences - upcoming;
+
+    QSqlQuery monthQuery;
+    monthQuery.exec(
+        "SELECT TO_CHAR(CONF_DATE, 'Mon'), COUNT(*) FROM CONFERENCE "
+        "WHERE CONF_DATE >= ADD_MONTHS(SYSDATE, -6) "
+        "GROUP BY TO_CHAR(CONF_DATE, 'Mon'), TO_CHAR(CONF_DATE, 'MM') "
+        "ORDER BY TO_CHAR(CONF_DATE, 'MM')"
+        );
+    QList<QPair<QString,int>> monthData;
+    while (monthQuery.next())
+        monthData.append({monthQuery.value(0).toString(),
+                          monthQuery.value(1).toInt()});
+
+    QSqlQuery priceQuery;
+    priceQuery.exec(
+        "SELECT "
+        "  SUM(CASE WHEN PRICE < 100  THEN 1 ELSE 0 END), "
+        "  SUM(CASE WHEN PRICE >= 100 AND PRICE < 500  THEN 1 ELSE 0 END), "
+        "  SUM(CASE WHEN PRICE >= 500 AND PRICE < 1000 THEN 1 ELSE 0 END), "
+        "  SUM(CASE WHEN PRICE >= 1000 THEN 1 ELSE 0 END) "
+        "FROM CONFERENCE"
+        );
+    QList<QPair<QString,int>> priceData;
+    if (priceQuery.next()) {
+        priceData = {
+            {"<$100",     priceQuery.value(0).toInt()},
+            {"$100-500",  priceQuery.value(1).toInt()},
+            {"$500-1000", priceQuery.value(2).toInt()},
+            {">$1000",    priceQuery.value(3).toInt()}
+        };
+    }
+
+    QSqlQuery locQuery;
+    locQuery.exec(
+        "SELECT LOCATION, COUNT(*) as cnt FROM CONFERENCE "
+        "GROUP BY LOCATION ORDER BY cnt DESC FETCH FIRST 1 ROWS ONLY"
+        );
+    QString topLocation = "N/A";
+    if (locQuery.next())
+        topLocation = locQuery.value(0).toString();
+
+    QSqlQuery nextQuery;
+    nextQuery.exec(
+        "SELECT TITLE, CONF_DATE FROM CONFERENCE "
+        "WHERE CONF_DATE >= TRUNC(SYSDATE) ORDER BY CONF_DATE ASC FETCH FIRST 1 ROWS ONLY"
+        );
+    QString nextTitle = "None";
+    QString nextDate  = "";
+    if (nextQuery.next()) {
+        nextTitle = nextQuery.value(0).toString();
+        nextDate  = nextQuery.value(1).toDate().toString("MMM dd, yyyy");
+    }
+
+    //Dialog
+    QDialog* dialog = new QDialog(this);
+    dialog->setWindowTitle("Conference Statistics");
+    dialog->setFixedSize(600, 640);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
+
+    //Scroll area
+    QWidget* scrollContent = new QWidget();
+    scrollContent->setAttribute(Qt::WA_StyledBackground, true);
+    scrollContent->setStyleSheet("QWidget { background-color: #f6f8fc; border: none; }");
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(scrollContent);
+    mainLayout->setContentsMargins(24, 20, 24, 16);
+    mainLayout->setSpacing(14);
+
+    QScrollArea* scroll = new QScrollArea(dialog);
+    scroll->setWidget(scrollContent);
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setStyleSheet(
+        "QScrollArea { background-color: #f6f8fc; border: none; }"
+        "QScrollBar:vertical { background: #f6f8fc; width: 6px; border-radius: 3px; }"
+        "QScrollBar::handle:vertical { background: #c0d0e8; border-radius: 3px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+        );
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout(dialog);
+    dialogLayout->setContentsMargins(0, 0, 0, 0);
+    dialogLayout->setSpacing(0);
+    dialogLayout->addWidget(scroll);
+
+    //Header
+    QLabel* titleLabel = new QLabel("Conference Statistics");
+    titleLabel->setStyleSheet(
+        "font-size: 16px; font-weight: bold; color: #1f2937; background: transparent;"
+        );
+    QLabel* subLabel = new QLabel(
+        QString::number(totalConferences) + " total  ·  " +
+        QString::number(upcoming) + " upcoming  ·  " +
+        QString::number(past) + " past  ·  Top location: " + topLocation
+        );
+    subLabel->setStyleSheet("font-size: 10px; color: #9ca3af; background: transparent;");
+    mainLayout->addWidget(titleLabel);
+    mainLayout->addWidget(subLabel);
+
+    QFrame* div = new QFrame();
+    div->setFrameShape(QFrame::HLine);
+    div->setFixedHeight(1);
+    div->setStyleSheet("background-color: #e2e8f0; border: none;");
+    mainLayout->addWidget(div);
+
+    //section label
+    auto makeSection = [&](const QString& text) -> QLabel* {
+        QLabel* sec = new QLabel(text.toUpper());
+        sec->setStyleSheet(
+            "font-size: 9px; font-weight: bold; color: #9ca3af;"
+            "background: transparent; letter-spacing: 1px; border: none;"
+            );
+        return sec;
+    };
+
+    //bar chart
+    auto makeBarChart = [&](const QList<QPair<QString,int>>& data,
+                            const QColor& barColor,
+                            int fixedHeight) -> QWidget*
+    {
+        QWidget* chart = new QWidget();
+        chart->setFixedHeight(fixedHeight);
+        chart->setAttribute(Qt::WA_StyledBackground, true);
+        chart->setStyleSheet(
+            "QWidget { background-color: #ffffff;"
+            "border: 1px solid #e2e8f0; border-radius: 10px; }"
+            );
+
+        QLabel* canvas = new QLabel(chart);
+        canvas->setGeometry(0, 0, 552, fixedHeight);
+        canvas->setAttribute(Qt::WA_StyledBackground, false);
+        canvas->setStyleSheet("background: transparent; border: none;");
+
+        int maxVal = 1;
+        for (const auto& d : data)
+            if (d.second > maxVal) maxVal = d.second;
+
+        QPixmap pixmap(552, fixedHeight);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        int n        = data.size();
+        int padLeft  = 72;
+        int padRight = 20;
+        int padTop   = 16;
+        int padBot   = 16;
+        int barAreaW = pixmap.width() - padLeft - padRight;
+        int totalH   = pixmap.height() - padTop - padBot;
+        int barH     = qMax(18, (totalH / qMax(n,1)) - 10);
+        int gap      = qMax(6, (totalH - barH * n) / (n + 1));
+
+        for (int i = 0; i < n; ++i) {
+            int y    = padTop + gap + i * (barH + gap);
+            int barW = data[i].second == 0 ? 0
+                                           : (int)((double)data[i].second / maxVal * barAreaW);
+
+            painter.setPen(cGray);
+            painter.setFont(QFont("Arial", 9));
+            painter.drawText(QRect(0, y, padLeft - 8, barH),
+                             Qt::AlignRight | Qt::AlignVCenter,
+                             data[i].first);
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(cLightBg);
+            painter.drawRoundedRect(padLeft, y, barAreaW, barH, 5, 5);
+
+            if (barW > 0) {
+                painter.setBrush(barColor);
+                painter.drawRoundedRect(padLeft, y, barW, barH, 5, 5);
+            }
+
+            painter.setPen(barW > 30 ? cWhite : cText);
+            painter.setFont(QFont("Arial", 9, QFont::Bold));
+            painter.drawText(QRect(padLeft + 6, y, qMax(barW - 4, 40), barH),
+                             Qt::AlignLeft | Qt::AlignVCenter,
+                             QString::number(data[i].second));
+        }
+
+        painter.end();
+        canvas->setPixmap(pixmap);
+        return chart;
+    };
+
+    //donut pie chart
+    auto makePieChart = [&](const QList<QPair<QString,int>>& data,
+                            int size) -> QWidget*
+    {
+        QWidget* container = new QWidget();
+        container->setFixedHeight(size + 20);
+        container->setAttribute(Qt::WA_StyledBackground, true);
+        container->setStyleSheet(
+            "QWidget { background-color: #ffffff;"
+            "border: 1px solid #e2e8f0; border-radius: 10px; }"
+            );
+
+        QLabel* canvas = new QLabel(container);
+        canvas->setGeometry(0, 0, 552, size + 20);
+        canvas->setAttribute(Qt::WA_StyledBackground, false);
+        canvas->setStyleSheet("background: transparent; border: none;");
+
+        const QList<QColor> colors = {
+            cTeal, cIndigo, cAmber, cRed, cGreen, cPink, cPurple
+        };
+
+        int total = 0;
+        for (const auto& d : data) total += d.second;
+
+        QPixmap pixmap(552, size + 20);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        if (total == 0) {
+            painter.setPen(cSubText);
+            painter.setFont(QFont("Arial", 10));
+            painter.drawText(pixmap.rect(), Qt::AlignCenter, "No data available");
+            painter.end();
+            canvas->setPixmap(pixmap);
+            return container;
+        }
+
+        int pieSize = size - 20;
+        int pieX    = 20;
+        int pieY    = 20;
+        QRect pieRect(pieX, pieY, pieSize, pieSize);
+
+        //Shadow
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(cShadow);
+        painter.drawEllipse(pieRect.adjusted(4, 4, 4, 4));
+
+        //Slices
+        double startAngle = 90.0;
+        for (int i = 0; i < data.size(); ++i) {
+            if (data[i].second == 0) continue;
+            double sweepAngle = (double)data[i].second / total * 360.0;
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(colors[i % colors.size()]);
+            painter.drawPie(pieRect,
+                            (int)(startAngle * 16),
+                            (int)(sweepAngle * 16));
+
+            painter.setPen(QPen(cWhite, 2));
+            painter.setBrush(Qt::NoBrush);
+            painter.drawPie(pieRect,
+                            (int)(startAngle * 16),
+                            (int)(sweepAngle * 16));
+
+            startAngle += sweepAngle;
+        }
+
+        //Center hole
+        int holeSize = pieSize / 2;
+        int holeX    = pieX + (pieSize - holeSize) / 2;
+        int holeY    = pieY + (pieSize - holeSize) / 2;
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(cWhite);
+        painter.drawEllipse(holeX, holeY, holeSize, holeSize);
+
+        //Center text
+        painter.setPen(cText);
+        painter.setFont(QFont("Arial", 13, QFont::Bold));
+        painter.drawText(QRect(holeX, holeY, holeSize, holeSize / 2 + 4),
+                         Qt::AlignCenter, QString::number(total));
+        painter.setPen(cSubText);
+        painter.setFont(QFont("Arial", 8));
+        painter.drawText(QRect(holeX, holeY + holeSize / 2 - 4, holeSize, holeSize / 2),
+                         Qt::AlignCenter, "total");
+
+        //Legend
+        int legendX     = pieX + pieSize + 24;
+        int legendY     = pieY + 10;
+        int legendItemH = (pieSize - 10) / qMax(data.size(), 1);
+
+        for (int i = 0; i < data.size(); ++i) {
+            if (data[i].second == 0) continue;
+            int ly = legendY + i * legendItemH;
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(colors[i % colors.size()]);
+            painter.drawEllipse(legendX, ly + 4, 11, 11);
+
+            painter.setPen(cGray);
+            painter.setFont(QFont("Arial", 9));
+            painter.drawText(legendX + 18, ly, 180, 20,
+                             Qt::AlignLeft | Qt::AlignVCenter,
+                             data[i].first);
+
+            double pct = (double)data[i].second / total * 100.0;
+            painter.setPen(cText);
+            painter.setFont(QFont("Arial", 9, QFont::Bold));
+            painter.drawText(legendX + 18, ly + 16, 180, 18,
+                             Qt::AlignLeft | Qt::AlignVCenter,
+                             QString::number(data[i].second) +
+                                 "  (" + QString::number(pct, 'f', 1) + "%)");
+        }
+
+        painter.end();
+        canvas->setPixmap(pixmap);
+        return container;
+    };
+
+    //Stat pills
+    auto makePill = [&](const QString& label,
+                        const QString& value,
+                        const QString& color) -> QFrame*
+    {
+        QFrame* pill = new QFrame();
+        pill->setAttribute(Qt::WA_StyledBackground, true);
+        pill->setStyleSheet(
+            "QFrame { background-color: #ffffff;"
+            "border: 1px solid #e2e8f0; border-radius: 10px; }"
+            );
+        pill->setFixedHeight(64);
+
+        QVBoxLayout* pl = new QVBoxLayout(pill);
+        pl->setContentsMargins(14, 8, 14, 8);
+        pl->setSpacing(2);
+
+        QLabel* vl = new QLabel(value);
+        vl->setStyleSheet(
+            "font-size: 15px; font-weight: bold; color: " + color + ";"
+                                                                    "background: transparent; border: none;"
+            );
+        QLabel* ll = new QLabel(label);
+        ll->setStyleSheet(
+            "font-size: 9px; color: #9ca3af;"
+            "background: transparent; border: none;"
+            );
+        pl->addWidget(vl);
+        pl->addWidget(ll);
+        return pill;
+    };
+
+    //LAYOUT
+    mainLayout->addWidget(makeSection("Overview"));
+    mainLayout->addWidget(makeBarChart(
+        {{"Upcoming", upcoming}, {"Past", past}},
+        cTeal, 90
+        ));
+
+    mainLayout->addWidget(makeSection("Upcoming vs Past"));
+    mainLayout->addWidget(makePieChart(
+        {{"Upcoming", upcoming}, {"Past", past}},
+        180
+        ));
+
+    if (!monthData.isEmpty()) {
+        mainLayout->addWidget(makeSection("Activity — Last 6 Months"));
+        mainLayout->addWidget(makeBarChart(
+            monthData, cIndigo,
+            qMax(90, monthData.size() * 36 + 32)
+            ));
+    }
+
+    mainLayout->addWidget(makeSection("Price Distribution"));
+    mainLayout->addWidget(makeBarChart(priceData, cAmber, 150));
+
+    mainLayout->addWidget(makeSection("Price Breakdown"));
+    mainLayout->addWidget(makePieChart(priceData, 200));
+
+    mainLayout->addWidget(makeSection("Pricing Summary"));
+    QHBoxLayout* pillRow = new QHBoxLayout();
+    pillRow->setSpacing(10);
+    pillRow->addWidget(makePill("Avg Price", "$" + QString::number(avgPrice,'f',0), "#30b9bf"));
+    pillRow->addWidget(makePill("Min Price", "$" + QString::number(minPrice,'f',0), "#16a34a"));
+    pillRow->addWidget(makePill("Max Price", "$" + QString::number(maxPrice,'f',0), "#dc2626"));
+    pillRow->addWidget(makePill("Total",     QString::number(totalConferences),     "#6366f1"));
+    mainLayout->addLayout(pillRow);
+
+    if (!nextTitle.isEmpty() && nextTitle != "None") {
+        mainLayout->addWidget(makeSection("Next Upcoming"));
+        QFrame* nextCard = new QFrame();
+        nextCard->setAttribute(Qt::WA_StyledBackground, true);
+        nextCard->setFixedHeight(56);
+        nextCard->setStyleSheet(
+            "QFrame { background-color: #ffffff;"
+            "border: 1px solid #e2e8f0; border-radius: 10px; }"
+            );
+        QHBoxLayout* nl = new QHBoxLayout(nextCard);
+        nl->setContentsMargins(16, 0, 16, 0);
+        QLabel* nt = new QLabel("📌  " + nextTitle);
+        nt->setStyleSheet(
+            "font-size: 10pt; font-weight: bold; color: #1f2937;"
+            "background: transparent; border: none;"
+            );
+        QLabel* nd = new QLabel(nextDate);
+        nd->setStyleSheet(
+            "font-size: 10pt; color: #16a34a;"
+            "background: transparent; border: none;"
+            );
+        nd->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        nl->addWidget(nt);
+        nl->addStretch();
+        nl->addWidget(nd);
+        mainLayout->addWidget(nextCard);
+    }
+
+    mainLayout->addStretch();
+
+    //Close
+    QPushButton* closeBtn = new QPushButton("Close");
+    closeBtn->setFixedWidth(100);
+    closeBtn->setFixedHeight(36);
+    closeBtn->setStyleSheet(
+        "QPushButton {"
+        "    background-color: #ffffff; color: #1f2937;"
+        "    border: 1px solid #e2e8f0; border-radius: 8px;"
+        "    font-size: 10pt; padding: 6px 20px;"
+        "}"
+        "QPushButton:hover   { background-color: #f1f5f9; }"
+        "QPushButton:pressed { background-color: #e2e8f0; }"
+        );
+    connect(closeBtn, &QPushButton::clicked, dialog, &QDialog::close,
+            Qt::QueuedConnection);
+
+    QHBoxLayout* footer = new QHBoxLayout();
+    footer->setContentsMargins(16, 8, 16, 8);
+    footer->addStretch();
+    footer->addWidget(closeBtn);
+    dialogLayout->addLayout(footer);
+
+    dialog->exec();
+}
+
+//4 CALENDAR
+void MainWindow::on_viewCalendarBtn_clicked()
+{
+    showConferenceCalendar();
 }
 
 void MainWindow::showConferenceCalendar()
 {
+    //Pre-declared colors (Warning fix)
+    const QColor cTeal    (0x30, 0xb9, 0xbf);
+    const QColor cAmber   (0xfe, 0xf3, 0xc7);
+    const QColor cAmberTx (0x92, 0x40, 0x0e);
+    const QColor cDarkTeal(0x0a, 0x5a, 0x5f);
+    const QColor cWhite   (0xff, 0xff, 0xff);
+
+    //Dtae query
     QMap<QDate, QStringList> conferenceDates;
     QSqlQuery query("SELECT TITLE, CONF_DATE FROM CONFERENCE ORDER BY CONF_DATE");
-    while (query.next()) {
+    while (query.next())
         conferenceDates[query.value(1).toDate()].append(query.value(0).toString());
-    }
 
+    //Dialog
     QDialog* dialog = new QDialog(this);
     dialog->setWindowTitle("Conference Calendar");
-    dialog->setFixedSize(520, 480);
-    dialog->setStyleSheet("background-color: #f6f8fc;");
+    dialog->setFixedSize(520, 520);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
 
-    QVBoxLayout* mainLayout = new QVBoxLayout(dialog);
-    mainLayout->setContentsMargins(20, 20, 20, 16);
-    mainLayout->setSpacing(12);
+    //Scroll
+    QWidget* scrollContent = new QWidget();
+    scrollContent->setAttribute(Qt::WA_StyledBackground, true);
+    scrollContent->setStyleSheet("QWidget { background-color: #f6f8fc; border: none; }");
 
-    // --- Title ---
+    QVBoxLayout* mainLayout = new QVBoxLayout(scrollContent);
+    mainLayout->setContentsMargins(24, 20, 24, 16);
+    mainLayout->setSpacing(14);
+
+    QScrollArea* scroll = new QScrollArea(dialog);
+    scroll->setWidget(scrollContent);
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setStyleSheet(
+        "QScrollArea { background-color: #f6f8fc; border: none; }"
+        "QScrollBar:vertical { background: #f6f8fc; width: 6px; border-radius: 3px; }"
+        "QScrollBar::handle:vertical { background: #c0d0e8; border-radius: 3px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+        );
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout(dialog);
+    dialogLayout->setContentsMargins(0, 0, 0, 0);
+    dialogLayout->setSpacing(0);
+    dialogLayout->addWidget(scroll);
+
+    //Header
     QLabel* titleLabel = new QLabel("Conference Calendar");
-    titleLabel->setStyleSheet("font-size: 15px; font-weight: bold; color: #1f2937;");
-
-    QLabel* subLabel = new QLabel(QString::number(conferenceDates.size()) + " scheduled conference(s)");
-    subLabel->setStyleSheet("font-size: 10px; color: #9ca3af;");
-
+    titleLabel->setStyleSheet(
+        "font-size: 16px; font-weight: bold; color: #1f2937; background: transparent;"
+        );
+    QLabel* subLabel = new QLabel(
+        QString::number(conferenceDates.size()) + " scheduled conference(s)"
+        );
+    subLabel->setStyleSheet("font-size: 10px; color: #9ca3af; background: transparent;");
     mainLayout->addWidget(titleLabel);
     mainLayout->addWidget(subLabel);
 
-    // --- Calendar ---
+    QFrame* div = new QFrame();
+    div->setFrameShape(QFrame::HLine);
+    div->setFixedHeight(1);
+    div->setStyleSheet("background-color: #e2e8f0; border: none;");
+    mainLayout->addWidget(div);
+
+    auto makeSection = [&](const QString& text) -> QLabel* {
+        QLabel* sec = new QLabel(text.toUpper());
+        sec->setStyleSheet(
+            "font-size: 9px; font-weight: bold; color: #9ca3af;"
+            "background: transparent; letter-spacing: 1px; border: none;"
+            );
+        return sec;
+    };
+
+    //Calendar style
+    QFrame* calCard = new QFrame();
+    calCard->setAttribute(Qt::WA_StyledBackground, true);
+    calCard->setStyleSheet(
+        "QFrame { background-color: #ffffff;"
+        "border: 1px solid #e2e8f0; border-radius: 10px; }"
+        );
+    QVBoxLayout* calCardLayout = new QVBoxLayout(calCard);
+    calCardLayout->setContentsMargins(8, 8, 8, 8);
+
     QCalendarWidget* calendar = new QCalendarWidget();
     calendar->setGridVisible(false);
     calendar->setNavigationBarVisible(true);
     calendar->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
     calendar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     calendar->setStyleSheet(R"(
-        QCalendarWidget {
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
+        QCalendarWidget QWidget {
             background-color: #ffffff;
+            color: #1f2937;
         }
         QCalendarWidget QWidget#qt_calendar_navigationbar {
-            background-color: #ffffff;
+            background-color: #f6f8fc;
             border-bottom: 1px solid #e2e8f0;
             padding: 4px 8px;
+            border-radius: 8px 8px 0 0;
         }
         QCalendarWidget QToolButton {
             color: #1f2937;
@@ -282,6 +831,7 @@ void MainWindow::showConferenceCalendar()
         }
         QCalendarWidget QToolButton:hover {
             color: #30b9bf;
+            background-color: transparent;
         }
         QCalendarWidget QMenu {
             background-color: #ffffff;
@@ -290,16 +840,22 @@ void MainWindow::showConferenceCalendar()
         }
         QCalendarWidget QSpinBox {
             color: #1f2937;
-            background-color: transparent;
-            border: none;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 2px 4px;
             font-weight: bold;
-            font-size: 11pt;
+        }
+        QCalendarWidget QSpinBox::up-button,
+        QCalendarWidget QSpinBox::down-button {
+            background-color: #f1f5f9;
+            border: none;
         }
         QCalendarWidget QAbstractItemView {
             background-color: #ffffff;
             color: #1f2937;
             selection-background-color: #30b9bf;
-            selection-color: white;
+            selection-color: #ffffff;
             outline: none;
             font-size: 10pt;
         }
@@ -308,24 +864,23 @@ void MainWindow::showConferenceCalendar()
         }
     )");
 
-    // Highlight conference dates
+    //Highlight conference dates
     QTextCharFormat conferenceFormat;
-    conferenceFormat.setBackground(QColor("#30b9bf"));
-    conferenceFormat.setForeground(QColor("#ffffff"));
+    conferenceFormat.setBackground(cTeal);
+    conferenceFormat.setForeground(cWhite);
     conferenceFormat.setFontWeight(QFont::Bold);
 
-    // Today
     QTextCharFormat todayFormat;
-    todayFormat.setBackground(QColor("#fef3c7"));
-    todayFormat.setForeground(QColor("#92400e"));
+    todayFormat.setBackground(cAmber);
+    todayFormat.setForeground(cAmberTx);
     todayFormat.setFontWeight(QFont::Bold);
     calendar->setDateTextFormat(QDate::currentDate(), todayFormat);
 
     for (auto it = conferenceDates.begin(); it != conferenceDates.end(); ++it) {
         if (it.key() == QDate::currentDate()) {
             QTextCharFormat bothFormat;
-            bothFormat.setBackground(QColor("#0a5a5f"));
-            bothFormat.setForeground(QColor("#ffffff"));
+            bothFormat.setBackground(cDarkTeal);
+            bothFormat.setForeground(cWhite);
             bothFormat.setFontWeight(QFont::Bold);
             calendar->setDateTextFormat(it.key(), bothFormat);
         } else {
@@ -333,124 +888,292 @@ void MainWindow::showConferenceCalendar()
         }
     }
 
-    mainLayout->addWidget(calendar);
+    calCardLayout->addWidget(calendar);
+    mainLayout->addWidget(makeSection("Calendar"));
+    mainLayout->addWidget(calCard);
 
-    // --- Event label shown below calendar on click ---
+    mainLayout->addWidget(makeSection("Selected Date"));
+
+    QFrame* eventCard = new QFrame();
+    eventCard->setAttribute(Qt::WA_StyledBackground, true);
+    eventCard->setFixedHeight(44);
+    eventCard->setStyleSheet(
+        "QFrame { background-color: #ffffff;"
+        "border: 1px solid #e2e8f0; border-radius: 8px; }"
+        );
+    QHBoxLayout* eventLayout = new QHBoxLayout(eventCard);
+    eventLayout->setContentsMargins(14, 0, 14, 0);
+
     QLabel* eventLabel = new QLabel("Click a highlighted date to see conferences.");
     eventLabel->setWordWrap(true);
-    eventLabel->setFixedHeight(36);
-    eventLabel->setAlignment(Qt::AlignCenter);
+    eventLabel->setAlignment(Qt::AlignVCenter);
     eventLabel->setStyleSheet(
-        "font-size: 10px; color: #6b7280;"
-        "background: #ffffff; border: 1px solid #e2e8f0;"
-        "border-radius: 8px; padding: 6px 12px;"
+        "font-size: 10px; color: #9ca3af;"
+        "background: transparent; border: none;"
         );
-    mainLayout->addWidget(eventLabel);
+    eventLayout->addWidget(eventLabel);
+    mainLayout->addWidget(eventCard);
 
-    connect(calendar, &QCalendarWidget::clicked, this, [=](const QDate& date) {
+    mainLayout->addWidget(makeSection("Legend"));
+
+    QFrame* legendCard = new QFrame();
+    legendCard->setAttribute(Qt::WA_StyledBackground, true);
+    legendCard->setStyleSheet(
+        "QFrame { background-color: #ffffff;"
+        "border: 1px solid #e2e8f0; border-radius: 8px; }"
+        );
+    QHBoxLayout* legendLayout = new QHBoxLayout(legendCard);
+    legendLayout->setContentsMargins(14, 10, 14, 10);
+    legendLayout->setSpacing(20);
+
+    auto makeLegendItem = [&](const QColor& bg, const QColor& fg,
+                              const QString& label) -> QWidget*
+    {
+        QWidget* item = new QWidget();
+        item->setAttribute(Qt::WA_StyledBackground, false);
+        QHBoxLayout* il = new QHBoxLayout(item);
+        il->setContentsMargins(0, 0, 0, 0);
+        il->setSpacing(6);
+
+        QLabel* dot = new QLabel();
+        dot->setFixedSize(14, 14);
+        dot->setStyleSheet(QString(
+                               "background-color: rgb(%1,%2,%3);"
+                               "border-radius: 7px; border: none;"
+                               ).arg(bg.red()).arg(bg.green()).arg(bg.blue()));
+
+        QLabel* lbl = new QLabel(label);
+        lbl->setStyleSheet(
+            "font-size: 9px; color: #4b5563;"
+            "background: transparent; border: none;"
+            );
+        Q_UNUSED(fg);
+        il->addWidget(dot);
+        il->addWidget(lbl);
+        return item;
+    };
+
+    legendLayout->addWidget(makeLegendItem(cTeal,     cWhite,   "Conference"));
+    legendLayout->addWidget(makeLegendItem(cAmber,    cAmberTx, "Today"));
+    legendLayout->addWidget(makeLegendItem(cDarkTeal, cWhite,   "Conference today"));
+    legendLayout->addStretch();
+    mainLayout->addWidget(legendCard);
+
+    mainLayout->addStretch();
+
+    //Update event label on date click
+    connect(calendar, &QCalendarWidget::clicked, dialog, [=](const QDate& date) {
         if (conferenceDates.contains(date)) {
-            QString text = "📌  " + conferenceDates[date].join("   •   ");
-            eventLabel->setText(text);
+            eventLabel->setText("📌  " + conferenceDates[date].join("   •   "));
+            eventCard->setStyleSheet(
+                "QFrame { background-color: #e0f7f7;"
+                "border: 1px solid #30b9bf; border-radius: 8px; }"
+                );
             eventLabel->setStyleSheet(
                 "font-size: 10px; color: #0a5a5f;"
-                "background: #e0f7f7; border: 1px solid #30b9bf;"
-                "border-radius: 8px; padding: 6px 12px;"
+                "background: transparent; border: none;"
                 );
         } else {
             eventLabel->setText("No conferences on this day.");
+            eventCard->setStyleSheet(
+                "QFrame { background-color: #ffffff;"
+                "border: 1px solid #e2e8f0; border-radius: 8px; }"
+                );
             eventLabel->setStyleSheet(
-                "font-size: 10px; color: #6b7280;"
-                "background: #ffffff; border: 1px solid #e2e8f0;"
-                "border-radius: 8px; padding: 6px 12px;"
+                "font-size: 10px; color: #9ca3af;"
+                "background: transparent; border: none;"
                 );
         }
     });
 
-    // --- Close button ---
+    //Close button
     QPushButton* closeBtn = new QPushButton("Close");
+    closeBtn->setFixedWidth(100);
     closeBtn->setFixedHeight(36);
     closeBtn->setStyleSheet(
         "QPushButton {"
-        "    background-color: #ffffff;"
-        "    color: #1f2937;"
-        "    border: 1px solid #e2e8f0;"
-        "    border-radius: 8px;"
-        "    font-size: 10pt;"
-        "    padding: 0 20px;"
+        "    background-color: #ffffff; color: #1f2937;"
+        "    border: 1px solid #e2e8f0; border-radius: 8px;"
+        "    font-size: 10pt; padding: 6px 20px;"
         "}"
-        "QPushButton:hover { background-color: #f1f5f9; }"
+        "QPushButton:hover   { background-color: #f1f5f9; }"
         "QPushButton:pressed { background-color: #e2e8f0; }"
         );
+    connect(closeBtn, &QPushButton::clicked, dialog, &QDialog::close,
+            Qt::QueuedConnection);
 
-    // Use QDialog::done() directly to guarantee it closes
-    connect(closeBtn, &QPushButton::clicked, dialog, [dialog]() {
-        dialog->done(QDialog::Accepted);
-    });
-
-    QHBoxLayout* footerLayout = new QHBoxLayout();
-    footerLayout->addStretch();
-    footerLayout->addWidget(closeBtn);
-    mainLayout->addLayout(footerLayout);
+    QHBoxLayout* footer = new QHBoxLayout();
+    footer->setContentsMargins(16, 8, 16, 8);
+    footer->addStretch();
+    footer->addWidget(closeBtn);
+    dialogLayout->addLayout(footer);
 
     dialog->exec();
 }
 
+//5 MAP
 void MainWindow::showConferenceMap(const QString& location, const QString& title)
 {
-    // Show a small dialog asking which map service to use
-    QDialog* dialog = new QDialog(this);
-    dialog->setWindowTitle("Open Map — " + title);
-    dialog->setFixedSize(360, 200);
+    //Loading
+    QDialog* loadingDialog = new QDialog(this);
+    loadingDialog->setWindowTitle("Loading Map...");
+    loadingDialog->setFixedSize(300, 80);
+    loadingDialog->setAttribute(Qt::WA_StyledBackground, true);
+    loadingDialog->setStyleSheet("QDialog { background-color: #f6f8fc; }");
 
-    QVBoxLayout* layout = new QVBoxLayout(dialog);
+    QVBoxLayout* ll = new QVBoxLayout(loadingDialog);
+    QLabel* loadingLabel = new QLabel("🌍  Geocoding location...");
+    loadingLabel->setAlignment(Qt::AlignCenter);
+    loadingLabel->setStyleSheet("font-size: 11px; color: #1f2937; background: transparent;");
+    ll->addWidget(loadingLabel);
 
-    QLabel* titleLabel = new QLabel("<b style='font-size:13px;'>" + title + "</b>");
-    QLabel* locLabel   = new QLabel("<span style='color:#555;'>" + location + "</span>");
-    QLabel* promptLabel = new QLabel("Choose a map service to open in your browser:");
-    promptLabel->setWordWrap(true);
+    //Geocode
+    auto* geocoder = new QNetworkAccessManager(this);
+    QString encoded = QString::fromUtf8(QUrl::toPercentEncoding(location));
+    QNetworkRequest geoReq(
+        QUrl("https://nominatim.openstreetmap.org/search?q="
+             + encoded + "&format=json&limit=1")
+        );
+    geoReq.setRawHeader("User-Agent", "PeerlyResearchApp/1.0");
+    QNetworkReply* geoReply = geocoder->get(geoReq);
 
-    QHBoxLayout* btnLayout = new QHBoxLayout();
+    QObject::connect(geoReply, &QNetworkReply::finished, this, [=]() {
+        geoReply->deleteLater();
+        geocoder->deleteLater();
+        loadingDialog->close();
 
-    QPushButton* googleBtn = new QPushButton("Google Maps");
-    QPushButton* osmBtn    = new QPushButton("OpenStreetMap");
-    QPushButton* cancelBtn = new QPushButton("Cancel");
+        double lat = 48.8566, lon = 2.3522;
+        bool found = false;
 
-    btnLayout->addWidget(googleBtn);
-    btnLayout->addWidget(osmBtn);
-    btnLayout->addWidget(cancelBtn);
+        if (geoReply->error() == QNetworkReply::NoError) {
+            QJsonDocument doc = QJsonDocument::fromJson(geoReply->readAll());
+            QJsonArray arr = doc.array();
+            if (!arr.isEmpty()) {
+                QJsonObject obj = arr[0].toObject();
+                lat   = obj["lat"].toString().toDouble();
+                lon   = obj["lon"].toString().toDouble();
+                found = true;
+            }
+        }
 
-    layout->addWidget(titleLabel);
-    layout->addWidget(locLabel);
-    layout->addSpacing(8);
-    layout->addWidget(promptLabel);
-    layout->addLayout(btnLayout);
+        QString html = QString(R"(
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>%1</title>
+                <link rel="stylesheet"
+                      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                <style>
+                    * { margin:0; padding:0; box-sizing:border-box; }
+                    body { font-family: Arial, sans-serif; background: #f6f8fc; }
+                    #topbar {
+                        background: #30b9bf;
+                        color: white;
+                        padding: 12px 20px;
+                        font-size: 15px;
+                        font-weight: bold;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    #topbar span {
+                        font-size: 11px;
+                        opacity: 0.85;
+                        font-weight: normal;
+                    }
+                    #map {
+                        height: calc(100vh - 48px);
+                        width: 100%;
+                    }
+                    %3
+                </style>
+            </head>
+            <body>
+                <div id="topbar">
+                    <div>📍 %1</div>
+                    <span>%2</span>
+                </div>
+                <div id="map"></div>
+                <script>
+                    var map = L.map('map', {
+                        zoomControl: true,
+                        scrollWheelZoom: true
+                    }).setView([%4, %5], 14);
 
-    // Google Maps URL
-    connect(googleBtn, &QPushButton::clicked, this, [=]() {
-        QString encoded = QUrl::toPercentEncoding(location);
-        QUrl url("https://www.google.com/maps/search/?api=1&query=" + encoded);
-        QDesktopServices::openUrl(url);
-        dialog->accept();
+                    L.tileLayer(
+                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        { maxZoom: 19,
+                          attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+                        }
+                    ).addTo(map);
+
+                    var icon = L.divIcon({
+                        html: '<div style="'
+                            + 'width:22px;height:22px;'
+                            + 'background:#30b9bf;'
+                            + 'border:3px solid white;'
+                            + 'border-radius:50%% 50%% 50%% 0;'
+                            + 'transform:rotate(-45deg);'
+                            + 'box-shadow:0 2px 8px rgba(0,0,0,0.35);'
+                            + '"></div>',
+                        iconSize:   [22, 22],
+                        iconAnchor: [11, 22],
+                        className:  ''
+                    });
+
+                    L.marker([%4, %5], { icon: icon })
+                     .addTo(map)
+                     .bindPopup(
+                         '<div style="font-family:Arial;min-width:160px;">'
+                         + '<b style="color:#30b9bf;font-size:14px;">%1</b><br>'
+                         + '<span style="color:#555;font-size:12px;">📍 %2</span>'
+                         + '</div>',
+                         { maxWidth: 250 }
+                     )
+                     .openPopup();
+                </script>
+            </body>
+            </html>
+        )")
+                           .arg(title.toHtmlEscaped(),
+                                location.toHtmlEscaped(),
+                                found ? "" : R"(
+                 #notfound {
+                     position:fixed; top:60px; left:50%;
+                     transform:translateX(-50%);
+                     background:rgba(220,38,38,0.85);
+                     color:white; padding:8px 18px;
+                     border-radius:20px; font-size:12px;
+                     z-index:9999;
+                 }
+             )",
+                                QString::number(lat, 'f', 6),
+                                QString::number(lon, 'f', 6));
+
+        //Write to temp file
+        QString tmpPath = QDir::tempPath() + "/peerly_map_"
+                          + QString::number(QDateTime::currentMSecsSinceEpoch())
+                          + ".html";
+
+        QFile file(tmpPath);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream stream(&file);
+            stream << html;
+            file.close();
+            QDesktopServices::openUrl(QUrl::fromLocalFile(tmpPath));
+        }
     });
 
-    // OpenStreetMap URL
-    connect(osmBtn, &QPushButton::clicked, this, [=]() {
-        QString encoded = QUrl::toPercentEncoding(location);
-        QUrl url("https://www.openstreetmap.org/search?query=" + encoded);
-        QDesktopServices::openUrl(url);
-        dialog->accept();
-    });
-
-    connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
-
-    dialog->exec();
+    loadingDialog->show();
 }
 
+//6 PDF
 void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& date,
-                                     const QString& location, double price,
-                                     const QString& description)
+                                     const QString& location, double price)
 {
-    // Ask user where to save
     QString filePath = QFileDialog::getSaveFileName(
         this,
         "Export Conference PDF",
@@ -464,10 +1187,17 @@ void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& 
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(filePath);
-    printer.setPageSize(QPageSize(QPageSize::A4));
-    printer.setPageMargins(QMarginsF(20, 20, 20, 20), QPageLayout::Millimeter);
+    printer.setPageLayout(QPageLayout(
+        QPageSize(QPageSize::A4),
+        QPageLayout::Portrait,
+        QMarginsF(15, 15, 15, 15),
+        QPageLayout::Millimeter
+        ));
 
-    // Build the HTML content for the PDF
+    QString generatedDate = QDate::currentDate().toString("MMMM dd, yyyy");
+    QString confDate      = date.toString("MMMM dd, yyyy");
+    QString priceStr      = QString::number(price, 'f', 2);
+
     QString html = QString(R"(
         <html>
         <head>
@@ -477,42 +1207,43 @@ void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& 
                     color: #1a1a2e;
                     margin: 0;
                     padding: 0;
+                    font-size: 48px;
                 }
                 .header {
                     background-color: #30b9bf;
                     color: white;
-                    padding: 24px 32px;
-                    border-radius: 0 0 12px 12px;
+                    padding: 60px 80px;
                 }
                 .header h1 {
-                    margin: 0 0 4px 0;
-                    font-size: 26px;
+                    margin: 0 0 16px 0;
+                    font-size: 72px;
+                    font-weight: bold;
                 }
                 .header p {
                     margin: 0;
-                    font-size: 13px;
-                    opacity: 0.85;
+                    font-size: 40px;
+                    opacity: 0.9;
                 }
                 .section {
-                    padding: 24px 32px;
+                    padding: 60px 80px;
                 }
                 .section h2 {
                     color: #30b9bf;
-                    font-size: 15px;
+                    font-size: 44px;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
-                    border-bottom: 2px solid #30b9bf;
-                    padding-bottom: 6px;
-                    margin-bottom: 16px;
+                    letter-spacing: 4px;
+                    border-bottom: 4px solid #30b9bf;
+                    padding-bottom: 16px;
+                    margin-bottom: 40px;
                 }
                 .info-grid {
                     width: 100%;
                     border-collapse: collapse;
-                    margin-bottom: 16px;
+                    margin-bottom: 40px;
                 }
                 .info-grid td {
-                    padding: 10px 14px;
-                    font-size: 13px;
+                    padding: 28px 32px;
+                    font-size: 44px;
                     vertical-align: top;
                 }
                 .info-grid tr:nth-child(odd) td {
@@ -520,26 +1251,17 @@ void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& 
                 }
                 .label {
                     font-weight: bold;
-                    color: #555;
+                    color: #555555;
                     width: 30%;
                 }
                 .value {
                     color: #1a1a2e;
                 }
-                .description-box {
-                    background-color: #f8fbff;
-                    border-left: 4px solid #30b9bf;
-                    padding: 14px 18px;
-                    border-radius: 4px;
-                    font-size: 13px;
-                    line-height: 1.6;
-                    color: #2d3748;
-                }
                 .footer {
-                    margin-top: 40px;
-                    padding: 16px 32px;
-                    border-top: 1px solid #e2e8f0;
-                    font-size: 11px;
+                    margin-top: 80px;
+                    padding: 40px 80px;
+                    border-top: 3px solid #e2e8f0;
+                    font-size: 36px;
                     color: #9ca3af;
                     text-align: center;
                 }
@@ -550,7 +1272,6 @@ void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& 
                 <h1>%1</h1>
                 <p>Conference ID: #%2 &nbsp;&bull;&nbsp; Generated on %3</p>
             </div>
-
             <div class="section">
                 <h2>Conference Details</h2>
                 <table class="info-grid">
@@ -568,37 +1289,32 @@ void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& 
                     </tr>
                 </table>
             </div>
-
-            <div class="section">
-                <h2>Description</h2>
-                <div class="description-box">
-                    %7
-                </div>
-            </div>
-
             <div class="footer">
                 Peerly Research Platform &bull; Exported %3
             </div>
         </body>
         </html>
     )")
-                       .arg(title.toHtmlEscaped())
-                       .arg(id)
-                       .arg(QDate::currentDate().toString("MMMM dd, yyyy"))
-                       .arg(date.toString("MMMM dd, yyyy"))
-                       .arg(location.toHtmlEscaped())
-                       .arg(QString::number(price, 'f', 2))
-                       .arg(description.toHtmlEscaped().replace("\n", "<br>"));
+                       .arg(title.toHtmlEscaped(),
+                            QString::number(id),
+                            generatedDate,
+                            confDate,
+                            location.toHtmlEscaped(),
+                            priceStr);
 
     QTextDocument doc;
     doc.setHtml(html);
-    doc.setPageSize(printer.pageRect(QPrinter::DevicePixel).size());
+    doc.setDefaultFont(QFont("Arial", 24));
+
+    QSizeF paperSize = printer.pageLayout().paintRectPixels(printer.resolution()).size();
+    doc.setPageSize(paperSize);
+
     doc.print(&printer);
 
-    // Open the file automatically after export
     QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
 }
 
+//7 SORT SEARCH
 void MainWindow::on_sortConfBtn_clicked()
 {
     sortAscending = !sortAscending;
@@ -613,20 +1329,14 @@ void MainWindow::on_searchConfBtn_clicked()
     loadConferences(sortAscending, ui->searchConfEdit->text());
 }
 
-void MainWindow::on_cancelButton_clicked() {
-    editingConferenceId = -1;
-    ui->stackedWidget->setCurrentIndex(4);
-}
-
-void MainWindow::on_addConferenceBtn_clicked() {
-    editingConferenceId = -1;
-    ui->cTitleEdit->clear();
-    ui->dateEdit->setDate(QDate::currentDate());
-    ui->locationEdit->clear();
-    ui->priceSpin->setValue(0);
-    ui->descriptionEdit->clear();
-    ui->stackedWidget->setCurrentIndex(5);
-}
+//LINKING BUTTONS
+void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf2_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf3_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf4_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf5_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf6_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
 //********************CONFERENCE END*************************************************************************************************************//
 
@@ -723,17 +1433,6 @@ void MainWindow::on_login_clicked(){             ui->stackedWidget->setCurrentIn
 void MainWindow::on_cancelBtnReg_clicked(){      ui->stackedWidget->setCurrentIndex(3);}
 void MainWindow::on_cancelBtnFor_clicked(){      ui->stackedWidget->setCurrentIndex(3);}
 void MainWindow::on_userSearchBackBTN_clicked(){ ui->stackedWidget->setCurrentIndex(3);}
-
-
-
-
-void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf2_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf3_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf4_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf5_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf6_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
 
 

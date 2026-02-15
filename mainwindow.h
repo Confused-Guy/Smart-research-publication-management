@@ -28,14 +28,6 @@ private slots:
     void on_homeButton7_clicked();
     void on_backHome_clicked();
 
-    void on_reveiw_clicked();
-    void on_reveiw2_clicked();
-    void on_reveiw3_clicked();
-    void on_reveiw4_clicked();
-    void on_reveiw5_clicked();
-    void on_reveiw6_clicked();
-    void on_reveiw7_clicked();
-
     void on_collab_clicked();
     void on_collab2_clicked();
     void on_collab3_clicked();
@@ -55,15 +47,6 @@ private slots:
     void on_cancelBtnFor_clicked();
     void on_searchUserBTN_clicked();
     void on_userSearchBackBTN_clicked();
-
-
-    void on_conf_clicked();
-    void on_conf2_clicked();
-    void on_conf3_clicked();
-    void on_conf4_clicked();
-    void on_conf5_clicked();
-    void on_conf6_clicked();
-    void on_conf7_clicked();
 
     void on_publication_clicked();
     void on_publication2_clicked();
@@ -104,24 +87,33 @@ private slots:
 
     //************CONFERENCE START***************************//
     void on_addConferenceBtn_clicked();
-    void on_saveButton_clicked();
-    void on_cancelButton_clicked();
-    void on_sortConfBtn_clicked();
-    void on_searchConfBtn_clicked();
-    void on_viewCalendarBtn_clicked();
+    void      on_saveConfBtn_clicked();
+    void    on_cancelConfBtn_clicked();
+    void      on_sortConfBtn_clicked();
+    void    on_searchConfBtn_clicked();
+    void     on_confStatsBtn_clicked();
+    void  on_viewCalendarBtn_clicked();
 
-    void loadConferences(bool ascending = true, QString searchFilter = "");
-    void showConferenceCalendar();
-    void showConferenceMap(const QString& location, const QString& title);
-    void exportConferencePDF(int id, const QString& title, const QDate& date,
-                             const QString& location, double price,
-                             const QString& description);
+    void  on_conf_clicked();
+    void on_conf2_clicked();
+    void on_conf3_clicked();
+    void on_conf4_clicked();
+    void on_conf5_clicked();
+    void on_conf6_clicked();
+    void on_conf7_clicked();
     //************CONFERENCE END***************************//
 
     //************Reveiw Start***************************//
 
     void on_exportPDF_clicked();
 
+    void  on_reveiw_clicked();
+    void on_reveiw2_clicked();
+    void on_reveiw3_clicked();
+    void on_reveiw4_clicked();
+    void on_reveiw5_clicked();
+    void on_reveiw6_clicked();
+    void on_reveiw7_clicked();
     //************Reveiw Start***************************//
 
 
@@ -132,7 +124,23 @@ private:
     Ui::MainWindow *ui;
     bool mode;
 
+    //************CONFERENCE START***************************//
+    //Variables
     int editingConferenceId = -1;
     bool sortAscending = true;
+
+    //Functions
+    void showConferenceStats();
+    void showConferenceCalendar();
+    void showConferenceMap(const QString& location,
+                           const QString& title);
+    void loadConferences(bool ascending = true,
+                         QString searchFilter = "");
+    void exportConferencePDF(int id,
+                             const QString& title,
+                             const QDate& date,
+                             const QString& location,
+                             double price);
+    //************CONFERENCE END***************************//
 };
 #endif // MAINWINDOW_H

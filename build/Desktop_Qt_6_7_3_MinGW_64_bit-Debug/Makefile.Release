@@ -304,7 +304,7 @@ release/moc_mainwindow.cpp: ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtabwidget.h \
 		release/moc_predefs.h \
 		C:/Qt/6.7.3/mingw_64/bin/moc.exe
-	C:\Qt\6.7.3\mingw_64\bin\moc.exe $(DEFINES) --include C:/Users/Ayoub/Documents/GitHub/Smart-research-publication-management/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/release/moc_predefs.h -IC:/Qt/6.7.3/mingw_64/mkspecs/win32-g++ -IC:/Users/Ayoub/Documents/GitHub/Smart-research-publication-management -IC:/Qt/6.7.3/mingw_64/include -IC:/Qt/6.7.3/mingw_64/include/QtPrintSupport -IC:/Qt/6.7.3/mingw_64/include/QtWidgets -IC:/Qt/6.7.3/mingw_64/include/QtGui -IC:/Qt/6.7.3/mingw_64/include/QtSql -IC:/Qt/6.7.3/mingw_64/include/QtNetwork -IC:/Qt/6.7.3/mingw_64/include/QtCore -I. -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\mainwindow.h -o release\moc_mainwindow.cpp
+	C:\Qt\6.7.3\mingw_64\bin\moc.exe $(DEFINES) --include C:/Users/Mega-pc/Downloads/Smart-research-publication-management/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/release/moc_predefs.h -IC:/Qt/6.7.3/mingw_64/mkspecs/win32-g++ -IC:/Users/Mega-pc/Downloads/Smart-research-publication-management -IC:/Qt/6.7.3/mingw_64/include -IC:/Qt/6.7.3/mingw_64/include/QtPrintSupport -IC:/Qt/6.7.3/mingw_64/include/QtWidgets -IC:/Qt/6.7.3/mingw_64/include/QtGui -IC:/Qt/6.7.3/mingw_64/include/QtSql -IC:/Qt/6.7.3/mingw_64/include/QtNetwork -IC:/Qt/6.7.3/mingw_64/include/QtCore -I. -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\mainwindow.h -o release\moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -453,14 +453,20 @@ release/conference.o: ../../conference.cpp ../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qdatetime.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qcalendar.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
+		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlerror.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlQuery \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlquery.h \
-		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlQueryModel
+		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlQueryModel \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QDebug \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QDateTime \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QVariant
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\conference.o ..\..\conference.cpp
 
-release/main.o: ../../main.cpp ../../conference.h \
-		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlquerymodel.h \
-		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsqlglobal.h \
+release/main.o: ../../main.cpp ../../mainwindow.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QMainWindow \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qmainwindow.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/qtguiglobal.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qglobal.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qtversionchecks.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qtconfiginclude.h \
@@ -505,26 +511,31 @@ release/main.o: ../../main.cpp ../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qtresource.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qttranslation.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qversiontagging.h \
-		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsql-config.h \
-		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsqlexports.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qhash.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qalgorithms.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qcontainertools_impl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qxptype_traits.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/q20type_traits.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qhashfunctions.h \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/qtgui-config.h \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/qtguiexports.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qwidget.h \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/qwindowdefs.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qobjectdefs.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qnamespace.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qtmetamacros.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qfunctionaltools_impl.h \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/qwindowdefs_win.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qobject.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstring.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qchar.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstringview.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qbytearray.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qrefcount.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qnamespace.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qtmetamacros.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qarraydata.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qpair.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qarraydatapointer.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qarraydataops.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qcontainertools_impl.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qxptype_traits.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/q20type_traits.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/q20functional.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/q20memory.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qbytearrayalgorithms.h \
@@ -539,15 +550,13 @@ release/main.o: ../../main.cpp ../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstringbuilder.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstringconverter.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstringconverter_base.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qiterator.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qlist.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qhashfunctions.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qiterator.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qbytearraylist.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstringlist.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qalgorithms.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qstringmatcher.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qobject.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qobjectdefs.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qobjectdefs_impl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qfunctionaltools_impl.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qcoreevent.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qscopedpointer.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qmetatype.h \
@@ -564,37 +573,8 @@ release/main.o: ../../main.cpp ../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qscopeguard.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qobject_impl.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qbindingstorage.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qvariant.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qdebug.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qtextstream.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qcontiguouscache.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qsharedpointer.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qshareddata.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qmap.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qshareddata_impl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qset.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qvarlengtharray.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/q23utility.h \
-		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqldatabase.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QString \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QDate \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qdatetime.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qcalendar.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
-		../../mainwindow.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QMainWindow \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qmainwindow.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtguiglobal.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtgui-config.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtguiexports.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qwidget.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qwindowdefs.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qmargins.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/q23utility.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qaction.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qkeysequence.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qicon.h \
@@ -606,12 +586,24 @@ release/main.o: ../../main.cpp ../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qcolor.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qrgb.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qrgba64.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qshareddata.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qimage.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qpixelformat.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qtransform.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qpolygon.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qregion.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qline.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qvariant.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qdebug.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qtextstream.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qcontiguouscache.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qsharedpointer.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qsharedpointer_impl.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qmap.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qshareddata_impl.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qset.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qhash.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qvarlengtharray.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qpalette.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qbrush.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qfont.h \
@@ -656,16 +648,29 @@ release/main.o: ../../main.cpp ../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qexception.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qpromise.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qinputmethod.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qguiapplication_platform.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtabwidget.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QApplication \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qapplication.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlDatabase \
+		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqldatabase.h \
+		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsqlglobal.h \
+		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsql-config.h \
+		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsqlexports.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlQuery \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlquery.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlError \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlerror.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QDebug
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QDebug \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QDir \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qdir.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qfile.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qfiledevice.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qfileinfo.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qdatetime.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qcalendar.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qtimezone.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\..\main.cpp
 
 release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
@@ -973,7 +978,53 @@ release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QCalendarWidget \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qcalendarwidget.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/QTextCharFormat \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QMap
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QMap \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/QPainter \
+		C:/Qt/6.7.3/mingw_64/include/QtGui/qpainter.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QMessageBox \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qmessagebox.h \
+		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qdialogbuttonbox.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QDir \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QFile \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QTextStream \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QDateTime \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qtnetworkglobal.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qtnetwork-config.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qtnetworkexports.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QSharedDataPointer \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/QSslConfiguration \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qsslsocket.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qhostaddress.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qsslerror.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qcryptographichash.h \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qssl.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QFlags \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/QSslPreSharedKeyAuthenticator \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qsslpresharedkeyauthenticator.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QMetaType \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/QNetworkReply \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QIODevice \
+		C:/Qt/6.7.3/mingw_64/include/QtNetwork/QNetworkRequest \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QUrlQuery \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qurlquery.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QJsonDocument \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qjsondocument.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qjsonvalue.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qcborvalue.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qcborcommon.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/quuid.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QJsonArray \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qjsonarray.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QJsonObject \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/qjsonobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\mainwindow.o ..\..\mainwindow.cpp
 
 release/moc_mainwindow.o: release/moc_mainwindow.cpp 

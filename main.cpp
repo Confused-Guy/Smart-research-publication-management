@@ -1,18 +1,15 @@
-#include "conference.h"
 #include "mainwindow.h"
 #include <QApplication>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QDir>
 
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
-    QStringList drivers = QSqlDatabase::drivers();
-    qDebug() << "Available SQL Drivers:" << drivers;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
     db.setDatabaseName("OraclePeerly");
@@ -20,9 +17,9 @@ int main(int argc, char *argv[])
     db.setPassword("123");
 
     if (!db.open())
-        qDebug() << "Error:" << db.lastError().text();
+        qDebug() << "Database Error:" << db.lastError().text();
     else
-        qDebug() << "Connected!";
+        qDebug() << "Datbase Connected";
 
 
     MainWindow w;
