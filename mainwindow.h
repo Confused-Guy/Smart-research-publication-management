@@ -99,14 +99,28 @@ private slots:
 
     void on_Browse_pressed();
 
+    //************CONFERENCE START***************************//
     void on_addConferenceBtn_clicked();
+    void on_saveButton_clicked();
+    void on_cancelButton_clicked();
+    void on_sortConfBtn_clicked();
+    void on_searchConfBtn_clicked();
+    void on_viewCalendarBtn_clicked();
 
-
-
+    void loadConferences(bool ascending = true, QString searchFilter = "");
+    void showConferenceCalendar();
+    void showConferenceMap(const QString& location, const QString& title);
+    void exportConferencePDF(int id, const QString& title, const QDate& date,
+                             const QString& location, double price,
+                             const QString& description);
+    //************CONFERENCE END***************************//
 
 
 private:
     Ui::MainWindow *ui;
     bool mode;
+
+    int editingConferenceId = -1;
+    bool sortAscending = true;
 };
 #endif // MAINWINDOW_H

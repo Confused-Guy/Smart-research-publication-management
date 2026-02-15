@@ -1,7 +1,23 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "conference.h"
+#include <QSqlQuery>
+#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintDialog>
+#include <QTextDocument>
 #include <QFileDialog>
+#include <QDesktopServices>
+#include <QUrl>
 #include <QPixmap>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QCalendarWidget>
+#include <QTextCharFormat>
+#include <QScrollArea>
+#include <QMap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,6 +59,570 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+//********************CONFERENCE START***********************************************************************************************************//
+
+void MainWindow::loadConferences(bool ascending, QString searchFilter)
+{
+    // Clear old cards
+    QLayoutItem* item;
+    while ((item = ui->conferenceLayout->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
+
+    QString queryStr = "SELECT ID, TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE";
+
+    if (!searchFilter.trimmed().isEmpty())
+        queryStr += " WHERE UPPER(TITLE) LIKE UPPER(:search)";
+
+    queryStr += ascending ? " ORDER BY PRICE ASC" : " ORDER BY PRICE DESC";
+
+    QSqlQuery query;
+    query.prepare(queryStr);
+
+    if (!searchFilter.trimmed().isEmpty())
+        query.bindValue(":search", "%" + searchFilter.trimmed() + "%");
+
+    query.exec();
+
+    bool anyResults = false;
+
+    while (query.next()) {
+        anyResults = true;
+        int id = query.value(0).toInt();
+        QString title = query.value(1).toString();
+        QDate date = query.value(2).toDate();
+        QString location = query.value(3).toString();
+        double price = query.value(4).toDouble();
+
+        QFrame* card = new QFrame();
+        card->setFrameShape(QFrame::StyledPanel);
+        card->setMinimumHeight(120);
+
+        QVBoxLayout* cardLayout = new QVBoxLayout(card);
+        QLabel* titleLabel = new QLabel("<b>" + title + "</b>");
+        QLabel* infoLabel = new QLabel(
+            "Date: " + date.toString("dd/MM/yyyy") +
+            " | Location: " + location +
+            " | Price: " + QString::number(price)
+            );
+
+        QHBoxLayout* btnLayout = new QHBoxLayout();
+        QPushButton* editBtn   = new QPushButton("Edit");
+        QPushButton* deleteBtn = new QPushButton("Delete");
+        QPushButton* mapBtn    = new QPushButton("Map");
+        QPushButton* pdfBtn    = new QPushButton("Export PDF");
+
+        btnLayout->addWidget(editBtn);
+        btnLayout->addWidget(deleteBtn);
+        btnLayout->addWidget(mapBtn);
+        btnLayout->addWidget(pdfBtn);
+
+        cardLayout->addWidget(titleLabel);
+        cardLayout->addWidget(infoLabel);
+        cardLayout->addLayout(btnLayout);
+
+        ui->conferenceLayout->addWidget(card);
+
+        // Delete
+        connect(deleteBtn, &QPushButton::clicked, this, [=]() {
+            QSqlQuery del;
+            del.prepare("DELETE FROM CONFERENCE WHERE ID=:id");
+            del.bindValue(":id", id);
+            del.exec();
+            loadConferences(sortAscending, ui->searchConfEdit->text());
+        });
+
+        // Edit
+        connect(editBtn, &QPushButton::clicked, this, [=]() {
+            QSqlQuery q;
+            q.prepare("SELECT TITLE, TOPIC_ID, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID=:id");
+            q.bindValue(":id", id);
+            q.exec();
+            if (q.next()) {
+                editingConferenceId = id;
+                ui->cTitleEdit->setText(q.value(0).toString());
+                ui->dateEdit->setDate(q.value(2).toDate());
+                ui->locationEdit->setText(q.value(3).toString());
+                ui->priceSpin->setValue(q.value(4).toDouble());
+                ui->descriptionEdit->setPlainText(q.value(5).toString());
+                ui->stackedWidget->setCurrentIndex(5);
+            }
+        });
+
+        //MAP
+        connect(mapBtn, &QPushButton::clicked, this, [=]() {
+            showConferenceMap(location, title);
+        });
+
+        //PDF
+        connect(pdfBtn, &QPushButton::clicked, this, [=]() {
+            QSqlQuery q;
+            q.prepare("SELECT TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID=:id");
+            q.bindValue(":id", id);
+            q.exec();
+
+            if (q.next()) {
+                exportConferencePDF(
+                    id,
+                    q.value(0).toString(),
+                    q.value(1).toDate(),
+                    q.value(2).toString(),
+                    q.value(3).toDouble(),
+                    q.value(4).toString()
+                    );
+            }
+        });
+    }
+
+    // Show a "no results" label if search returned nothing
+    if (!anyResults) {
+        QLabel* noResults = new QLabel("No conferences found.");
+        noResults->setAlignment(Qt::AlignCenter);
+        ui->conferenceLayout->addWidget(noResults);
+    }
+
+    ui->conferenceLayout->addStretch();
+}
+
+//CALENDAR
+void MainWindow::on_viewCalendarBtn_clicked()
+{
+    showConferenceCalendar();
+}
+
+void MainWindow::on_saveButton_clicked()
+{
+    Conference c(
+        editingConferenceId,
+        ui->cTitleEdit->text(),
+        1,
+        ui->dateEdit->date(),
+        ui->locationEdit->text(),
+        ui->priceSpin->text().toDouble(),
+        ui->descriptionEdit->toPlainText()
+        );
+
+    bool success = false;
+
+    if (editingConferenceId == -1)
+        success = c.add();
+    else
+        success = c.update();
+
+    if (success) {
+        qDebug() << (editingConferenceId == -1 ? "Added!" : "Updated!");
+        editingConferenceId = -1;
+        loadConferences(sortAscending, "");
+        ui->stackedWidget->setCurrentIndex(4);
+    } else {
+        qDebug() << "Failed!";
+    }
+}
+
+void MainWindow::showConferenceCalendar()
+{
+    QMap<QDate, QStringList> conferenceDates;
+    QSqlQuery query("SELECT TITLE, CONF_DATE FROM CONFERENCE ORDER BY CONF_DATE");
+    while (query.next()) {
+        conferenceDates[query.value(1).toDate()].append(query.value(0).toString());
+    }
+
+    QDialog* dialog = new QDialog(this);
+    dialog->setWindowTitle("Conference Calendar");
+    dialog->setFixedSize(520, 480);
+    dialog->setStyleSheet("background-color: #f6f8fc;");
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(dialog);
+    mainLayout->setContentsMargins(20, 20, 20, 16);
+    mainLayout->setSpacing(12);
+
+    // --- Title ---
+    QLabel* titleLabel = new QLabel("Conference Calendar");
+    titleLabel->setStyleSheet("font-size: 15px; font-weight: bold; color: #1f2937;");
+
+    QLabel* subLabel = new QLabel(QString::number(conferenceDates.size()) + " scheduled conference(s)");
+    subLabel->setStyleSheet("font-size: 10px; color: #9ca3af;");
+
+    mainLayout->addWidget(titleLabel);
+    mainLayout->addWidget(subLabel);
+
+    // --- Calendar ---
+    QCalendarWidget* calendar = new QCalendarWidget();
+    calendar->setGridVisible(false);
+    calendar->setNavigationBarVisible(true);
+    calendar->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
+    calendar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    calendar->setStyleSheet(R"(
+        QCalendarWidget {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+        QCalendarWidget QWidget#qt_calendar_navigationbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 4px 8px;
+        }
+        QCalendarWidget QToolButton {
+            color: #1f2937;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-weight: bold;
+            font-size: 11pt;
+        }
+        QCalendarWidget QToolButton:hover {
+            color: #30b9bf;
+        }
+        QCalendarWidget QMenu {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #1f2937;
+        }
+        QCalendarWidget QSpinBox {
+            color: #1f2937;
+            background-color: transparent;
+            border: none;
+            font-weight: bold;
+            font-size: 11pt;
+        }
+        QCalendarWidget QAbstractItemView {
+            background-color: #ffffff;
+            color: #1f2937;
+            selection-background-color: #30b9bf;
+            selection-color: white;
+            outline: none;
+            font-size: 10pt;
+        }
+        QCalendarWidget QAbstractItemView:disabled {
+            color: #d1d5db;
+        }
+    )");
+
+    // Highlight conference dates
+    QTextCharFormat conferenceFormat;
+    conferenceFormat.setBackground(QColor("#30b9bf"));
+    conferenceFormat.setForeground(QColor("#ffffff"));
+    conferenceFormat.setFontWeight(QFont::Bold);
+
+    // Today
+    QTextCharFormat todayFormat;
+    todayFormat.setBackground(QColor("#fef3c7"));
+    todayFormat.setForeground(QColor("#92400e"));
+    todayFormat.setFontWeight(QFont::Bold);
+    calendar->setDateTextFormat(QDate::currentDate(), todayFormat);
+
+    for (auto it = conferenceDates.begin(); it != conferenceDates.end(); ++it) {
+        if (it.key() == QDate::currentDate()) {
+            QTextCharFormat bothFormat;
+            bothFormat.setBackground(QColor("#0a5a5f"));
+            bothFormat.setForeground(QColor("#ffffff"));
+            bothFormat.setFontWeight(QFont::Bold);
+            calendar->setDateTextFormat(it.key(), bothFormat);
+        } else {
+            calendar->setDateTextFormat(it.key(), conferenceFormat);
+        }
+    }
+
+    mainLayout->addWidget(calendar);
+
+    // --- Event label shown below calendar on click ---
+    QLabel* eventLabel = new QLabel("Click a highlighted date to see conferences.");
+    eventLabel->setWordWrap(true);
+    eventLabel->setFixedHeight(36);
+    eventLabel->setAlignment(Qt::AlignCenter);
+    eventLabel->setStyleSheet(
+        "font-size: 10px; color: #6b7280;"
+        "background: #ffffff; border: 1px solid #e2e8f0;"
+        "border-radius: 8px; padding: 6px 12px;"
+        );
+    mainLayout->addWidget(eventLabel);
+
+    connect(calendar, &QCalendarWidget::clicked, this, [=](const QDate& date) {
+        if (conferenceDates.contains(date)) {
+            QString text = "📌  " + conferenceDates[date].join("   •   ");
+            eventLabel->setText(text);
+            eventLabel->setStyleSheet(
+                "font-size: 10px; color: #0a5a5f;"
+                "background: #e0f7f7; border: 1px solid #30b9bf;"
+                "border-radius: 8px; padding: 6px 12px;"
+                );
+        } else {
+            eventLabel->setText("No conferences on this day.");
+            eventLabel->setStyleSheet(
+                "font-size: 10px; color: #6b7280;"
+                "background: #ffffff; border: 1px solid #e2e8f0;"
+                "border-radius: 8px; padding: 6px 12px;"
+                );
+        }
+    });
+
+    // --- Close button ---
+    QPushButton* closeBtn = new QPushButton("Close");
+    closeBtn->setFixedHeight(36);
+    closeBtn->setStyleSheet(
+        "QPushButton {"
+        "    background-color: #ffffff;"
+        "    color: #1f2937;"
+        "    border: 1px solid #e2e8f0;"
+        "    border-radius: 8px;"
+        "    font-size: 10pt;"
+        "    padding: 0 20px;"
+        "}"
+        "QPushButton:hover { background-color: #f1f5f9; }"
+        "QPushButton:pressed { background-color: #e2e8f0; }"
+        );
+
+    // Use QDialog::done() directly to guarantee it closes
+    connect(closeBtn, &QPushButton::clicked, dialog, [dialog]() {
+        dialog->done(QDialog::Accepted);
+    });
+
+    QHBoxLayout* footerLayout = new QHBoxLayout();
+    footerLayout->addStretch();
+    footerLayout->addWidget(closeBtn);
+    mainLayout->addLayout(footerLayout);
+
+    dialog->exec();
+}
+
+void MainWindow::showConferenceMap(const QString& location, const QString& title)
+{
+    // Show a small dialog asking which map service to use
+    QDialog* dialog = new QDialog(this);
+    dialog->setWindowTitle("Open Map — " + title);
+    dialog->setFixedSize(360, 200);
+
+    QVBoxLayout* layout = new QVBoxLayout(dialog);
+
+    QLabel* titleLabel = new QLabel("<b style='font-size:13px;'>" + title + "</b>");
+    QLabel* locLabel   = new QLabel("<span style='color:#555;'>" + location + "</span>");
+    QLabel* promptLabel = new QLabel("Choose a map service to open in your browser:");
+    promptLabel->setWordWrap(true);
+
+    QHBoxLayout* btnLayout = new QHBoxLayout();
+
+    QPushButton* googleBtn = new QPushButton("Google Maps");
+    QPushButton* osmBtn    = new QPushButton("OpenStreetMap");
+    QPushButton* cancelBtn = new QPushButton("Cancel");
+
+    btnLayout->addWidget(googleBtn);
+    btnLayout->addWidget(osmBtn);
+    btnLayout->addWidget(cancelBtn);
+
+    layout->addWidget(titleLabel);
+    layout->addWidget(locLabel);
+    layout->addSpacing(8);
+    layout->addWidget(promptLabel);
+    layout->addLayout(btnLayout);
+
+    // Google Maps URL
+    connect(googleBtn, &QPushButton::clicked, this, [=]() {
+        QString encoded = QUrl::toPercentEncoding(location);
+        QUrl url("https://www.google.com/maps/search/?api=1&query=" + encoded);
+        QDesktopServices::openUrl(url);
+        dialog->accept();
+    });
+
+    // OpenStreetMap URL
+    connect(osmBtn, &QPushButton::clicked, this, [=]() {
+        QString encoded = QUrl::toPercentEncoding(location);
+        QUrl url("https://www.openstreetmap.org/search?query=" + encoded);
+        QDesktopServices::openUrl(url);
+        dialog->accept();
+    });
+
+    connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
+
+    dialog->exec();
+}
+
+void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& date,
+                                     const QString& location, double price,
+                                     const QString& description)
+{
+    // Ask user where to save
+    QString filePath = QFileDialog::getSaveFileName(
+        this,
+        "Export Conference PDF",
+        QDir::homePath() + "/" + title + ".pdf",
+        "PDF Files (*.pdf)"
+        );
+
+    if (filePath.isEmpty())
+        return;
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filePath);
+    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageMargins(QMarginsF(20, 20, 20, 20), QPageLayout::Millimeter);
+
+    // Build the HTML content for the PDF
+    QString html = QString(R"(
+        <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    color: #1a1a2e;
+                    margin: 0;
+                    padding: 0;
+                }
+                .header {
+                    background-color: #30b9bf;
+                    color: white;
+                    padding: 24px 32px;
+                    border-radius: 0 0 12px 12px;
+                }
+                .header h1 {
+                    margin: 0 0 4px 0;
+                    font-size: 26px;
+                }
+                .header p {
+                    margin: 0;
+                    font-size: 13px;
+                    opacity: 0.85;
+                }
+                .section {
+                    padding: 24px 32px;
+                }
+                .section h2 {
+                    color: #30b9bf;
+                    font-size: 15px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    border-bottom: 2px solid #30b9bf;
+                    padding-bottom: 6px;
+                    margin-bottom: 16px;
+                }
+                .info-grid {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 16px;
+                }
+                .info-grid td {
+                    padding: 10px 14px;
+                    font-size: 13px;
+                    vertical-align: top;
+                }
+                .info-grid tr:nth-child(odd) td {
+                    background-color: #f0f9fa;
+                }
+                .label {
+                    font-weight: bold;
+                    color: #555;
+                    width: 30%;
+                }
+                .value {
+                    color: #1a1a2e;
+                }
+                .description-box {
+                    background-color: #f8fbff;
+                    border-left: 4px solid #30b9bf;
+                    padding: 14px 18px;
+                    border-radius: 4px;
+                    font-size: 13px;
+                    line-height: 1.6;
+                    color: #2d3748;
+                }
+                .footer {
+                    margin-top: 40px;
+                    padding: 16px 32px;
+                    border-top: 1px solid #e2e8f0;
+                    font-size: 11px;
+                    color: #9ca3af;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>%1</h1>
+                <p>Conference ID: #%2 &nbsp;&bull;&nbsp; Generated on %3</p>
+            </div>
+
+            <div class="section">
+                <h2>Conference Details</h2>
+                <table class="info-grid">
+                    <tr>
+                        <td class="label">Date</td>
+                        <td class="value">%4</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Location</td>
+                        <td class="value">%5</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Price</td>
+                        <td class="value">$%6</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>Description</h2>
+                <div class="description-box">
+                    %7
+                </div>
+            </div>
+
+            <div class="footer">
+                Peerly Research Platform &bull; Exported %3
+            </div>
+        </body>
+        </html>
+    )")
+                       .arg(title.toHtmlEscaped())
+                       .arg(id)
+                       .arg(QDate::currentDate().toString("MMMM dd, yyyy"))
+                       .arg(date.toString("MMMM dd, yyyy"))
+                       .arg(location.toHtmlEscaped())
+                       .arg(QString::number(price, 'f', 2))
+                       .arg(description.toHtmlEscaped().replace("\n", "<br>"));
+
+    QTextDocument doc;
+    doc.setHtml(html);
+    doc.setPageSize(printer.pageRect(QPrinter::DevicePixel).size());
+    doc.print(&printer);
+
+    // Open the file automatically after export
+    QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+}
+
+void MainWindow::on_sortConfBtn_clicked()
+{
+    sortAscending = !sortAscending;
+
+    ui->sortConfBtn->setText(sortAscending ? "Price ↑" : "Price ↓");
+
+    loadConferences(sortAscending, ui->searchConfEdit->text());
+}
+
+void MainWindow::on_searchConfBtn_clicked()
+{
+    loadConferences(sortAscending, ui->searchConfEdit->text());
+}
+
+void MainWindow::on_cancelButton_clicked() {
+    editingConferenceId = -1;
+    ui->stackedWidget->setCurrentIndex(4);
+}
+
+void MainWindow::on_addConferenceBtn_clicked() {
+    editingConferenceId = -1;
+    ui->cTitleEdit->clear();
+    ui->dateEdit->setDate(QDate::currentDate());
+    ui->locationEdit->clear();
+    ui->priceSpin->setValue(0);
+    ui->descriptionEdit->clear();
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+//********************CONFERENCE END*************************************************************************************************************//
 
 void MainWindow::on_Browse_pressed()
 {
@@ -96,13 +676,13 @@ void MainWindow::on_cancelBtnReg_clicked(){ui->stackedWidget->setCurrentIndex(3)
 void MainWindow::on_cancelBtnFor_clicked(){ui->stackedWidget->setCurrentIndex(3);}
 
 
-void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4);}
-void MainWindow::on_conf2_clicked(){ui->stackedWidget->setCurrentIndex(4);}
-void MainWindow::on_conf3_clicked(){ui->stackedWidget->setCurrentIndex(4);}
-void MainWindow::on_conf4_clicked(){ui->stackedWidget->setCurrentIndex(4);}
-void MainWindow::on_conf5_clicked(){ui->stackedWidget->setCurrentIndex(4);}
-void MainWindow::on_conf6_clicked(){ui->stackedWidget->setCurrentIndex(4);}
-void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4);}
+void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf2_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf3_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf4_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf5_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf6_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
 
 void MainWindow::on_publication_clicked(){ ui->stackedWidget->setCurrentIndex(6);}
@@ -133,33 +713,6 @@ void MainWindow::on_mkUser_clicked(){ui->stackedWidget->setCurrentIndex(9);}
 
 void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
 
-
-void MainWindow::on_addConferenceBtn_clicked(){
-    // Create popup as QMainWindow
-    QMainWindow *popupWindow = new QMainWindow(this);
-    popupWindow->setWindowTitle("Add Conference");
-    popupWindow->setWindowModality(Qt::ApplicationModal);
-    popupWindow->setMinimumSize(800, 550);
-    popupWindow->setMaximumSize(800, 550);
-    popupWindow->setAttribute(Qt::WA_DeleteOnClose);
-
-    // Create a new instance of the same UI
-    Ui::MainWindow *popupUi = new Ui::MainWindow();
-    popupUi->setupUi(popupWindow);
-
-    popupUi->stackedWidget->setCurrentIndex(5);
-
-    // Connect cancel button to close
-    popupUi->cancelButton->connect(popupUi->cancelButton, &QPushButton::clicked,
-                                   popupWindow, &QMainWindow::close);
-
-    //window is destroyed
-    QObject::connect(popupWindow, &QMainWindow::destroyed, [popupUi]() {
-        delete popupUi;
-    });
-
-    popupWindow->show();
-}
 
 
 //don't go down, too much text for a single function
@@ -718,6 +1271,7 @@ void MainWindow::toggleDarkMode(){
             ""
             "/* Group Box */"
             "QGroupBox {"
+            "    background-color: #c5d0e2;"
             "    border: 1px solid #d8e0f0;"
             "    border-radius: 8px;"
             "    margin-top: 12px;"
@@ -758,6 +1312,11 @@ void MainWindow::toggleDarkMode(){
             "QTabBar::tab:hover {"
             "    color: #1f2937;"
             "    background-color: #f1f5f9;"
+            "}"
+            "QFrame {"
+            "    background-color: #ffffff;"
+            "    border: 1px solid #d8e0f0;"
+            "    border-radius: 8px;"
             "}"
             );} else{
         this->setStyleSheet(
@@ -1424,6 +1983,11 @@ void MainWindow::toggleDarkMode(){
             "QTabBar::tab:hover {"
             "    color: #1a1f2e;"
             "    background-color: #545e73;"
+            "}"
+            "QFrame {"
+            "    background-color: #c5d0e2;"
+            "    border: 1px solid #a8b5c9;"
+            "    border-radius: 8px;"
             "}"
             );
     }
