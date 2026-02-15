@@ -124,6 +124,7 @@ public:
     QPushButton *pushButton_5;
     QLabel *label_8;
     QLabel *label_13;
+    QPushButton *exportPDF;
     QWidget *tab_3;
     QLineEdit *lineEdit_6;
     QLabel *label_38;
@@ -2668,8 +2669,14 @@ public:
         label_13 = new QLabel(ReveiwT);
         label_13->setObjectName("label_13");
         label_13->setGeometry(QRect(890, 80, 70, 19));
-        QIcon icon17(QIcon::fromTheme(QIcon::ThemeIcon::AppointmentSoon));
-        tabWidget->addTab(ReveiwT, icon17, QString());
+        exportPDF = new QPushButton(ReveiwT);
+        exportPDF->setObjectName("exportPDF");
+        exportPDF->setGeometry(QRect(1040, 10, 31, 31));
+        QIcon icon17;
+        icon17.addFile(QString::fromUtf8("icons/printer.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        exportPDF->setIcon(icon17);
+        QIcon icon18(QIcon::fromTheme(QIcon::ThemeIcon::AppointmentSoon));
+        tabWidget->addTab(ReveiwT, icon18, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName("tab_3");
         lineEdit_6 = new QLineEdit(tab_3);
@@ -2701,8 +2708,8 @@ public:
         pushButton_7->setObjectName("pushButton_7");
         pushButton_7->setGeometry(QRect(950, 70, 31, 31));
         pushButton_7->setIcon(icon16);
-        QIcon icon18(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPageSetup));
-        tabWidget->addTab(tab_3, icon18, QString());
+        QIcon icon19(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPageSetup));
+        tabWidget->addTab(tab_3, icon19, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName("tab_2");
         publicationListGroup = new QGroupBox(tab_2);
@@ -2742,8 +2749,8 @@ public:
 
         verticalLayout_list->addWidget(frame_2);
 
-        QIcon icon19(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
-        tabWidget->addTab(tab_2, icon19, QString());
+        QIcon icon20(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
+        tabWidget->addTab(tab_2, icon20, QString());
         tab = new QWidget();
         tab->setObjectName("tab");
         frame_5 = new QFrame(tab);
@@ -2769,8 +2776,8 @@ public:
         listView = new QListView(frame_5);
         listView->setObjectName("listView");
         listView->setGeometry(QRect(320, 80, 351, 101));
-        QIcon icon20(QIcon::fromTheme(QIcon::ThemeIcon::InputTablet));
-        tabWidget->addTab(tab, icon20, QString());
+        QIcon icon21(QIcon::fromTheme(QIcon::ThemeIcon::InputTablet));
+        tabWidget->addTab(tab, icon21, QString());
         Research3 = new QPushButton(page_3);
         Research3->setObjectName("Research3");
         Research3->setGeometry(QRect(20, 260, 41, 41));
@@ -5666,7 +5673,7 @@ public:
         label_54 = new QLabel(ReveiwT_2);
         label_54->setObjectName("label_54");
         label_54->setGeometry(QRect(890, 80, 70, 19));
-        tabWidget_2->addTab(ReveiwT_2, icon17, QString());
+        tabWidget_2->addTab(ReveiwT_2, icon18, QString());
         tab_4 = new QWidget();
         tab_4->setObjectName("tab_4");
         lineEdit_19 = new QLineEdit(tab_4);
@@ -5694,7 +5701,7 @@ public:
         pushButton_14->setObjectName("pushButton_14");
         pushButton_14->setGeometry(QRect(950, 70, 31, 31));
         pushButton_14->setIcon(icon16);
-        tabWidget_2->addTab(tab_4, icon18, QString());
+        tabWidget_2->addTab(tab_4, icon19, QString());
         tab_5 = new QWidget();
         tab_5->setObjectName("tab_5");
         publicationListGroup_2 = new QGroupBox(tab_5);
@@ -5727,7 +5734,7 @@ public:
 
         verticalLayout_list_2->addWidget(frame_11);
 
-        tabWidget_2->addTab(tab_5, icon19, QString());
+        tabWidget_2->addTab(tab_5, icon20, QString());
         tab_6 = new QWidget();
         tab_6->setObjectName("tab_6");
         frame_12 = new QFrame(tab_6);
@@ -5753,7 +5760,7 @@ public:
         listView_2 = new QListView(frame_12);
         listView_2->setObjectName("listView_2");
         listView_2->setGeometry(QRect(320, 80, 351, 101));
-        tabWidget_2->addTab(tab_6, icon20, QString());
+        tabWidget_2->addTab(tab_6, icon21, QString());
         Research3_2 = new QPushButton(page_15);
         Research3_2->setObjectName("Research3_2");
         Research3_2->setGeometry(QRect(20, 260, 41, 41));
@@ -6318,9 +6325,9 @@ public:
 #endif
         pushButton_25->setPalette(palette20);
         pushButton_25->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon21;
-        icon21.addFile(QString::fromUtf8("icons/plus.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        pushButton_25->setIcon(icon21);
+        QIcon icon22;
+        icon22.addFile(QString::fromUtf8("icons/plus.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        pushButton_25->setIcon(icon22);
         groupBox_7 = new QGroupBox(page_19);
         groupBox_7->setObjectName("groupBox_7");
         groupBox_7->setGeometry(QRect(180, 70, 901, 551));
@@ -7312,7 +7319,7 @@ public:
 #endif
         pushButton_2->setPalette(palette25);
         pushButton_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        pushButton_2->setIcon(icon21);
+        pushButton_2->setIcon(icon22);
         groupBox_3 = new QGroupBox(page_7);
         groupBox_3->setObjectName("groupBox_3");
         groupBox_3->setGeometry(QRect(180, 70, 901, 551));
@@ -8138,7 +8145,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(11);
+        stackedWidget->setCurrentIndex(3);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -8302,6 +8309,10 @@ public:
         pushButton_5->setText(QString());
         label_8->setText(QCoreApplication::translate("MainWindow", "[ AI Percentage ]", nullptr));
         label_13->setText(QCoreApplication::translate("MainWindow", "20% <", nullptr));
+#if QT_CONFIG(tooltip)
+        exportPDF->setToolTip(QCoreApplication::translate("MainWindow", "Export to PDF", nullptr));
+#endif // QT_CONFIG(tooltip)
+        exportPDF->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(ReveiwT), QCoreApplication::translate("MainWindow", "Review status", nullptr));
         label_38->setText(QCoreApplication::translate("MainWindow", "[ Category ]", nullptr));
         label_39->setText(QCoreApplication::translate("MainWindow", "[ Title ]   ", nullptr));

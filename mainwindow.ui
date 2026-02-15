@@ -1179,7 +1179,7 @@ QTabBar::tab:hover {
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>11</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QPushButton" name="reveiw4">
@@ -4029,6 +4029,26 @@ QTabBar::tab:hover {
         </property>
         <property name="text">
          <string>20% &lt;</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="exportPDF">
+        <property name="geometry">
+         <rect>
+          <x>1040</x>
+          <y>10</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Export to PDF</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>icons/printer.svg</normaloff>icons/printer.svg</iconset>
         </property>
        </widget>
       </widget>

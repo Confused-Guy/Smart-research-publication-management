@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "conference.h"
+#include "review.h"
 #include <QSqlQuery>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintDialog>
@@ -18,6 +19,11 @@
 #include <QTextCharFormat>
 #include <QScrollArea>
 #include <QMap>
+#include <QPainter>
+#include <QMessageBox>
+#include <QPrinter>
+#include <QFileDialog>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -623,6 +629,44 @@ void MainWindow::on_addConferenceBtn_clicked() {
 }
 
 //********************CONFERENCE END*************************************************************************************************************//
+
+//********************Reveiw Start*************************************//
+
+void MainWindow::on_exportPDF_clicked()
+{
+    QString fileNam = QFileDialog::getSaveFileName(
+        this,
+        tr("Export to PDF"),
+        QDir::homePath() + "/export.pdf",
+        tr("PDF Files (*.pdf)")
+        );
+    // Check
+    if (fileNam.isEmpty()) {
+        return;
+    }
+    if (!fileNam.endsWith(".pdf", Qt::CaseInsensitive)) {
+        fileNam += ".pdf";
+    }
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileNam);
+    printer.setPageSize(QPageSize::A4);
+
+    // Create QPainter and begin painting
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        QMessageBox::warning(this, tr("Export Failed"),
+                             tr("Could not create PDF file."));
+        return;
+    }
+
+    // For now, just placeholder text
+    painter.setFont(QFont("Arial", 12));
+    painter.drawText(100, 100, "PDF Export - Data will be added here");
+    painter.end();
+}
+
+//***************Reveiw End*********************************//
 
 void MainWindow::on_Browse_pressed()
 {

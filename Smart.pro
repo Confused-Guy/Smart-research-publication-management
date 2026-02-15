@@ -9,7 +9,8 @@ SOURCES += \
 
 HEADERS += \
     conference.h \
-    mainwindow.h
+    mainwindow.h \
+    review.h
 
 FORMS += \
     mainwindow.ui

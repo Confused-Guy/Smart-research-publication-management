@@ -118,7 +118,11 @@ private slots:
                              const QString& description);
     //************CONFERENCE END***************************//
 
+    //************Reveiw Start***************************//
 
+    void on_exportPDF_clicked();
+
+    //************Reveiw Start***************************//
 
 
 
