@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -1553,7 +1553,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="movable">
        <bool>false</bool>
@@ -1913,6 +1913,32 @@
         <property name="icon">
          <iconset>
           <normaloff>icons/edit.svg</normaloff>icons/edit.svg</iconset>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_8">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>160</y>
+          <width>111</width>
+          <height>29</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ai checker</string>
+        </property>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_12">
+        <property name="geometry">
+         <rect>
+          <x>39</x>
+          <y>209</y>
+          <width>251</width>
+          <height>191</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Likelyhood of acceptance</string>
         </property>
        </widget>
       </widget>
@@ -10256,7 +10282,7 @@ QTabBar::tab:hover {
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>80</y>
+         <y>70</y>
          <width>131</width>
          <height>19</height>
         </rect>
@@ -10269,7 +10295,7 @@ QTabBar::tab:hover {
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>210</y>
+         <y>170</y>
          <width>171</width>
          <height>19</height>
         </rect>
@@ -10281,7 +10307,7 @@ QTabBar::tab:hover {
       <widget class="QLabel" name="label_20">
        <property name="geometry">
         <rect>
-         <x>70</x>
+         <x>80</x>
          <y>430</y>
          <width>211</width>
          <height>19</height>
@@ -10329,30 +10355,27 @@ QTabBar::tab:hover {
         </property>
        </item>
       </widget>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QTextEdit" name="textEdit_6">
        <property name="geometry">
         <rect>
          <x>290</x>
          <y>70</y>
-         <width>331</width>
-         <height>41</height>
+         <width>411</width>
+         <height>61</height>
         </rect>
        </property>
-       <item>
-        <property name="text">
-         <string>Research 1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Research 2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Research 3</string>
-        </property>
-       </item>
+       <property name="cursor" stdset="0">
+        <cursorShape>IBeamCursor</cursorShape>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <property name="lineWidth">
+        <number>9</number>
+       </property>
+       <property name="placeholderText">
+        <string>[ The selected Research title would be here ]</string>
+       </property>
       </widget>
      </widget>
     </widget>

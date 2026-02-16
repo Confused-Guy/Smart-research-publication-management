@@ -106,6 +106,8 @@ public:
     QLabel *label_40;
     QPushButton *pushButton_6;
     QPushButton *pushButton_7;
+    QPushButton *pushButton_8;
+    QGroupBox *groupBox_12;
     QWidget *tab_2;
     QGroupBox *publicationListGroup;
     QVBoxLayout *verticalLayout_list;
@@ -425,7 +427,7 @@ public:
     QLabel *label_20;
     QLabel *label_21;
     QComboBox *comboBox;
-    QComboBox *comboBox_2;
+    QTextEdit *textEdit_6;
     QWidget *page_8;
     QFrame *frame_7;
     QGroupBox *groupBox_2;
@@ -911,6 +913,12 @@ public:
         pushButton_7->setObjectName("pushButton_7");
         pushButton_7->setGeometry(QRect(950, 70, 31, 31));
         pushButton_7->setIcon(icon8);
+        pushButton_8 = new QPushButton(tab_3);
+        pushButton_8->setObjectName("pushButton_8");
+        pushButton_8->setGeometry(QRect(40, 160, 111, 29));
+        groupBox_12 = new QGroupBox(tab_3);
+        groupBox_12->setObjectName("groupBox_12");
+        groupBox_12->setGeometry(QRect(39, 209, 251, 191));
         QIcon icon11(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPageSetup));
         tabWidget->addTab(tab_3, icon11, QString());
         tab_2 = new QWidget();
@@ -3876,13 +3884,13 @@ public:
         textEdit_4->setLineWidth(9);
         label_18 = new QLabel(groupBox_3);
         label_18->setObjectName("label_18");
-        label_18->setGeometry(QRect(80, 80, 131, 19));
+        label_18->setGeometry(QRect(80, 70, 131, 19));
         label_19 = new QLabel(groupBox_3);
         label_19->setObjectName("label_19");
-        label_19->setGeometry(QRect(80, 210, 171, 19));
+        label_19->setGeometry(QRect(80, 170, 171, 19));
         label_20 = new QLabel(groupBox_3);
         label_20->setObjectName("label_20");
-        label_20->setGeometry(QRect(70, 430, 211, 19));
+        label_20->setGeometry(QRect(80, 430, 211, 19));
         label_21 = new QLabel(groupBox_3);
         label_21->setObjectName("label_21");
         label_21->setGeometry(QRect(80, 340, 161, 19));
@@ -3892,12 +3900,12 @@ public:
         comboBox->addItem(QString());
         comboBox->setObjectName("comboBox");
         comboBox->setGeometry(QRect(290, 330, 331, 41));
-        comboBox_2 = new QComboBox(groupBox_3);
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->setObjectName("comboBox_2");
-        comboBox_2->setGeometry(QRect(290, 70, 331, 41));
+        textEdit_6 = new QTextEdit(groupBox_3);
+        textEdit_6->setObjectName("textEdit_6");
+        textEdit_6->setGeometry(QRect(290, 70, 411, 61));
+        textEdit_6->viewport()->setProperty("cursor", QVariant(QCursor(Qt::CursorShape::IBeamCursor)));
+        textEdit_6->setFrameShape(QFrame::Shape::NoFrame);
+        textEdit_6->setLineWidth(9);
         stackedWidget->addWidget(page_7);
         page_8 = new QWidget();
         page_8->setObjectName("page_8");
@@ -4117,8 +4125,8 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(4);
-        tabWidget->setCurrentIndex(0);
+        stackedWidget->setCurrentIndex(7);
+        tabWidget->setCurrentIndex(1);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
         sideBarStack->setCurrentIndex(0);
@@ -4196,6 +4204,8 @@ public:
         label_40->setText(QCoreApplication::translate("MainWindow", "// [ RESEARCH DOCUMENTS ] //", nullptr));
         pushButton_6->setText(QString());
         pushButton_7->setText(QString());
+        pushButton_8->setText(QCoreApplication::translate("MainWindow", "Ai checker", nullptr));
+        groupBox_12->setTitle(QCoreApplication::translate("MainWindow", "Likelyhood of acceptance", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QCoreApplication::translate("MainWindow", "Research Preview", nullptr));
         publicationListGroup->setTitle(QString());
         postPicture->setText(QString());
@@ -4630,10 +4640,7 @@ public:
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "Biology", nullptr));
         comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "Physics", nullptr));
 
-        comboBox_2->setItemText(0, QCoreApplication::translate("MainWindow", "Research 1", nullptr));
-        comboBox_2->setItemText(1, QCoreApplication::translate("MainWindow", "Research 2", nullptr));
-        comboBox_2->setItemText(2, QCoreApplication::translate("MainWindow", "Research 3", nullptr));
-
+        textEdit_6->setPlaceholderText(QCoreApplication::translate("MainWindow", "[ The selected Research title would be here ]", nullptr));
         groupBox_2->setTitle(QString());
         lineEdit_8->setText(QString());
         lineEdit_8->setPlaceholderText(QCoreApplication::translate("MainWindow", "Email", nullptr));
