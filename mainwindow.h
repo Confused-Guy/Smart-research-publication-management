@@ -36,6 +36,7 @@ private slots:
     void on_collab6_clicked();
     void on_collab7_clicked();
 
+
     void on_profile_clicked();
     void on_profile2_clicked();
     void on_profile3_clicked();

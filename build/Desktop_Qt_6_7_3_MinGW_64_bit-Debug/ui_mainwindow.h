@@ -95,6 +95,9 @@ public:
     QLabel *label_17;
     QPushButton *collabsGroupChatButton;
     QTextBrowser *collabsTextBrower;
+    QPushButton *collabsDeleteButton;
+    QPushButton *collabsStatsButton;
+    QPushButton *collabsExportButton;
     QPushButton *collaborationCreationConfirmButton;
     QPushButton *collaborationCreationCancelButton;
     QFrame *collaborationCreationFrame;
@@ -2576,13 +2579,22 @@ public:
         label_17->setFont(font);
         collabsGroupChatButton = new QPushButton(frame_6);
         collabsGroupChatButton->setObjectName("collabsGroupChatButton");
-        collabsGroupChatButton->setGeometry(QRect(650, 260, 141, 41));
+        collabsGroupChatButton->setGeometry(QRect(990, 40, 141, 41));
         QIcon icon10;
         icon10.addFile(QString::fromUtf8("icons/video.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         collabsGroupChatButton->setIcon(icon10);
         collabsTextBrower = new QTextBrowser(frame_6);
         collabsTextBrower->setObjectName("collabsTextBrower");
-        collabsTextBrower->setGeometry(QRect(480, 30, 491, 221));
+        collabsTextBrower->setGeometry(QRect(490, 30, 491, 221));
+        collabsDeleteButton = new QPushButton(frame_6);
+        collabsDeleteButton->setObjectName("collabsDeleteButton");
+        collabsDeleteButton->setGeometry(QRect(990, 90, 141, 41));
+        collabsStatsButton = new QPushButton(frame_6);
+        collabsStatsButton->setObjectName("collabsStatsButton");
+        collabsStatsButton->setGeometry(QRect(990, 140, 141, 41));
+        collabsExportButton = new QPushButton(frame_6);
+        collabsExportButton->setObjectName("collabsExportButton");
+        collabsExportButton->setGeometry(QRect(990, 190, 141, 41));
         collaborationCreationConfirmButton = new QPushButton(page_2);
         collaborationCreationConfirmButton->setObjectName("collaborationCreationConfirmButton");
         collaborationCreationConfirmButton->setGeometry(QRect(1050, 230, 161, 61));
@@ -2595,7 +2607,7 @@ public:
         collaborationCreationConfirmButton->setIcon(icon11);
         collaborationCreationCancelButton = new QPushButton(page_2);
         collaborationCreationCancelButton->setObjectName("collaborationCreationCancelButton");
-        collaborationCreationCancelButton->setGeometry(QRect(1060, 300, 131, 61));
+        collaborationCreationCancelButton->setGeometry(QRect(1050, 300, 161, 61));
         collaborationCreationCancelButton->setFont(font1);
         collaborationCreationFrame = new QFrame(page_2);
         collaborationCreationFrame->setObjectName("collaborationCreationFrame");
@@ -8287,7 +8299,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(4);
+        stackedWidget->setCurrentIndex(2);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -8430,6 +8442,9 @@ public:
         modeSwitch2->setText(QString());
         label_17->setText(QCoreApplication::translate("MainWindow", "Collaborations: ", nullptr));
         collabsGroupChatButton->setText(QCoreApplication::translate("MainWindow", "  Group Chat", nullptr));
+        collabsDeleteButton->setText(QCoreApplication::translate("MainWindow", "Delete ", nullptr));
+        collabsStatsButton->setText(QCoreApplication::translate("MainWindow", "Stats", nullptr));
+        collabsExportButton->setText(QCoreApplication::translate("MainWindow", "Export", nullptr));
         collaborationCreationConfirmButton->setText(QCoreApplication::translate("MainWindow", "Confirm", nullptr));
         collaborationCreationCancelButton->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
         collaborationCreationCollaborationTitileEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Title of the Collaboration", nullptr));

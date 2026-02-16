@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pic_6->setPixmap(logo);
     ui->pic_7->setPixmap(logo);//logo stuff!
 
+
     ui->stackedWidget->setCurrentIndex(3);
 
     QPixmap userPic("user.png"); //temporary until user gets an actual db
@@ -169,6 +170,7 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
                 ui->stackedWidget->setCurrentIndex(5);
             }
         });
+
 
         //MAP
         connect(mapBtn, &QPushButton::clicked, this, [=]() {
@@ -1340,7 +1342,7 @@ void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4); loadC
 
 //********************CONFERENCE END*************************************************************************************************************//
 
-//********************Reveiw Start*************************************//
+//********************Review Start*************************************//
 
 void MainWindow::on_exportPDF_clicked()
 {

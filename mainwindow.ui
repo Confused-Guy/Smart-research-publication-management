@@ -1182,7 +1182,7 @@ QTabBar::tab:hover {
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QPushButton" name="reveiw4">
@@ -3842,8 +3842,8 @@ QTabBar::tab:hover {
       <widget class="QPushButton" name="collabsGroupChatButton">
        <property name="geometry">
         <rect>
-         <x>650</x>
-         <y>260</y>
+         <x>990</x>
+         <y>40</y>
          <width>141</width>
          <height>41</height>
         </rect>
@@ -3859,11 +3859,50 @@ QTabBar::tab:hover {
       <widget class="QTextBrowser" name="collabsTextBrower">
        <property name="geometry">
         <rect>
-         <x>480</x>
+         <x>490</x>
          <y>30</y>
          <width>491</width>
          <height>221</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="collabsDeleteButton">
+       <property name="geometry">
+        <rect>
+         <x>990</x>
+         <y>90</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Delete </string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="collabsStatsButton">
+       <property name="geometry">
+        <rect>
+         <x>990</x>
+         <y>140</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Stats</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="collabsExportButton">
+       <property name="geometry">
+        <rect>
+         <x>990</x>
+         <y>190</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Export</string>
        </property>
       </widget>
      </widget>
@@ -3893,9 +3932,9 @@ QTabBar::tab:hover {
      <widget class="QPushButton" name="collaborationCreationCancelButton">
       <property name="geometry">
        <rect>
-        <x>1060</x>
+        <x>1050</x>
         <y>300</y>
-        <width>131</width>
+        <width>161</width>
         <height>61</height>
        </rect>
       </property>
