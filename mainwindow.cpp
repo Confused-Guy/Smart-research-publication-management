@@ -34,6 +34,10 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QDesktopServices>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QChart>
+#include <QtCharts/QPieSeries>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,13 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QPixmap logo("logo.png");//logo stuff!
     ui->loginLogo->setPixmap(logo);
-    ui->pic->setPixmap(logo);
-    ui->pic_2->setPixmap(logo);
-    ui->pic_3->setPixmap(logo);
-    ui->pic_4->setPixmap(logo);
-    ui->pic_5->setPixmap(logo);
-    ui->pic_6->setPixmap(logo);
-    ui->pic_7->setPixmap(logo);//logo stuff!
+    ui->pic->setPixmap(logo);//logo stuff!
 
 
     ui->stackedWidget->setCurrentIndex(3);
@@ -59,14 +57,40 @@ MainWindow::MainWindow(QWidget *parent)
     QPixmap userPic("user.png"); //temporary until user gets an actual db
     ui->userPic->setPixmap(userPic);
 
-    QPixmap chart("pie_chart.png");
-    ui->chart->setPixmap(chart);
+    QPixmap chartt("pie_chart.png");
+    ui->chart->setPixmap(chartt);
     QPixmap bar("bar.png");
     ui->bar->setPixmap(bar);
     QPixmap post("gallary.png");
     ui->postPicture->setPixmap(post);
     QPixmap drop("drop.png");
     ui->dropPlace->setPixmap(drop);
+
+
+    //actual charts for review
+    QPieSeries *series = new QPieSeries();
+    series->append("Review A", 40);
+    series->append("Review B", 30);
+    series->append("Review C", 20);
+    series->append("Review D", 10);
+
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Research Distribution");
+    chart->legend()->setAlignment(Qt::AlignRight);
+
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setMinimumSize(100, 100);
+    chartView->setMaximumSize(250, 250);
+
+    QWidget *tabPage = ui->tabWidget->widget(0);
+
+    QVBoxLayout *layout = new QVBoxLayout(tabPage);
+    layout->setContentsMargins(30, 20, 30, 20);
+    layout->setAlignment(Qt::AlignBottom);
+    layout->addWidget(chartView);
+    tabPage->setLayout(layout);
 
 
 
@@ -1333,12 +1357,7 @@ void MainWindow::on_searchConfBtn_clicked()
 
 //LINKING BUTTONS
 void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf2_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf3_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf4_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf5_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf6_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
-void MainWindow::on_conf7_clicked(){ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
+
 
 //********************CONFERENCE END*************************************************************************************************************//
 
@@ -1394,76 +1413,64 @@ void MainWindow::on_Browse_pressed()
 }
 
 void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_homeButton2_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_homeButton3_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_homeButton4_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_homeButton5_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_homeButton6_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_homeButton7_clicked(){ui->stackedWidget->setCurrentIndex(0);}
+
 void MainWindow::on_backHome_clicked(){   ui->stackedWidget->setCurrentIndex(0);}
 
 
 
 void MainWindow::on_reveiw_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
-void MainWindow::on_reveiw2_clicked(){ui->stackedWidget->setCurrentIndex(1);}
-void MainWindow::on_reveiw3_clicked(){ui->stackedWidget->setCurrentIndex(1);}
-void MainWindow::on_reveiw4_clicked(){ui->stackedWidget->setCurrentIndex(1);}
-void MainWindow::on_reveiw5_clicked(){ui->stackedWidget->setCurrentIndex(1);}
-void MainWindow::on_reveiw6_clicked(){ui->stackedWidget->setCurrentIndex(1);}
-void MainWindow::on_reveiw7_clicked(){ui->stackedWidget->setCurrentIndex(1);}
+
 
 
 
 void MainWindow::on_collab_clicked(){ ui->stackedWidget->setCurrentIndex(2);}
-void MainWindow::on_collab2_clicked(){ui->stackedWidget->setCurrentIndex(2);}
-void MainWindow::on_collab3_clicked(){ui->stackedWidget->setCurrentIndex(2);}
-void MainWindow::on_collab4_clicked(){ui->stackedWidget->setCurrentIndex(2);}
-void MainWindow::on_collab5_clicked(){ui->stackedWidget->setCurrentIndex(2);}
-void MainWindow::on_collab6_clicked(){ui->stackedWidget->setCurrentIndex(2);}
-void MainWindow::on_collab7_clicked(){ui->stackedWidget->setCurrentIndex(2);}
+
 
 
 
 void MainWindow::on_profile_clicked(){           ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile2_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile3_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile4_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile5_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile6_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_profile7_clicked(){          ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_login_clicked(){             ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_cancelBtnReg_clicked(){      ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_cancelBtnFor_clicked(){      ui->stackedWidget->setCurrentIndex(3);}
-void MainWindow::on_userSearchBackBTN_clicked(){ ui->stackedWidget->setCurrentIndex(3);}
+
+void MainWindow::on_login_clicked(){
+    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_cancelBtnReg_clicked(){
+    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_cancelBtnFor_clicked(){
+    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);}
+void MainWindow::on_userSearchBackBTN_clicked(){
+    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);}
 
 
 
 void MainWindow::on_publication_clicked(){ ui->stackedWidget->setCurrentIndex(6);}
-void MainWindow::on_publication2_clicked(){ui->stackedWidget->setCurrentIndex(6);}
-void MainWindow::on_publication3_clicked(){ui->stackedWidget->setCurrentIndex(6);}
-void MainWindow::on_publication4_clicked(){ui->stackedWidget->setCurrentIndex(6);}
-void MainWindow::on_publication5_clicked(){ui->stackedWidget->setCurrentIndex(6);}
-void MainWindow::on_publication6_clicked(){ui->stackedWidget->setCurrentIndex(6);}
-void MainWindow::on_publication7_clicked(){ui->stackedWidget->setCurrentIndex(6);}
+
 
 
 
 void MainWindow::on_Research_clicked(){ ui->stackedWidget->setCurrentIndex(7);}
-void MainWindow::on_Research2_clicked(){ui->stackedWidget->setCurrentIndex(7);}
-void MainWindow::on_Research3_clicked(){ui->stackedWidget->setCurrentIndex(7);}
-void MainWindow::on_Research4_clicked(){ui->stackedWidget->setCurrentIndex(7);}
-void MainWindow::on_Research5_clicked(){ui->stackedWidget->setCurrentIndex(7);}
-void MainWindow::on_Research6_clicked(){ui->stackedWidget->setCurrentIndex(7);}
-void MainWindow::on_Research7_clicked(){ui->stackedWidget->setCurrentIndex(7);}
+
 
 
 
 void MainWindow::on_temp_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_temp2_clicked(){ui->stackedWidget->setCurrentIndex(8);}
+void MainWindow::on_temp2_clicked(){
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(8);}
 
 
 
-void MainWindow::on_mkUser_clicked(){ui->stackedWidget->setCurrentIndex(9);}
+void MainWindow::on_mkUser_clicked(){
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(9);}
 
 
 
@@ -1471,7 +1478,10 @@ void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(1
 
 
 
-void MainWindow::on_searchUserBTN_clicked(){ui->stackedWidget->setCurrentIndex(11);}
+void MainWindow::on_searchUserBTN_clicked(){
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(11);}
 
 
 
