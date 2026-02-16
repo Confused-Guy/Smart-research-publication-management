@@ -44,16 +44,6 @@ public:
     QWidget *centralwidget;
     QStackedWidget *stackedWidget;
     QWidget *page_5;
-    QPushButton *reveiw4;
-    QPushButton *Research7;
-    QPushButton *conf6;
-    QPushButton *homeButton4;
-    QLabel *pic_4;
-    QPushButton *profile4;
-    QFrame *line_3;
-    QPushButton *collab7;
-    QPushButton *publication7;
-    QPushButton *modeSwitch4;
     QLabel *chart;
     QLabel *bar;
     QWidget *page;
@@ -69,27 +59,7 @@ public:
     QLabel *label_3;
     QLabel *label_5;
     QComboBox *comboBox_3;
-    QPushButton *profile;
-    QPushButton *conf;
-    QPushButton *Research;
-    QPushButton *reveiw;
-    QPushButton *homeButton;
-    QPushButton *collab;
-    QPushButton *publication;
-    QFrame *line;
-    QLabel *pic;
-    QPushButton *modeSwitch;
     QWidget *page_2;
-    QFrame *line_2;
-    QPushButton *profile2;
-    QPushButton *Research2;
-    QPushButton *reveiw2;
-    QPushButton *conf2;
-    QPushButton *homeButton2;
-    QLabel *pic_2;
-    QPushButton *collab2;
-    QPushButton *publication2;
-    QPushButton *modeSwitch2;
     QFrame *frame_6;
     QListWidget *callabsList;
     QLabel *label_17;
@@ -152,16 +122,6 @@ public:
     QLineEdit *lineEdit_4;
     QLabel *label_37;
     QListView *listView;
-    QPushButton *Research3;
-    QPushButton *profile7;
-    QPushButton *reveiw7;
-    QLabel *pic_7;
-    QPushButton *homeButton6;
-    QPushButton *conf7;
-    QPushButton *publication3;
-    QPushButton *modeSwitch7;
-    QPushButton *collab3;
-    QFrame *line_7;
     QFrame *frame_4;
     QLabel *userPic;
     QLabel *label_6;
@@ -193,18 +153,8 @@ public:
     QPushButton *mapBtn;
     QPushButton *editBtn;
     QPushButton *deleteBtn;
-    QPushButton *profile3;
-    QFrame *line_5;
     QPushButton *viewCalendarBtn;
     QPushButton *addConferenceBtn;
-    QPushButton *publication4;
-    QPushButton *Research4;
-    QPushButton *conf3;
-    QPushButton *homeButton3;
-    QPushButton *reveiw3;
-    QLabel *pic_3;
-    QPushButton *collab4;
-    QPushButton *modeSwitch3;
     QPushButton *confStatsBtn;
     QWidget *page_9;
     QStackedWidget *stackedWidget_2;
@@ -331,16 +281,6 @@ public:
     QPushButton *temp2_2;
     QPushButton *mkUser_2;
     QWidget *page_16;
-    QPushButton *profile3_2;
-    QFrame *line_12;
-    QPushButton *publication4_2;
-    QPushButton *Research4_2;
-    QPushButton *conf3_2;
-    QPushButton *homeButton3_2;
-    QPushButton *reveiw3_2;
-    QLabel *pic_12;
-    QPushButton *collab4_2;
-    QPushButton *modeSwitch3_2;
     QFrame *frame_3;
     QWidget *layoutWidget_3;
     QFormLayout *formLayout;
@@ -474,17 +414,6 @@ public:
     QHBoxLayout *horizontalLayout_features;
     QPushButton *summaryButton;
     QPushButton *emailButton;
-    QLabel *statusLabel;
-    QPushButton *profile5;
-    QFrame *line_4;
-    QPushButton *modeSwitch5;
-    QPushButton *conf4;
-    QPushButton *Research5;
-    QPushButton *reveiw5;
-    QPushButton *homeButton5;
-    QPushButton *collab5;
-    QLabel *pic_5;
-    QPushButton *publication5;
     QWidget *page_7;
     QPushButton *backHome2;
     QPushButton *pushButton_2;
@@ -497,16 +426,6 @@ public:
     QLabel *label_21;
     QComboBox *comboBox;
     QComboBox *comboBox_2;
-    QPushButton *profile6;
-    QFrame *line_6;
-    QPushButton *modeSwitch6;
-    QPushButton *conf5;
-    QPushButton *Research6;
-    QPushButton *homeButton7;
-    QPushButton *reveiw6;
-    QPushButton *collab6;
-    QLabel *pic_6;
-    QPushButton *publication6;
     QWidget *page_8;
     QFrame *frame_7;
     QGroupBox *groupBox_2;
@@ -540,6 +459,18 @@ public:
     QCheckBox *userCheckBox_3;
     QPushButton *userSearchBackBTN;
     QListView *useListView;
+    QStackedWidget *sideBarStack;
+    QWidget *page_24;
+    QPushButton *homeButton;
+    QPushButton *conf;
+    QLabel *pic;
+    QPushButton *collab;
+    QPushButton *profile;
+    QPushButton *reveiw;
+    QPushButton *Research;
+    QPushButton *modeSwitch;
+    QPushButton *publication;
+    QWidget *page_25;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -566,1154 +497,26 @@ public:
         palette.setBrush(QPalette::Disabled, QPalette::Window, brush1);
         MainWindow->setPalette(palette);
         MainWindow->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
-        MainWindow->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Navigation Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transparent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-co"
-                        "lor: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    backgro"
-                        "und-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    b"
-                        "order: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hover {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-col"
-                        "or: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-wei"
-                        "ght: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-" "
-                        "   border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    bo"
-                        "rder: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30"
-                        "b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    color: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    bor"
-                        "der-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-"\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Sta"
-                        "tus Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hov"
-                        "er {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"} QFrame {\n"
-"background-color: #ffffff;\n"
-"   border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;             }"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         stackedWidget = new QStackedWidget(centralwidget);
         stackedWidget->setObjectName("stackedWidget");
-        stackedWidget->setGeometry(QRect(0, 0, 1271, 741));
+        stackedWidget->setGeometry(QRect(90, 0, 1191, 741));
         stackedWidget->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
-        stackedWidget->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"/* For QDateEdit */\n"
-"QDateEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* For QSpinBox / QDoubleSpinBox */\n"
-"QSpinBox, QDoubleSpinBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Navigatio"
-                        "n Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transparent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-color: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-col"
-                        "or: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    background-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-""
-                        "    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hov"
-                        "er {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-""
-                        "}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-""
-                        "}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-""
-                        "\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"   "
-                        " outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-""
-                        "\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    color: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    border-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-""
-                        "\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Status Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-""
-                        "    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hover {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"}"));
+        stackedWidget->setStyleSheet(QString::fromUtf8(""));
         stackedWidget->setFrameShape(QFrame::Shape::NoFrame);
-        stackedWidget->setFrameShadow(QFrame::Shadow::Sunken);
+        stackedWidget->setFrameShadow(QFrame::Shadow::Plain);
         stackedWidget->setLineWidth(0);
         page_5 = new QWidget();
         page_5->setObjectName("page_5");
-        reveiw4 = new QPushButton(page_5);
-        reveiw4->setObjectName("reveiw4");
-        reveiw4->setGeometry(QRect(20, 180, 41, 41));
-        QIcon icon;
-        icon.addFile(QString::fromUtf8("icons/plus-square.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        reveiw4->setIcon(icon);
-        Research7 = new QPushButton(page_5);
-        Research7->setObjectName("Research7");
-        Research7->setGeometry(QRect(20, 260, 41, 41));
-        QIcon icon1;
-        icon1.addFile(QString::fromUtf8("icons/pie-chart.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        Research7->setIcon(icon1);
-        conf6 = new QPushButton(page_5);
-        conf6->setObjectName("conf6");
-        conf6->setGeometry(QRect(20, 340, 41, 41));
-        QIcon icon2;
-        icon2.addFile(QString::fromUtf8("icons/calendar.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        conf6->setIcon(icon2);
-        homeButton4 = new QPushButton(page_5);
-        homeButton4->setObjectName("homeButton4");
-        homeButton4->setEnabled(true);
-        homeButton4->setGeometry(QRect(20, 80, 40, 40));
-        homeButton4->setMinimumSize(QSize(40, 40));
-        homeButton4->setMaximumSize(QSize(40, 40));
-        homeButton4->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton4->setMouseTracking(true);
-        homeButton4->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton4->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton4->setAutoFillBackground(false);
-        QIcon icon3;
-        icon3.addFile(QString::fromUtf8("icons/menu.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        homeButton4->setIcon(icon3);
-        homeButton4->setIconSize(QSize(22, 22));
-        homeButton4->setFlat(true);
-        pic_4 = new QLabel(page_5);
-        pic_4->setObjectName("pic_4");
-        pic_4->setGeometry(QRect(20, 10, 41, 41));
-        pic_4->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_4->setScaledContents(true);
-        pic_4->setWordWrap(false);
-        profile4 = new QPushButton(page_5);
-        profile4->setObjectName("profile4");
-        profile4->setGeometry(QRect(20, 600, 41, 41));
-        profile4->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon4;
-        icon4.addFile(QString::fromUtf8("icons/user.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        profile4->setIcon(icon4);
-        line_3 = new QFrame(page_5);
-        line_3->setObjectName("line_3");
-        line_3->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette1;
-        QBrush brush2(QColor(255, 255, 255, 255));
-        brush2.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette1.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette1.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette1.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette1.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette1.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_3->setPalette(palette1);
-        line_3->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_3->setAutoFillBackground(false);
-        line_3->setFrameShadow(QFrame::Shadow::Plain);
-        line_3->setLineWidth(3);
-        line_3->setFrameShape(QFrame::Shape::VLine);
-        collab7 = new QPushButton(page_5);
-        collab7->setObjectName("collab7");
-        collab7->setGeometry(QRect(20, 420, 41, 41));
-        QIcon icon5;
-        icon5.addFile(QString::fromUtf8("icons/share-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        collab7->setIcon(icon5);
-        publication7 = new QPushButton(page_5);
-        publication7->setObjectName("publication7");
-        publication7->setGeometry(QRect(20, 500, 41, 41));
-        QIcon icon6;
-        icon6.addFile(QString::fromUtf8("icons/send.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        publication7->setIcon(icon6);
-        modeSwitch4 = new QPushButton(page_5);
-        modeSwitch4->setObjectName("modeSwitch4");
-        modeSwitch4->setGeometry(QRect(20, 660, 41, 41));
-        QIcon icon7;
-        icon7.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        modeSwitch4->setIcon(icon7);
         chart = new QLabel(page_5);
         chart->setObjectName("chart");
-        chart->setGeometry(QRect(710, 60, 421, 271));
+        chart->setGeometry(QRect(620, 60, 431, 271));
         chart->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/pie_chart.png")));
         chart->setScaledContents(true);
         bar = new QLabel(page_5);
         bar->setObjectName("bar");
-        bar->setGeometry(QRect(110, 390, 491, 271));
+        bar->setGeometry(QRect(30, 430, 491, 271));
         bar->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/bar.png")));
         bar->setScaledContents(true);
         stackedWidget->addWidget(page_5);
@@ -1721,681 +524,173 @@ public:
         page->setObjectName("page");
         backHome = new QPushButton(page);
         backHome->setObjectName("backHome");
-        backHome->setGeometry(QRect(710, 620, 81, 41));
-        QIcon icon8;
-        icon8.addFile(QString::fromUtf8("icons/log-out.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        backHome->setIcon(icon8);
+        backHome->setGeometry(QRect(630, 620, 81, 41));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8("icons/log-out.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        backHome->setIcon(icon);
         backHome->setIconSize(QSize(25, 25));
         pushButton = new QPushButton(page);
         pushButton->setObjectName("pushButton");
-        pushButton->setGeometry(QRect(400, 620, 141, 41));
-        QPalette palette2;
-        QBrush brush3(QColor(30, 64, 175, 255));
+        pushButton->setGeometry(QRect(320, 620, 141, 41));
+        QPalette palette1;
+        QBrush brush2(QColor(30, 64, 175, 255));
+        brush2.setStyle(Qt::SolidPattern);
+        palette1.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        QBrush brush3(QColor(226, 239, 255, 255));
         brush3.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush3);
-        QBrush brush4(QColor(226, 239, 255, 255));
+        palette1.setBrush(QPalette::Active, QPalette::Button, brush3);
+        palette1.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette1.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
+        palette1.setBrush(QPalette::Active, QPalette::Base, brush3);
+        palette1.setBrush(QPalette::Active, QPalette::Window, brush3);
+        QBrush brush4(QColor(31, 155, 93, 255));
         brush4.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::Button, brush4);
-        palette2.setBrush(QPalette::Active, QPalette::Text, brush3);
-        palette2.setBrush(QPalette::Active, QPalette::ButtonText, brush3);
-        palette2.setBrush(QPalette::Active, QPalette::Base, brush4);
-        palette2.setBrush(QPalette::Active, QPalette::Window, brush4);
-        QBrush brush5(QColor(31, 155, 93, 255));
+        palette1.setBrush(QPalette::Active, QPalette::Highlight, brush4);
+        QBrush brush5(QColor(30, 64, 175, 128));
         brush5.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::Highlight, brush5);
-        QBrush brush6(QColor(30, 64, 175, 128));
-        brush6.setStyle(Qt::SolidPattern);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette::Active, QPalette::PlaceholderText, brush6);
+        palette1.setBrush(QPalette::Active, QPalette::PlaceholderText, brush5);
 #endif
-        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush3);
-        palette2.setBrush(QPalette::Inactive, QPalette::Button, brush4);
-        palette2.setBrush(QPalette::Inactive, QPalette::Text, brush3);
-        palette2.setBrush(QPalette::Inactive, QPalette::ButtonText, brush3);
-        palette2.setBrush(QPalette::Inactive, QPalette::Base, brush4);
-        palette2.setBrush(QPalette::Inactive, QPalette::Window, brush4);
-        palette2.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
+        palette1.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette1.setBrush(QPalette::Inactive, QPalette::Button, brush3);
+        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette1.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
+        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush3);
+        palette1.setBrush(QPalette::Inactive, QPalette::Window, brush3);
+        palette1.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush6);
+        palette1.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush5);
 #endif
-        palette2.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette2.setBrush(QPalette::Disabled, QPalette::Button, brush4);
-        palette2.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette2.setBrush(QPalette::Disabled, QPalette::ButtonText, brush3);
-        palette2.setBrush(QPalette::Disabled, QPalette::Base, brush4);
-        palette2.setBrush(QPalette::Disabled, QPalette::Window, brush4);
-        palette2.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette1.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        palette1.setBrush(QPalette::Disabled, QPalette::Button, brush3);
+        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        palette1.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
+        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush3);
+        palette1.setBrush(QPalette::Disabled, QPalette::Window, brush3);
+        palette1.setBrush(QPalette::Disabled, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush6);
+        palette1.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
 #endif
-        pushButton->setPalette(palette2);
+        pushButton->setPalette(palette1);
         pushButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon9(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSend));
-        pushButton->setIcon(icon9);
+        QIcon icon1(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSend));
+        pushButton->setIcon(icon1);
         groupBox = new QGroupBox(page);
         groupBox->setObjectName("groupBox");
-        groupBox->setGeometry(QRect(230, 50, 811, 561));
-        QPalette palette3;
-        QBrush brush7(QColor(31, 41, 55, 255));
+        groupBox->setGeometry(QRect(150, 50, 811, 561));
+        QPalette palette2;
+        QBrush brush6(QColor(31, 41, 55, 255));
+        brush6.setStyle(Qt::SolidPattern);
+        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        QBrush brush7(QColor(145, 65, 172, 255));
         brush7.setStyle(Qt::SolidPattern);
-        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        QBrush brush8(QColor(145, 65, 172, 255));
+        palette2.setBrush(QPalette::Active, QPalette::Button, brush7);
+        palette2.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette2.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        QBrush brush8(QColor(61, 61, 61, 255));
         brush8.setStyle(Qt::SolidPattern);
-        palette3.setBrush(QPalette::Active, QPalette::Button, brush8);
-        palette3.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette3.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        QBrush brush9(QColor(61, 61, 61, 255));
+        palette2.setBrush(QPalette::Active, QPalette::Window, brush8);
+        QBrush brush9(QColor(31, 41, 55, 128));
         brush9.setStyle(Qt::SolidPattern);
-        palette3.setBrush(QPalette::Active, QPalette::Window, brush9);
-        QBrush brush10(QColor(31, 41, 55, 128));
-        brush10.setStyle(Qt::SolidPattern);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette3.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette2.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette3.setBrush(QPalette::Inactive, QPalette::Button, brush8);
-        palette3.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette3.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette3.setBrush(QPalette::Inactive, QPalette::Window, brush9);
+        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette2.setBrush(QPalette::Inactive, QPalette::Button, brush7);
+        palette2.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette2.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette2.setBrush(QPalette::Inactive, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette3.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette2.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette3.setBrush(QPalette::Disabled, QPalette::Button, brush8);
-        palette3.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette3.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette3.setBrush(QPalette::Disabled, QPalette::Base, brush9);
-        palette3.setBrush(QPalette::Disabled, QPalette::Window, brush9);
+        palette2.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette2.setBrush(QPalette::Disabled, QPalette::Button, brush7);
+        palette2.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette2.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette2.setBrush(QPalette::Disabled, QPalette::Base, brush8);
+        palette2.setBrush(QPalette::Disabled, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette3.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette2.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        groupBox->setPalette(palette3);
-        groupBox->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Navigation Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transparent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-co"
-                        "lor: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    backgro"
-                        "und-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    b"
-                        "order: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hover {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-col"
-                        "or: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-wei"
-                        "ght: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-" "
-                        "   border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    bo"
-                        "rder: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30"
-                        "b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    color: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    bor"
-                        "der-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-"\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Sta"
-                        "tus Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hov"
-                        "er {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"}"));
+        groupBox->setPalette(palette2);
+        groupBox->setStyleSheet(QString::fromUtf8(""));
         Browse = new QPushButton(groupBox);
         Browse->setObjectName("Browse");
         Browse->setGeometry(QRect(480, 430, 121, 31));
-        QPalette palette4;
-        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        QPalette palette3;
+        QBrush brush10(QColor(255, 255, 255, 255));
+        brush10.setStyle(Qt::SolidPattern);
+        palette3.setBrush(QPalette::Active, QPalette::WindowText, brush10);
         QBrush brush11(QColor(48, 185, 191, 255));
         brush11.setStyle(Qt::SolidPattern);
-        palette4.setBrush(QPalette::Active, QPalette::Button, brush11);
-        palette4.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette4.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
-        palette4.setBrush(QPalette::Active, QPalette::Base, brush11);
-        palette4.setBrush(QPalette::Active, QPalette::Window, brush11);
-        palette4.setBrush(QPalette::Active, QPalette::Highlight, brush5);
+        palette3.setBrush(QPalette::Active, QPalette::Button, brush11);
+        palette3.setBrush(QPalette::Active, QPalette::Text, brush10);
+        palette3.setBrush(QPalette::Active, QPalette::ButtonText, brush10);
+        palette3.setBrush(QPalette::Active, QPalette::Base, brush11);
+        palette3.setBrush(QPalette::Active, QPalette::Window, brush11);
+        palette3.setBrush(QPalette::Active, QPalette::Highlight, brush4);
         QBrush brush12(QColor(255, 255, 255, 128));
         brush12.setStyle(Qt::SolidPattern);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette4.setBrush(QPalette::Active, QPalette::PlaceholderText, brush12);
+        palette3.setBrush(QPalette::Active, QPalette::PlaceholderText, brush12);
 #endif
-        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette4.setBrush(QPalette::Inactive, QPalette::Button, brush11);
-        palette4.setBrush(QPalette::Inactive, QPalette::Text, brush2);
-        palette4.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
-        palette4.setBrush(QPalette::Inactive, QPalette::Base, brush11);
-        palette4.setBrush(QPalette::Inactive, QPalette::Window, brush11);
-        palette4.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
+        palette3.setBrush(QPalette::Inactive, QPalette::WindowText, brush10);
+        palette3.setBrush(QPalette::Inactive, QPalette::Button, brush11);
+        palette3.setBrush(QPalette::Inactive, QPalette::Text, brush10);
+        palette3.setBrush(QPalette::Inactive, QPalette::ButtonText, brush10);
+        palette3.setBrush(QPalette::Inactive, QPalette::Base, brush11);
+        palette3.setBrush(QPalette::Inactive, QPalette::Window, brush11);
+        palette3.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette4.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush12);
+        palette3.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush12);
 #endif
-        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
-        palette4.setBrush(QPalette::Disabled, QPalette::Button, brush11);
-        palette4.setBrush(QPalette::Disabled, QPalette::Text, brush2);
-        palette4.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
-        palette4.setBrush(QPalette::Disabled, QPalette::Base, brush11);
-        palette4.setBrush(QPalette::Disabled, QPalette::Window, brush11);
-        palette4.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette3.setBrush(QPalette::Disabled, QPalette::WindowText, brush10);
+        palette3.setBrush(QPalette::Disabled, QPalette::Button, brush11);
+        palette3.setBrush(QPalette::Disabled, QPalette::Text, brush10);
+        palette3.setBrush(QPalette::Disabled, QPalette::ButtonText, brush10);
+        palette3.setBrush(QPalette::Disabled, QPalette::Base, brush11);
+        palette3.setBrush(QPalette::Disabled, QPalette::Window, brush11);
+        palette3.setBrush(QPalette::Disabled, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette4.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush12);
+        palette3.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush12);
 #endif
-        Browse->setPalette(palette4);
+        Browse->setPalette(palette3);
         Browse->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         Browse->setStyleSheet(QString::fromUtf8(""));
         label_4 = new QLabel(groupBox);
         label_4->setObjectName("label_4");
         label_4->setGeometry(QRect(350, 440, 131, 19));
-        QPalette palette5;
-        palette5.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        QPalette palette4;
+        palette4.setBrush(QPalette::Active, QPalette::WindowText, brush6);
         QBrush brush13(QColor(0, 0, 0, 0));
         brush13.setStyle(Qt::SolidPattern);
-        palette5.setBrush(QPalette::Active, QPalette::Button, brush13);
-        palette5.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette5.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette5.setBrush(QPalette::Active, QPalette::Base, brush13);
-        palette5.setBrush(QPalette::Active, QPalette::Window, brush13);
+        palette4.setBrush(QPalette::Active, QPalette::Button, brush13);
+        palette4.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette4.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette4.setBrush(QPalette::Active, QPalette::Base, brush13);
+        palette4.setBrush(QPalette::Active, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette5.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette4.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette5.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette5.setBrush(QPalette::Inactive, QPalette::Button, brush13);
-        palette5.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette5.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette5.setBrush(QPalette::Inactive, QPalette::Base, brush13);
-        palette5.setBrush(QPalette::Inactive, QPalette::Window, brush13);
+        palette4.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette4.setBrush(QPalette::Inactive, QPalette::Button, brush13);
+        palette4.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette4.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette4.setBrush(QPalette::Inactive, QPalette::Base, brush13);
+        palette4.setBrush(QPalette::Inactive, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette5.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette4.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette5.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette5.setBrush(QPalette::Disabled, QPalette::Button, brush13);
-        palette5.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette5.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette5.setBrush(QPalette::Disabled, QPalette::Base, brush13);
-        palette5.setBrush(QPalette::Disabled, QPalette::Window, brush13);
+        palette4.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette4.setBrush(QPalette::Disabled, QPalette::Button, brush13);
+        palette4.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette4.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette4.setBrush(QPalette::Disabled, QPalette::Base, brush13);
+        palette4.setBrush(QPalette::Disabled, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette5.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette4.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        label_4->setPalette(palette5);
+        label_4->setPalette(palette4);
         textEdit_2 = new QTextEdit(groupBox);
         textEdit_2->setObjectName("textEdit_2");
         textEdit_2->setGeometry(QRect(290, 160, 431, 131));
@@ -2423,148 +718,12 @@ public:
         comboBox_3->addItem(QString());
         comboBox_3->setObjectName("comboBox_3");
         comboBox_3->setGeometry(QRect(290, 330, 331, 41));
-        profile = new QPushButton(page);
-        profile->setObjectName("profile");
-        profile->setGeometry(QRect(20, 600, 41, 41));
-        profile->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile->setIcon(icon4);
-        conf = new QPushButton(page);
-        conf->setObjectName("conf");
-        conf->setGeometry(QRect(20, 340, 41, 41));
-        conf->setIcon(icon2);
-        Research = new QPushButton(page);
-        Research->setObjectName("Research");
-        Research->setGeometry(QRect(20, 260, 41, 41));
-        Research->setIcon(icon1);
-        reveiw = new QPushButton(page);
-        reveiw->setObjectName("reveiw");
-        reveiw->setGeometry(QRect(20, 180, 41, 41));
-        reveiw->setIcon(icon);
-        homeButton = new QPushButton(page);
-        homeButton->setObjectName("homeButton");
-        homeButton->setEnabled(true);
-        homeButton->setGeometry(QRect(20, 80, 40, 40));
-        homeButton->setMinimumSize(QSize(40, 40));
-        homeButton->setMaximumSize(QSize(40, 40));
-        homeButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton->setMouseTracking(true);
-        homeButton->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton->setAutoFillBackground(false);
-        homeButton->setIcon(icon3);
-        homeButton->setIconSize(QSize(22, 22));
-        homeButton->setFlat(true);
-        collab = new QPushButton(page);
-        collab->setObjectName("collab");
-        collab->setGeometry(QRect(20, 420, 41, 41));
-        collab->setIcon(icon5);
-        publication = new QPushButton(page);
-        publication->setObjectName("publication");
-        publication->setGeometry(QRect(20, 500, 41, 41));
-        publication->setIcon(icon6);
-        line = new QFrame(page);
-        line->setObjectName("line");
-        line->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette6;
-        palette6.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette6.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette6.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette6.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette6.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette6.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette6.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette6.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette6.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line->setPalette(palette6);
-        line->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line->setAutoFillBackground(false);
-        line->setFrameShadow(QFrame::Shadow::Plain);
-        line->setLineWidth(3);
-        line->setFrameShape(QFrame::Shape::VLine);
-        pic = new QLabel(page);
-        pic->setObjectName("pic");
-        pic->setGeometry(QRect(20, 10, 41, 41));
-        pic->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic->setScaledContents(true);
-        pic->setWordWrap(false);
-        modeSwitch = new QPushButton(page);
-        modeSwitch->setObjectName("modeSwitch");
-        modeSwitch->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch->setIcon(icon7);
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName("page_2");
-        line_2 = new QFrame(page_2);
-        line_2->setObjectName("line_2");
-        line_2->setGeometry(QRect(80, -20, 20, 841));
-        QPalette palette7;
-        palette7.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette7.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette7.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette7.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette7.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette7.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette7.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette7.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette7.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_2->setPalette(palette7);
-        line_2->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_2->setAutoFillBackground(false);
-        line_2->setFrameShadow(QFrame::Shadow::Plain);
-        line_2->setLineWidth(3);
-        line_2->setFrameShape(QFrame::Shape::VLine);
-        profile2 = new QPushButton(page_2);
-        profile2->setObjectName("profile2");
-        profile2->setGeometry(QRect(20, 600, 41, 41));
-        profile2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile2->setIcon(icon4);
-        Research2 = new QPushButton(page_2);
-        Research2->setObjectName("Research2");
-        Research2->setGeometry(QRect(20, 260, 41, 41));
-        Research2->setIcon(icon1);
-        reveiw2 = new QPushButton(page_2);
-        reveiw2->setObjectName("reveiw2");
-        reveiw2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw2->setIcon(icon);
-        conf2 = new QPushButton(page_2);
-        conf2->setObjectName("conf2");
-        conf2->setGeometry(QRect(20, 340, 41, 41));
-        conf2->setIcon(icon2);
-        homeButton2 = new QPushButton(page_2);
-        homeButton2->setObjectName("homeButton2");
-        homeButton2->setEnabled(true);
-        homeButton2->setGeometry(QRect(20, 80, 40, 40));
-        homeButton2->setMinimumSize(QSize(40, 40));
-        homeButton2->setMaximumSize(QSize(40, 40));
-        homeButton2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton2->setMouseTracking(true);
-        homeButton2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton2->setAutoFillBackground(false);
-        homeButton2->setIcon(icon3);
-        homeButton2->setIconSize(QSize(22, 22));
-        homeButton2->setFlat(true);
-        pic_2 = new QLabel(page_2);
-        pic_2->setObjectName("pic_2");
-        pic_2->setGeometry(QRect(20, 10, 41, 41));
-        pic_2->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_2->setScaledContents(true);
-        pic_2->setWordWrap(false);
-        collab2 = new QPushButton(page_2);
-        collab2->setObjectName("collab2");
-        collab2->setGeometry(QRect(20, 420, 41, 41));
-        collab2->setIcon(icon5);
-        publication2 = new QPushButton(page_2);
-        publication2->setObjectName("publication2");
-        publication2->setGeometry(QRect(20, 500, 41, 41));
-        publication2->setIcon(icon6);
-        modeSwitch2 = new QPushButton(page_2);
-        modeSwitch2->setObjectName("modeSwitch2");
-        modeSwitch2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch2->setIcon(icon7);
         frame_6 = new QFrame(page_2);
         frame_6->setObjectName("frame_6");
-        frame_6->setGeometry(QRect(100, 410, 1151, 311));
+        frame_6->setGeometry(QRect(10, 410, 1151, 311));
         frame_6->setFrameShape(QFrame::Shape::NoFrame);
         frame_6->setFrameShadow(QFrame::Shadow::Raised);
         callabsList = new QListWidget(frame_6);
@@ -2580,9 +739,9 @@ public:
         collabsGroupChatButton = new QPushButton(frame_6);
         collabsGroupChatButton->setObjectName("collabsGroupChatButton");
         collabsGroupChatButton->setGeometry(QRect(990, 40, 141, 41));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8("icons/video.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        collabsGroupChatButton->setIcon(icon10);
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8("icons/video.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        collabsGroupChatButton->setIcon(icon2);
         collabsTextBrower = new QTextBrowser(frame_6);
         collabsTextBrower->setObjectName("collabsTextBrower");
         collabsTextBrower->setGeometry(QRect(490, 30, 491, 221));
@@ -2597,21 +756,21 @@ public:
         collabsExportButton->setGeometry(QRect(990, 190, 141, 41));
         collaborationCreationConfirmButton = new QPushButton(page_2);
         collaborationCreationConfirmButton->setObjectName("collaborationCreationConfirmButton");
-        collaborationCreationConfirmButton->setGeometry(QRect(1050, 230, 161, 61));
+        collaborationCreationConfirmButton->setGeometry(QRect(960, 230, 161, 61));
         QFont font1;
         font1.setFamilies({QString::fromUtf8("-apple-system")});
         font1.setPointSize(10);
         collaborationCreationConfirmButton->setFont(font1);
-        QIcon icon11;
-        icon11.addFile(QString::fromUtf8("icons/save.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        collaborationCreationConfirmButton->setIcon(icon11);
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8("icons/save.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        collaborationCreationConfirmButton->setIcon(icon3);
         collaborationCreationCancelButton = new QPushButton(page_2);
         collaborationCreationCancelButton->setObjectName("collaborationCreationCancelButton");
-        collaborationCreationCancelButton->setGeometry(QRect(1050, 300, 161, 61));
+        collaborationCreationCancelButton->setGeometry(QRect(960, 300, 161, 61));
         collaborationCreationCancelButton->setFont(font1);
         collaborationCreationFrame = new QFrame(page_2);
         collaborationCreationFrame->setObjectName("collaborationCreationFrame");
-        collaborationCreationFrame->setGeometry(QRect(100, 20, 911, 381));
+        collaborationCreationFrame->setGeometry(QRect(10, 20, 911, 381));
         collaborationCreationFrame->setFrameShape(QFrame::Shape::NoFrame);
         collaborationCreationFrame->setFrameShadow(QFrame::Shadow::Raised);
         collaborationCreationCollaborationTitileEdit = new QPlainTextEdit(collaborationCreationFrame);
@@ -2626,7 +785,7 @@ public:
         collaborationCreationCollaborationTitleLabel->setFont(font);
         collaborationCreationCollaborationDescriptionLabel = new QLabel(collaborationCreationFrame);
         collaborationCreationCollaborationDescriptionLabel->setObjectName("collaborationCreationCollaborationDescriptionLabel");
-        collaborationCreationCollaborationDescriptionLabel->setGeometry(QRect(10, 70, 251, 31));
+        collaborationCreationCollaborationDescriptionLabel->setGeometry(QRect(10, 80, 251, 31));
         collaborationCreationCollaborationDescriptionLabel->setFont(font);
         collaboartionCreationTopicMenu = new QComboBox(collaborationCreationFrame);
         collaboartionCreationTopicMenu->setObjectName("collaboartionCreationTopicMenu");
@@ -2644,7 +803,7 @@ public:
         page_3->setObjectName("page_3");
         tabWidget = new QTabWidget(page_3);
         tabWidget->setObjectName("tabWidget");
-        tabWidget->setGeometry(QRect(120, 240, 1091, 461));
+        tabWidget->setGeometry(QRect(20, 240, 1141, 471));
         tabWidget->setTabPosition(QTabWidget::TabPosition::North);
         tabWidget->setTabShape(QTabWidget::TabShape::Rounded);
         tabWidget->setMovable(false);
@@ -2661,7 +820,7 @@ public:
         label_31->setGeometry(QRect(180, 40, 91, 19));
         label_32 = new QLabel(ReveiwT);
         label_32->setObjectName("label_32");
-        label_32->setGeometry(QRect(510, 40, 111, 19));
+        label_32->setGeometry(QRect(520, 40, 111, 19));
         lineEdit = new QLineEdit(ReveiwT);
         lineEdit->setObjectName("lineEdit");
         lineEdit->setGeometry(QRect(180, 80, 113, 27));
@@ -2674,53 +833,53 @@ public:
         approve = new QPushButton(ReveiwT);
         approve->setObjectName("approve");
         approve->setGeometry(QRect(320, 80, 31, 27));
-        QIcon icon12;
-        icon12.addFile(QString::fromUtf8("icons/thumbs-up.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        approve->setIcon(icon12);
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8("icons/thumbs-up.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        approve->setIcon(icon4);
         pending = new QPushButton(ReveiwT);
         pending->setObjectName("pending");
         pending->setGeometry(QRect(370, 80, 31, 27));
-        QIcon icon13;
-        icon13.addFile(QString::fromUtf8("icons/clock.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        pending->setIcon(icon13);
+        QIcon icon5;
+        icon5.addFile(QString::fromUtf8("icons/clock.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        pending->setIcon(icon5);
         label_34 = new QLabel(ReveiwT);
         label_34->setObjectName("label_34");
         label_34->setGeometry(QRect(360, 70, 21, 41));
         denied = new QPushButton(ReveiwT);
         denied->setObjectName("denied");
         denied->setGeometry(QRect(420, 80, 31, 27));
-        QIcon icon14;
-        icon14.addFile(QString::fromUtf8("icons/x.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        denied->setIcon(icon14);
+        QIcon icon6;
+        icon6.addFile(QString::fromUtf8("icons/x.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        denied->setIcon(icon6);
         lineEdit_3 = new QLineEdit(ReveiwT);
         lineEdit_3->setObjectName("lineEdit_3");
-        lineEdit_3->setGeometry(QRect(510, 80, 321, 27));
+        lineEdit_3->setGeometry(QRect(520, 80, 321, 27));
         pushButton_4 = new QPushButton(ReveiwT);
         pushButton_4->setObjectName("pushButton_4");
-        pushButton_4->setGeometry(QRect(1040, 70, 31, 31));
-        QIcon icon15;
-        icon15.addFile(QString::fromUtf8("icons/trash-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        pushButton_4->setIcon(icon15);
+        pushButton_4->setGeometry(QRect(1080, 70, 31, 31));
+        QIcon icon7;
+        icon7.addFile(QString::fromUtf8("icons/trash-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        pushButton_4->setIcon(icon7);
         pushButton_5 = new QPushButton(ReveiwT);
         pushButton_5->setObjectName("pushButton_5");
-        pushButton_5->setGeometry(QRect(990, 70, 31, 31));
-        QIcon icon16;
-        icon16.addFile(QString::fromUtf8("icons/edit.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        pushButton_5->setIcon(icon16);
+        pushButton_5->setGeometry(QRect(1030, 70, 31, 31));
+        QIcon icon8;
+        icon8.addFile(QString::fromUtf8("icons/edit.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        pushButton_5->setIcon(icon8);
         label_8 = new QLabel(ReveiwT);
         label_8->setObjectName("label_8");
-        label_8->setGeometry(QRect(850, 40, 131, 19));
+        label_8->setGeometry(QRect(870, 40, 131, 19));
         label_13 = new QLabel(ReveiwT);
         label_13->setObjectName("label_13");
-        label_13->setGeometry(QRect(890, 80, 70, 19));
+        label_13->setGeometry(QRect(910, 80, 70, 19));
         exportPDF = new QPushButton(ReveiwT);
         exportPDF->setObjectName("exportPDF");
-        exportPDF->setGeometry(QRect(1040, 10, 31, 31));
-        QIcon icon17;
-        icon17.addFile(QString::fromUtf8("icons/printer.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        exportPDF->setIcon(icon17);
-        QIcon icon18(QIcon::fromTheme(QIcon::ThemeIcon::AppointmentSoon));
-        tabWidget->addTab(ReveiwT, icon18, QString());
+        exportPDF->setGeometry(QRect(1080, 10, 31, 31));
+        QIcon icon9;
+        icon9.addFile(QString::fromUtf8("icons/printer.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        exportPDF->setIcon(icon9);
+        QIcon icon10(QIcon::fromTheme(QIcon::ThemeIcon::AppointmentSoon));
+        tabWidget->addTab(ReveiwT, icon10, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName("tab_3");
         lineEdit_6 = new QLineEdit(tab_3);
@@ -2747,13 +906,13 @@ public:
         pushButton_6 = new QPushButton(tab_3);
         pushButton_6->setObjectName("pushButton_6");
         pushButton_6->setGeometry(QRect(1000, 70, 31, 31));
-        pushButton_6->setIcon(icon15);
+        pushButton_6->setIcon(icon7);
         pushButton_7 = new QPushButton(tab_3);
         pushButton_7->setObjectName("pushButton_7");
         pushButton_7->setGeometry(QRect(950, 70, 31, 31));
-        pushButton_7->setIcon(icon16);
-        QIcon icon19(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPageSetup));
-        tabWidget->addTab(tab_3, icon19, QString());
+        pushButton_7->setIcon(icon8);
+        QIcon icon11(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPageSetup));
+        tabWidget->addTab(tab_3, icon11, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName("tab_2");
         publicationListGroup = new QGroupBox(tab_2);
@@ -2793,8 +952,8 @@ public:
 
         verticalLayout_list->addWidget(frame_2);
 
-        QIcon icon20(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
-        tabWidget->addTab(tab_2, icon20, QString());
+        QIcon icon12(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
+        tabWidget->addTab(tab_2, icon12, QString());
         tab = new QWidget();
         tab->setObjectName("tab");
         frame_5 = new QFrame(tab);
@@ -2820,79 +979,11 @@ public:
         listView = new QListView(frame_5);
         listView->setObjectName("listView");
         listView->setGeometry(QRect(320, 80, 351, 101));
-        QIcon icon21(QIcon::fromTheme(QIcon::ThemeIcon::InputTablet));
-        tabWidget->addTab(tab, icon21, QString());
-        Research3 = new QPushButton(page_3);
-        Research3->setObjectName("Research3");
-        Research3->setGeometry(QRect(20, 260, 41, 41));
-        Research3->setIcon(icon1);
-        profile7 = new QPushButton(page_3);
-        profile7->setObjectName("profile7");
-        profile7->setGeometry(QRect(20, 600, 41, 41));
-        profile7->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile7->setIcon(icon4);
-        reveiw7 = new QPushButton(page_3);
-        reveiw7->setObjectName("reveiw7");
-        reveiw7->setGeometry(QRect(20, 180, 41, 41));
-        reveiw7->setIcon(icon);
-        pic_7 = new QLabel(page_3);
-        pic_7->setObjectName("pic_7");
-        pic_7->setGeometry(QRect(20, 10, 41, 41));
-        pic_7->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_7->setScaledContents(true);
-        pic_7->setWordWrap(false);
-        homeButton6 = new QPushButton(page_3);
-        homeButton6->setObjectName("homeButton6");
-        homeButton6->setEnabled(true);
-        homeButton6->setGeometry(QRect(20, 80, 40, 40));
-        homeButton6->setMinimumSize(QSize(40, 40));
-        homeButton6->setMaximumSize(QSize(40, 40));
-        homeButton6->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton6->setMouseTracking(true);
-        homeButton6->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton6->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton6->setAutoFillBackground(false);
-        homeButton6->setIcon(icon3);
-        homeButton6->setIconSize(QSize(22, 22));
-        homeButton6->setFlat(true);
-        conf7 = new QPushButton(page_3);
-        conf7->setObjectName("conf7");
-        conf7->setGeometry(QRect(20, 340, 41, 41));
-        conf7->setIcon(icon2);
-        publication3 = new QPushButton(page_3);
-        publication3->setObjectName("publication3");
-        publication3->setGeometry(QRect(20, 500, 41, 41));
-        publication3->setIcon(icon6);
-        modeSwitch7 = new QPushButton(page_3);
-        modeSwitch7->setObjectName("modeSwitch7");
-        modeSwitch7->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch7->setIcon(icon7);
-        collab3 = new QPushButton(page_3);
-        collab3->setObjectName("collab3");
-        collab3->setGeometry(QRect(20, 420, 41, 41));
-        collab3->setIcon(icon5);
-        line_7 = new QFrame(page_3);
-        line_7->setObjectName("line_7");
-        line_7->setGeometry(QRect(80, -20, 20, 841));
-        QPalette palette8;
-        palette8.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette8.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette8.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette8.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette8.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette8.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette8.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette8.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette8.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_7->setPalette(palette8);
-        line_7->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_7->setAutoFillBackground(false);
-        line_7->setFrameShadow(QFrame::Shadow::Plain);
-        line_7->setLineWidth(3);
-        line_7->setFrameShape(QFrame::Shape::VLine);
+        QIcon icon13(QIcon::fromTheme(QIcon::ThemeIcon::InputTablet));
+        tabWidget->addTab(tab, icon13, QString());
         frame_4 = new QFrame(page_3);
         frame_4->setObjectName("frame_4");
-        frame_4->setGeometry(QRect(120, 20, 461, 191));
+        frame_4->setGeometry(QRect(20, 20, 461, 191));
         frame_4->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         frame_4->setStyleSheet(QString::fromUtf8("/* Tabs */\n"
 "QTabWidget::pane {\n"
@@ -2954,1061 +1045,29 @@ public:
         label_7->setGeometry(QRect(200, 120, 131, 19));
         temp = new QPushButton(page_3);
         temp->setObjectName("temp");
-        temp->setGeometry(QRect(1080, 30, 121, 41));
+        temp->setGeometry(QRect(1050, 20, 121, 41));
         temp2 = new QPushButton(page_3);
         temp2->setObjectName("temp2");
-        temp2->setGeometry(QRect(760, 30, 121, 41));
+        temp2->setGeometry(QRect(730, 20, 121, 41));
         mkUser = new QPushButton(page_3);
         mkUser->setObjectName("mkUser");
-        mkUser->setGeometry(QRect(910, 30, 141, 41));
+        mkUser->setGeometry(QRect(880, 20, 141, 41));
         searchUserBTN = new QPushButton(page_3);
         searchUserBTN->setObjectName("searchUserBTN");
-        searchUserBTN->setGeometry(QRect(1080, 100, 121, 41));
+        searchUserBTN->setGeometry(QRect(1050, 90, 121, 41));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");
         scrollArea = new QScrollArea(page_4);
         scrollArea->setObjectName("scrollArea");
-        scrollArea->setGeometry(QRect(130, 40, 1101, 556));
-        scrollArea->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QScrollArea#scrollArea {\n"
-"    background-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"QScrollArea#scrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"QScrollArea#scrollArea > QWidget > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Navigation Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transpar"
-                        "ent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-color: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-""
-                        "QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    background-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    back"
-                        "ground-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hover {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/*"
-                        " Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-""
-                        "    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-""
-                        "    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-""
-                        "/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::in"
-                        "dicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    colo"
-                        "r: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    border-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-"\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-" "
-                        "   background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Status Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    "
-                        "border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hover {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"}"));
+        scrollArea->setGeometry(QRect(30, 50, 1101, 556));
+        scrollArea->setAutoFillBackground(false);
+        scrollArea->setStyleSheet(QString::fromUtf8(""));
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1101, 556));
-        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Navigation Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transparent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-co"
-                        "lor: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    backgro"
-                        "und-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    b"
-                        "order: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hover {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-col"
-                        "or: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-wei"
-                        "ght: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-" "
-                        "   border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    bo"
-                        "rder: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30"
-                        "b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    color: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    bor"
-                        "der-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-"\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Sta"
-                        "tus Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hov"
-                        "er {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"}"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1099, 554));
+        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout->setObjectName("verticalLayout");
         widget = new QWidget(scrollAreaWidgetContents);
@@ -4122,87 +1181,19 @@ public:
         verticalLayout->addWidget(widget);
 
         scrollArea->setWidget(scrollAreaWidgetContents);
-        profile3 = new QPushButton(page_4);
-        profile3->setObjectName("profile3");
-        profile3->setGeometry(QRect(20, 600, 41, 41));
-        profile3->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile3->setIcon(icon4);
-        line_5 = new QFrame(page_4);
-        line_5->setObjectName("line_5");
-        line_5->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette9;
-        palette9.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette9.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette9.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette9.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette9.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette9.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette9.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette9.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette9.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_5->setPalette(palette9);
-        line_5->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_5->setAutoFillBackground(false);
-        line_5->setFrameShadow(QFrame::Shadow::Plain);
-        line_5->setLineWidth(3);
-        line_5->setFrameShape(QFrame::Shape::VLine);
         viewCalendarBtn = new QPushButton(page_4);
         viewCalendarBtn->setObjectName("viewCalendarBtn");
-        viewCalendarBtn->setGeometry(QRect(520, 630, 321, 51));
+        viewCalendarBtn->setGeometry(QRect(420, 640, 321, 51));
         viewCalendarBtn->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         viewCalendarBtn->setStyleSheet(QString::fromUtf8(""));
         addConferenceBtn = new QPushButton(page_4);
         addConferenceBtn->setObjectName("addConferenceBtn");
-        addConferenceBtn->setGeometry(QRect(170, 630, 301, 51));
+        addConferenceBtn->setGeometry(QRect(70, 640, 301, 51));
         addConferenceBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         addConferenceBtn->setStyleSheet(QString::fromUtf8(""));
-        publication4 = new QPushButton(page_4);
-        publication4->setObjectName("publication4");
-        publication4->setGeometry(QRect(20, 500, 41, 41));
-        publication4->setIcon(icon6);
-        Research4 = new QPushButton(page_4);
-        Research4->setObjectName("Research4");
-        Research4->setGeometry(QRect(20, 260, 41, 41));
-        Research4->setIcon(icon1);
-        conf3 = new QPushButton(page_4);
-        conf3->setObjectName("conf3");
-        conf3->setGeometry(QRect(20, 340, 41, 41));
-        conf3->setIcon(icon2);
-        homeButton3 = new QPushButton(page_4);
-        homeButton3->setObjectName("homeButton3");
-        homeButton3->setEnabled(true);
-        homeButton3->setGeometry(QRect(20, 80, 40, 40));
-        homeButton3->setMinimumSize(QSize(40, 40));
-        homeButton3->setMaximumSize(QSize(40, 40));
-        homeButton3->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton3->setMouseTracking(true);
-        homeButton3->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton3->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton3->setAutoFillBackground(false);
-        homeButton3->setIcon(icon3);
-        homeButton3->setIconSize(QSize(22, 22));
-        homeButton3->setFlat(true);
-        reveiw3 = new QPushButton(page_4);
-        reveiw3->setObjectName("reveiw3");
-        reveiw3->setGeometry(QRect(20, 180, 41, 41));
-        reveiw3->setIcon(icon);
-        pic_3 = new QLabel(page_4);
-        pic_3->setObjectName("pic_3");
-        pic_3->setGeometry(QRect(20, 10, 41, 41));
-        pic_3->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_3->setScaledContents(true);
-        pic_3->setWordWrap(false);
-        collab4 = new QPushButton(page_4);
-        collab4->setObjectName("collab4");
-        collab4->setGeometry(QRect(20, 420, 41, 41));
-        collab4->setIcon(icon5);
-        modeSwitch3 = new QPushButton(page_4);
-        modeSwitch3->setObjectName("modeSwitch3");
-        modeSwitch3->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch3->setIcon(icon7);
         confStatsBtn = new QPushButton(page_4);
         confStatsBtn->setObjectName("confStatsBtn");
-        confStatsBtn->setGeometry(QRect(890, 630, 321, 51));
+        confStatsBtn->setGeometry(QRect(790, 640, 321, 51));
         confStatsBtn->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         confStatsBtn->setStyleSheet(QString::fromUtf8(""));
         stackedWidget->addWidget(page_4);
@@ -4212,535 +1203,7 @@ public:
         stackedWidget_2->setObjectName("stackedWidget_2");
         stackedWidget_2->setGeometry(QRect(0, 0, 1271, 741));
         stackedWidget_2->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
-        stackedWidget_2->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"/* For QDateEdit */\n"
-"QDateEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* For QSpinBox / QDoubleSpinBox */\n"
-"QSpinBox, QDoubleSpinBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Navigatio"
-                        "n Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transparent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-color: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-col"
-                        "or: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    background-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-""
-                        "    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hov"
-                        "er {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-""
-                        "}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-""
-                        "}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-""
-                        "\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"   "
-                        " outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-""
-                        "\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    color: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    border-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-""
-                        "\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Status Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-""
-                        "    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hover {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"}"));
+        stackedWidget_2->setStyleSheet(QString::fromUtf8(""));
         stackedWidget_2->setFrameShape(QFrame::Shape::NoFrame);
         stackedWidget_2->setFrameShadow(QFrame::Shadow::Sunken);
         stackedWidget_2->setLineWidth(0);
@@ -4749,15 +1212,21 @@ public:
         reveiw4_2 = new QPushButton(page_12);
         reveiw4_2->setObjectName("reveiw4_2");
         reveiw4_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw4_2->setIcon(icon);
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8("icons/plus-square.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        reveiw4_2->setIcon(icon14);
         Research7_2 = new QPushButton(page_12);
         Research7_2->setObjectName("Research7_2");
         Research7_2->setGeometry(QRect(20, 260, 41, 41));
-        Research7_2->setIcon(icon1);
+        QIcon icon15;
+        icon15.addFile(QString::fromUtf8("icons/pie-chart.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        Research7_2->setIcon(icon15);
         conf6_2 = new QPushButton(page_12);
         conf6_2->setObjectName("conf6_2");
         conf6_2->setGeometry(QRect(20, 340, 41, 41));
-        conf6_2->setIcon(icon2);
+        QIcon icon16;
+        icon16.addFile(QString::fromUtf8("icons/calendar.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        conf6_2->setIcon(icon16);
         homeButton4_2 = new QPushButton(page_12);
         homeButton4_2->setObjectName("homeButton4_2");
         homeButton4_2->setEnabled(true);
@@ -4769,7 +1238,9 @@ public:
         homeButton4_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton4_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton4_2->setAutoFillBackground(false);
-        homeButton4_2->setIcon(icon3);
+        QIcon icon17;
+        icon17.addFile(QString::fromUtf8("icons/menu.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        homeButton4_2->setIcon(icon17);
         homeButton4_2->setIconSize(QSize(22, 22));
         homeButton4_2->setFlat(true);
         pic_8 = new QLabel(page_12);
@@ -4782,22 +1253,24 @@ public:
         profile4_2->setObjectName("profile4_2");
         profile4_2->setGeometry(QRect(20, 600, 41, 41));
         profile4_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile4_2->setIcon(icon4);
+        QIcon icon18;
+        icon18.addFile(QString::fromUtf8("icons/user.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        profile4_2->setIcon(icon18);
         line_8 = new QFrame(page_12);
         line_8->setObjectName("line_8");
         line_8->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette10;
-        palette10.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette10.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette10.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette10.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette10.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette10.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette10.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette10.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette10.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_8->setPalette(palette10);
-        line_8->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
+        QPalette palette5;
+        palette5.setBrush(QPalette::Active, QPalette::Button, brush10);
+        palette5.setBrush(QPalette::Active, QPalette::Base, brush10);
+        palette5.setBrush(QPalette::Active, QPalette::Window, brush10);
+        palette5.setBrush(QPalette::Inactive, QPalette::Button, brush10);
+        palette5.setBrush(QPalette::Inactive, QPalette::Base, brush10);
+        palette5.setBrush(QPalette::Inactive, QPalette::Window, brush10);
+        palette5.setBrush(QPalette::Disabled, QPalette::Button, brush10);
+        palette5.setBrush(QPalette::Disabled, QPalette::Base, brush10);
+        palette5.setBrush(QPalette::Disabled, QPalette::Window, brush10);
+        line_8->setPalette(palette5);
+        line_8->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         line_8->setAutoFillBackground(false);
         line_8->setFrameShadow(QFrame::Shadow::Plain);
         line_8->setLineWidth(3);
@@ -4805,15 +1278,21 @@ public:
         collab7_2 = new QPushButton(page_12);
         collab7_2->setObjectName("collab7_2");
         collab7_2->setGeometry(QRect(20, 420, 41, 41));
-        collab7_2->setIcon(icon5);
+        QIcon icon19;
+        icon19.addFile(QString::fromUtf8("icons/share-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        collab7_2->setIcon(icon19);
         publication7_2 = new QPushButton(page_12);
         publication7_2->setObjectName("publication7_2");
         publication7_2->setGeometry(QRect(20, 500, 41, 41));
-        publication7_2->setIcon(icon6);
+        QIcon icon20;
+        icon20.addFile(QString::fromUtf8("icons/send.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        publication7_2->setIcon(icon20);
         modeSwitch4_2 = new QPushButton(page_12);
         modeSwitch4_2->setObjectName("modeSwitch4_2");
         modeSwitch4_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch4_2->setIcon(icon7);
+        QIcon icon21;
+        icon21.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        modeSwitch4_2->setIcon(icon21);
         chart_2 = new QLabel(page_12);
         chart_2->setObjectName("chart_2");
         chart_2->setGeometry(QRect(710, 60, 421, 271));
@@ -4830,75 +1309,75 @@ public:
         backHome_2 = new QPushButton(page_13);
         backHome_2->setObjectName("backHome_2");
         backHome_2->setGeometry(QRect(710, 620, 81, 41));
-        backHome_2->setIcon(icon8);
+        backHome_2->setIcon(icon);
         backHome_2->setIconSize(QSize(25, 25));
         pushButton_10 = new QPushButton(page_13);
         pushButton_10->setObjectName("pushButton_10");
         pushButton_10->setGeometry(QRect(400, 620, 141, 41));
-        QPalette palette11;
-        palette11.setBrush(QPalette::Active, QPalette::WindowText, brush3);
-        palette11.setBrush(QPalette::Active, QPalette::Button, brush4);
-        palette11.setBrush(QPalette::Active, QPalette::Text, brush3);
-        palette11.setBrush(QPalette::Active, QPalette::ButtonText, brush3);
-        palette11.setBrush(QPalette::Active, QPalette::Base, brush4);
-        palette11.setBrush(QPalette::Active, QPalette::Window, brush4);
-        palette11.setBrush(QPalette::Active, QPalette::Highlight, brush5);
+        QPalette palette6;
+        palette6.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette6.setBrush(QPalette::Active, QPalette::Button, brush3);
+        palette6.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette6.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
+        palette6.setBrush(QPalette::Active, QPalette::Base, brush3);
+        palette6.setBrush(QPalette::Active, QPalette::Window, brush3);
+        palette6.setBrush(QPalette::Active, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette11.setBrush(QPalette::Active, QPalette::PlaceholderText, brush6);
+        palette6.setBrush(QPalette::Active, QPalette::PlaceholderText, brush5);
 #endif
-        palette11.setBrush(QPalette::Inactive, QPalette::WindowText, brush3);
-        palette11.setBrush(QPalette::Inactive, QPalette::Button, brush4);
-        palette11.setBrush(QPalette::Inactive, QPalette::Text, brush3);
-        palette11.setBrush(QPalette::Inactive, QPalette::ButtonText, brush3);
-        palette11.setBrush(QPalette::Inactive, QPalette::Base, brush4);
-        palette11.setBrush(QPalette::Inactive, QPalette::Window, brush4);
-        palette11.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
+        palette6.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette6.setBrush(QPalette::Inactive, QPalette::Button, brush3);
+        palette6.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette6.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
+        palette6.setBrush(QPalette::Inactive, QPalette::Base, brush3);
+        palette6.setBrush(QPalette::Inactive, QPalette::Window, brush3);
+        palette6.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette11.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush6);
+        palette6.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush5);
 #endif
-        palette11.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette11.setBrush(QPalette::Disabled, QPalette::Button, brush4);
-        palette11.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette11.setBrush(QPalette::Disabled, QPalette::ButtonText, brush3);
-        palette11.setBrush(QPalette::Disabled, QPalette::Base, brush4);
-        palette11.setBrush(QPalette::Disabled, QPalette::Window, brush4);
-        palette11.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette6.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        palette6.setBrush(QPalette::Disabled, QPalette::Button, brush3);
+        palette6.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        palette6.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
+        palette6.setBrush(QPalette::Disabled, QPalette::Base, brush3);
+        palette6.setBrush(QPalette::Disabled, QPalette::Window, brush3);
+        palette6.setBrush(QPalette::Disabled, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette11.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush6);
+        palette6.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
 #endif
-        pushButton_10->setPalette(palette11);
+        pushButton_10->setPalette(palette6);
         pushButton_10->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        pushButton_10->setIcon(icon9);
+        pushButton_10->setIcon(icon1);
         groupBox_6 = new QGroupBox(page_13);
         groupBox_6->setObjectName("groupBox_6");
         groupBox_6->setGeometry(QRect(230, 50, 811, 561));
-        QPalette palette12;
-        palette12.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette12.setBrush(QPalette::Active, QPalette::Button, brush8);
-        palette12.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette12.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette12.setBrush(QPalette::Active, QPalette::Window, brush9);
+        QPalette palette7;
+        palette7.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette7.setBrush(QPalette::Active, QPalette::Button, brush7);
+        palette7.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette7.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette7.setBrush(QPalette::Active, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette12.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette7.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette12.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette12.setBrush(QPalette::Inactive, QPalette::Button, brush8);
-        palette12.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette12.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette12.setBrush(QPalette::Inactive, QPalette::Window, brush9);
+        palette7.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette7.setBrush(QPalette::Inactive, QPalette::Button, brush7);
+        palette7.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette7.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette7.setBrush(QPalette::Inactive, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette12.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette7.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette12.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette12.setBrush(QPalette::Disabled, QPalette::Button, brush8);
-        palette12.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette12.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette12.setBrush(QPalette::Disabled, QPalette::Base, brush9);
-        palette12.setBrush(QPalette::Disabled, QPalette::Window, brush9);
+        palette7.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette7.setBrush(QPalette::Disabled, QPalette::Button, brush7);
+        palette7.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette7.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette7.setBrush(QPalette::Disabled, QPalette::Base, brush8);
+        palette7.setBrush(QPalette::Disabled, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette12.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette7.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        groupBox_6->setPalette(palette12);
+        groupBox_6->setPalette(palette7);
         groupBox_6->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
 "\n"
 "* {\n"
@@ -5413,72 +1892,72 @@ public:
         Browse_2 = new QPushButton(groupBox_6);
         Browse_2->setObjectName("Browse_2");
         Browse_2->setGeometry(QRect(480, 430, 121, 31));
-        QPalette palette13;
-        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush3);
-        palette13.setBrush(QPalette::Active, QPalette::Button, brush4);
-        palette13.setBrush(QPalette::Active, QPalette::Text, brush3);
-        palette13.setBrush(QPalette::Active, QPalette::ButtonText, brush3);
-        palette13.setBrush(QPalette::Active, QPalette::Base, brush4);
-        palette13.setBrush(QPalette::Active, QPalette::Window, brush4);
-        palette13.setBrush(QPalette::Active, QPalette::Highlight, brush5);
+        QPalette palette8;
+        palette8.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette8.setBrush(QPalette::Active, QPalette::Button, brush3);
+        palette8.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette8.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
+        palette8.setBrush(QPalette::Active, QPalette::Base, brush3);
+        palette8.setBrush(QPalette::Active, QPalette::Window, brush3);
+        palette8.setBrush(QPalette::Active, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette13.setBrush(QPalette::Active, QPalette::PlaceholderText, brush6);
+        palette8.setBrush(QPalette::Active, QPalette::PlaceholderText, brush5);
 #endif
-        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush3);
-        palette13.setBrush(QPalette::Inactive, QPalette::Button, brush4);
-        palette13.setBrush(QPalette::Inactive, QPalette::Text, brush3);
-        palette13.setBrush(QPalette::Inactive, QPalette::ButtonText, brush3);
-        palette13.setBrush(QPalette::Inactive, QPalette::Base, brush4);
-        palette13.setBrush(QPalette::Inactive, QPalette::Window, brush4);
-        palette13.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
+        palette8.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette8.setBrush(QPalette::Inactive, QPalette::Button, brush3);
+        palette8.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette8.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
+        palette8.setBrush(QPalette::Inactive, QPalette::Base, brush3);
+        palette8.setBrush(QPalette::Inactive, QPalette::Window, brush3);
+        palette8.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette13.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush6);
+        palette8.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush5);
 #endif
-        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette13.setBrush(QPalette::Disabled, QPalette::Button, brush4);
-        palette13.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette13.setBrush(QPalette::Disabled, QPalette::ButtonText, brush3);
-        palette13.setBrush(QPalette::Disabled, QPalette::Base, brush4);
-        palette13.setBrush(QPalette::Disabled, QPalette::Window, brush4);
-        palette13.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette8.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        palette8.setBrush(QPalette::Disabled, QPalette::Button, brush3);
+        palette8.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        palette8.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
+        palette8.setBrush(QPalette::Disabled, QPalette::Base, brush3);
+        palette8.setBrush(QPalette::Disabled, QPalette::Window, brush3);
+        palette8.setBrush(QPalette::Disabled, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette13.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush6);
+        palette8.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
 #endif
-        Browse_2->setPalette(palette13);
+        Browse_2->setPalette(palette8);
         Browse_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         Browse_2->setStyleSheet(QString::fromUtf8(""));
         label_14 = new QLabel(groupBox_6);
         label_14->setObjectName("label_14");
         label_14->setGeometry(QRect(350, 440, 131, 19));
-        QPalette palette14;
-        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette14.setBrush(QPalette::Active, QPalette::Button, brush13);
-        palette14.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette14.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette14.setBrush(QPalette::Active, QPalette::Base, brush13);
-        palette14.setBrush(QPalette::Active, QPalette::Window, brush13);
+        QPalette palette9;
+        palette9.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette9.setBrush(QPalette::Active, QPalette::Button, brush13);
+        palette9.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette9.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette9.setBrush(QPalette::Active, QPalette::Base, brush13);
+        palette9.setBrush(QPalette::Active, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette14.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette9.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette14.setBrush(QPalette::Inactive, QPalette::Button, brush13);
-        palette14.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette14.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette14.setBrush(QPalette::Inactive, QPalette::Base, brush13);
-        palette14.setBrush(QPalette::Inactive, QPalette::Window, brush13);
+        palette9.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette9.setBrush(QPalette::Inactive, QPalette::Button, brush13);
+        palette9.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette9.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette9.setBrush(QPalette::Inactive, QPalette::Base, brush13);
+        palette9.setBrush(QPalette::Inactive, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette14.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette9.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette14.setBrush(QPalette::Disabled, QPalette::Button, brush13);
-        palette14.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette14.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette14.setBrush(QPalette::Disabled, QPalette::Base, brush13);
-        palette14.setBrush(QPalette::Disabled, QPalette::Window, brush13);
+        palette9.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette9.setBrush(QPalette::Disabled, QPalette::Button, brush13);
+        palette9.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette9.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette9.setBrush(QPalette::Disabled, QPalette::Base, brush13);
+        palette9.setBrush(QPalette::Disabled, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette14.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette9.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        label_14->setPalette(palette14);
+        label_14->setPalette(palette9);
         textEdit_3 = new QTextEdit(groupBox_6);
         textEdit_3->setObjectName("textEdit_3");
         textEdit_3->setGeometry(QRect(290, 160, 431, 131));
@@ -5510,19 +1989,19 @@ public:
         profile_2->setObjectName("profile_2");
         profile_2->setGeometry(QRect(20, 600, 41, 41));
         profile_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile_2->setIcon(icon4);
+        profile_2->setIcon(icon18);
         conf_2 = new QPushButton(page_13);
         conf_2->setObjectName("conf_2");
         conf_2->setGeometry(QRect(20, 340, 41, 41));
-        conf_2->setIcon(icon2);
+        conf_2->setIcon(icon16);
         Research_2 = new QPushButton(page_13);
         Research_2->setObjectName("Research_2");
         Research_2->setGeometry(QRect(20, 260, 41, 41));
-        Research_2->setIcon(icon1);
+        Research_2->setIcon(icon15);
         reveiw_2 = new QPushButton(page_13);
         reveiw_2->setObjectName("reveiw_2");
         reveiw_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw_2->setIcon(icon);
+        reveiw_2->setIcon(icon14);
         homeButton_2 = new QPushButton(page_13);
         homeButton_2->setObjectName("homeButton_2");
         homeButton_2->setEnabled(true);
@@ -5534,32 +2013,32 @@ public:
         homeButton_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton_2->setAutoFillBackground(false);
-        homeButton_2->setIcon(icon3);
+        homeButton_2->setIcon(icon17);
         homeButton_2->setIconSize(QSize(22, 22));
         homeButton_2->setFlat(true);
         collab_2 = new QPushButton(page_13);
         collab_2->setObjectName("collab_2");
         collab_2->setGeometry(QRect(20, 420, 41, 41));
-        collab_2->setIcon(icon5);
+        collab_2->setIcon(icon19);
         publication_2 = new QPushButton(page_13);
         publication_2->setObjectName("publication_2");
         publication_2->setGeometry(QRect(20, 500, 41, 41));
-        publication_2->setIcon(icon6);
+        publication_2->setIcon(icon20);
         line_9 = new QFrame(page_13);
         line_9->setObjectName("line_9");
         line_9->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette15;
-        palette15.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette15.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette15.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette15.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette15.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette15.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette15.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette15.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette15.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_9->setPalette(palette15);
-        line_9->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
+        QPalette palette10;
+        palette10.setBrush(QPalette::Active, QPalette::Button, brush10);
+        palette10.setBrush(QPalette::Active, QPalette::Base, brush10);
+        palette10.setBrush(QPalette::Active, QPalette::Window, brush10);
+        palette10.setBrush(QPalette::Inactive, QPalette::Button, brush10);
+        palette10.setBrush(QPalette::Inactive, QPalette::Base, brush10);
+        palette10.setBrush(QPalette::Inactive, QPalette::Window, brush10);
+        palette10.setBrush(QPalette::Disabled, QPalette::Button, brush10);
+        palette10.setBrush(QPalette::Disabled, QPalette::Base, brush10);
+        palette10.setBrush(QPalette::Disabled, QPalette::Window, brush10);
+        line_9->setPalette(palette10);
+        line_9->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         line_9->setAutoFillBackground(false);
         line_9->setFrameShadow(QFrame::Shadow::Plain);
         line_9->setLineWidth(3);
@@ -5573,25 +2052,25 @@ public:
         modeSwitch_2 = new QPushButton(page_13);
         modeSwitch_2->setObjectName("modeSwitch_2");
         modeSwitch_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch_2->setIcon(icon7);
+        modeSwitch_2->setIcon(icon21);
         stackedWidget_2->addWidget(page_13);
         page_14 = new QWidget();
         page_14->setObjectName("page_14");
         line_10 = new QFrame(page_14);
         line_10->setObjectName("line_10");
         line_10->setGeometry(QRect(80, -20, 20, 841));
-        QPalette palette16;
-        palette16.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette16.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette16.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette16.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette16.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette16.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette16.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette16.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette16.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_10->setPalette(palette16);
-        line_10->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
+        QPalette palette11;
+        palette11.setBrush(QPalette::Active, QPalette::Button, brush10);
+        palette11.setBrush(QPalette::Active, QPalette::Base, brush10);
+        palette11.setBrush(QPalette::Active, QPalette::Window, brush10);
+        palette11.setBrush(QPalette::Inactive, QPalette::Button, brush10);
+        palette11.setBrush(QPalette::Inactive, QPalette::Base, brush10);
+        palette11.setBrush(QPalette::Inactive, QPalette::Window, brush10);
+        palette11.setBrush(QPalette::Disabled, QPalette::Button, brush10);
+        palette11.setBrush(QPalette::Disabled, QPalette::Base, brush10);
+        palette11.setBrush(QPalette::Disabled, QPalette::Window, brush10);
+        line_10->setPalette(palette11);
+        line_10->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         line_10->setAutoFillBackground(false);
         line_10->setFrameShadow(QFrame::Shadow::Plain);
         line_10->setLineWidth(3);
@@ -5600,19 +2079,19 @@ public:
         profile2_2->setObjectName("profile2_2");
         profile2_2->setGeometry(QRect(20, 600, 41, 41));
         profile2_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile2_2->setIcon(icon4);
+        profile2_2->setIcon(icon18);
         Research2_2 = new QPushButton(page_14);
         Research2_2->setObjectName("Research2_2");
         Research2_2->setGeometry(QRect(20, 260, 41, 41));
-        Research2_2->setIcon(icon1);
+        Research2_2->setIcon(icon15);
         reveiw2_2 = new QPushButton(page_14);
         reveiw2_2->setObjectName("reveiw2_2");
         reveiw2_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw2_2->setIcon(icon);
+        reveiw2_2->setIcon(icon14);
         conf2_2 = new QPushButton(page_14);
         conf2_2->setObjectName("conf2_2");
         conf2_2->setGeometry(QRect(20, 340, 41, 41));
-        conf2_2->setIcon(icon2);
+        conf2_2->setIcon(icon16);
         homeButton2_2 = new QPushButton(page_14);
         homeButton2_2->setObjectName("homeButton2_2");
         homeButton2_2->setEnabled(true);
@@ -5624,7 +2103,7 @@ public:
         homeButton2_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton2_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton2_2->setAutoFillBackground(false);
-        homeButton2_2->setIcon(icon3);
+        homeButton2_2->setIcon(icon17);
         homeButton2_2->setIconSize(QSize(22, 22));
         homeButton2_2->setFlat(true);
         pic_10 = new QLabel(page_14);
@@ -5636,15 +2115,15 @@ public:
         collab2_2 = new QPushButton(page_14);
         collab2_2->setObjectName("collab2_2");
         collab2_2->setGeometry(QRect(20, 420, 41, 41));
-        collab2_2->setIcon(icon5);
+        collab2_2->setIcon(icon19);
         publication2_2 = new QPushButton(page_14);
         publication2_2->setObjectName("publication2_2");
         publication2_2->setGeometry(QRect(20, 500, 41, 41));
-        publication2_2->setIcon(icon6);
+        publication2_2->setIcon(icon20);
         modeSwitch2_2 = new QPushButton(page_14);
         modeSwitch2_2->setObjectName("modeSwitch2_2");
         modeSwitch2_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch2_2->setIcon(icon7);
+        modeSwitch2_2->setIcon(icon21);
         frame_10 = new QFrame(page_14);
         frame_10->setObjectName("frame_10");
         frame_10->setGeometry(QRect(100, 410, 1151, 311));
@@ -5660,7 +2139,7 @@ public:
         collabsGroupChatButton_2 = new QPushButton(frame_10);
         collabsGroupChatButton_2->setObjectName("collabsGroupChatButton_2");
         collabsGroupChatButton_2->setGeometry(QRect(650, 260, 141, 41));
-        collabsGroupChatButton_2->setIcon(icon10);
+        collabsGroupChatButton_2->setIcon(icon2);
         collabsTextBrower_2 = new QTextBrowser(frame_10);
         collabsTextBrower_2->setObjectName("collabsTextBrower_2");
         collabsTextBrower_2->setGeometry(QRect(480, 30, 491, 221));
@@ -5668,7 +2147,7 @@ public:
         collaborationCreationConfirmButton_2->setObjectName("collaborationCreationConfirmButton_2");
         collaborationCreationConfirmButton_2->setGeometry(QRect(1050, 230, 161, 61));
         collaborationCreationConfirmButton_2->setFont(font1);
-        collaborationCreationConfirmButton_2->setIcon(icon11);
+        collaborationCreationConfirmButton_2->setIcon(icon3);
         collaborationCreationCancelButton_2 = new QPushButton(page_14);
         collaborationCreationCancelButton_2->setObjectName("collaborationCreationCancelButton_2");
         collaborationCreationCancelButton_2->setGeometry(QRect(1060, 300, 131, 61));
@@ -5738,36 +2217,36 @@ public:
         approve_2 = new QPushButton(ReveiwT_2);
         approve_2->setObjectName("approve_2");
         approve_2->setGeometry(QRect(320, 80, 31, 27));
-        approve_2->setIcon(icon12);
+        approve_2->setIcon(icon4);
         pending_2 = new QPushButton(ReveiwT_2);
         pending_2->setObjectName("pending_2");
         pending_2->setGeometry(QRect(370, 80, 31, 27));
-        pending_2->setIcon(icon13);
+        pending_2->setIcon(icon5);
         label_52 = new QLabel(ReveiwT_2);
         label_52->setObjectName("label_52");
         label_52->setGeometry(QRect(360, 70, 21, 41));
         denied_2 = new QPushButton(ReveiwT_2);
         denied_2->setObjectName("denied_2");
         denied_2->setGeometry(QRect(420, 80, 31, 27));
-        denied_2->setIcon(icon14);
+        denied_2->setIcon(icon6);
         lineEdit_18 = new QLineEdit(ReveiwT_2);
         lineEdit_18->setObjectName("lineEdit_18");
         lineEdit_18->setGeometry(QRect(510, 80, 321, 27));
         pushButton_11 = new QPushButton(ReveiwT_2);
         pushButton_11->setObjectName("pushButton_11");
         pushButton_11->setGeometry(QRect(1040, 70, 31, 31));
-        pushButton_11->setIcon(icon15);
+        pushButton_11->setIcon(icon7);
         pushButton_12 = new QPushButton(ReveiwT_2);
         pushButton_12->setObjectName("pushButton_12");
         pushButton_12->setGeometry(QRect(990, 70, 31, 31));
-        pushButton_12->setIcon(icon16);
+        pushButton_12->setIcon(icon8);
         label_53 = new QLabel(ReveiwT_2);
         label_53->setObjectName("label_53");
         label_53->setGeometry(QRect(850, 40, 131, 19));
         label_54 = new QLabel(ReveiwT_2);
         label_54->setObjectName("label_54");
         label_54->setGeometry(QRect(890, 80, 70, 19));
-        tabWidget_2->addTab(ReveiwT_2, icon18, QString());
+        tabWidget_2->addTab(ReveiwT_2, icon10, QString());
         tab_4 = new QWidget();
         tab_4->setObjectName("tab_4");
         lineEdit_19 = new QLineEdit(tab_4);
@@ -5790,12 +2269,12 @@ public:
         pushButton_13 = new QPushButton(tab_4);
         pushButton_13->setObjectName("pushButton_13");
         pushButton_13->setGeometry(QRect(1000, 70, 31, 31));
-        pushButton_13->setIcon(icon15);
+        pushButton_13->setIcon(icon7);
         pushButton_14 = new QPushButton(tab_4);
         pushButton_14->setObjectName("pushButton_14");
         pushButton_14->setGeometry(QRect(950, 70, 31, 31));
-        pushButton_14->setIcon(icon16);
-        tabWidget_2->addTab(tab_4, icon19, QString());
+        pushButton_14->setIcon(icon8);
+        tabWidget_2->addTab(tab_4, icon11, QString());
         tab_5 = new QWidget();
         tab_5->setObjectName("tab_5");
         publicationListGroup_2 = new QGroupBox(tab_5);
@@ -5828,7 +2307,7 @@ public:
 
         verticalLayout_list_2->addWidget(frame_11);
 
-        tabWidget_2->addTab(tab_5, icon20, QString());
+        tabWidget_2->addTab(tab_5, icon12, QString());
         tab_6 = new QWidget();
         tab_6->setObjectName("tab_6");
         frame_12 = new QFrame(tab_6);
@@ -5854,20 +2333,20 @@ public:
         listView_2 = new QListView(frame_12);
         listView_2->setObjectName("listView_2");
         listView_2->setGeometry(QRect(320, 80, 351, 101));
-        tabWidget_2->addTab(tab_6, icon21, QString());
+        tabWidget_2->addTab(tab_6, icon13, QString());
         Research3_2 = new QPushButton(page_15);
         Research3_2->setObjectName("Research3_2");
         Research3_2->setGeometry(QRect(20, 260, 41, 41));
-        Research3_2->setIcon(icon1);
+        Research3_2->setIcon(icon15);
         profile7_2 = new QPushButton(page_15);
         profile7_2->setObjectName("profile7_2");
         profile7_2->setGeometry(QRect(20, 600, 41, 41));
         profile7_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile7_2->setIcon(icon4);
+        profile7_2->setIcon(icon18);
         reveiw7_2 = new QPushButton(page_15);
         reveiw7_2->setObjectName("reveiw7_2");
         reveiw7_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw7_2->setIcon(icon);
+        reveiw7_2->setIcon(icon14);
         pic_11 = new QLabel(page_15);
         pic_11->setObjectName("pic_11");
         pic_11->setGeometry(QRect(20, 10, 41, 41));
@@ -5885,40 +2364,40 @@ public:
         homeButton6_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton6_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton6_2->setAutoFillBackground(false);
-        homeButton6_2->setIcon(icon3);
+        homeButton6_2->setIcon(icon17);
         homeButton6_2->setIconSize(QSize(22, 22));
         homeButton6_2->setFlat(true);
         conf7_2 = new QPushButton(page_15);
         conf7_2->setObjectName("conf7_2");
         conf7_2->setGeometry(QRect(20, 340, 41, 41));
-        conf7_2->setIcon(icon2);
+        conf7_2->setIcon(icon16);
         publication3_2 = new QPushButton(page_15);
         publication3_2->setObjectName("publication3_2");
         publication3_2->setGeometry(QRect(20, 500, 41, 41));
-        publication3_2->setIcon(icon6);
+        publication3_2->setIcon(icon20);
         modeSwitch7_2 = new QPushButton(page_15);
         modeSwitch7_2->setObjectName("modeSwitch7_2");
         modeSwitch7_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch7_2->setIcon(icon7);
+        modeSwitch7_2->setIcon(icon21);
         collab3_2 = new QPushButton(page_15);
         collab3_2->setObjectName("collab3_2");
         collab3_2->setGeometry(QRect(20, 420, 41, 41));
-        collab3_2->setIcon(icon5);
+        collab3_2->setIcon(icon19);
         line_11 = new QFrame(page_15);
         line_11->setObjectName("line_11");
         line_11->setGeometry(QRect(80, -20, 20, 841));
-        QPalette palette17;
-        palette17.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette17.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette17.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette17.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette17.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette17.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette17.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette17.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette17.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_11->setPalette(palette17);
-        line_11->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
+        QPalette palette12;
+        palette12.setBrush(QPalette::Active, QPalette::Button, brush10);
+        palette12.setBrush(QPalette::Active, QPalette::Base, brush10);
+        palette12.setBrush(QPalette::Active, QPalette::Window, brush10);
+        palette12.setBrush(QPalette::Inactive, QPalette::Button, brush10);
+        palette12.setBrush(QPalette::Inactive, QPalette::Base, brush10);
+        palette12.setBrush(QPalette::Inactive, QPalette::Window, brush10);
+        palette12.setBrush(QPalette::Disabled, QPalette::Button, brush10);
+        palette12.setBrush(QPalette::Disabled, QPalette::Base, brush10);
+        palette12.setBrush(QPalette::Disabled, QPalette::Window, brush10);
+        line_11->setPalette(palette12);
+        line_11->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         line_11->setAutoFillBackground(false);
         line_11->setFrameShadow(QFrame::Shadow::Plain);
         line_11->setLineWidth(3);
@@ -5997,77 +2476,9 @@ public:
         stackedWidget_2->addWidget(page_15);
         page_16 = new QWidget();
         page_16->setObjectName("page_16");
-        profile3_2 = new QPushButton(page_16);
-        profile3_2->setObjectName("profile3_2");
-        profile3_2->setGeometry(QRect(20, 600, 41, 41));
-        profile3_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile3_2->setIcon(icon4);
-        line_12 = new QFrame(page_16);
-        line_12->setObjectName("line_12");
-        line_12->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette18;
-        palette18.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette18.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette18.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette18.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette18.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette18.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette18.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette18.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette18.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_12->setPalette(palette18);
-        line_12->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_12->setAutoFillBackground(false);
-        line_12->setFrameShadow(QFrame::Shadow::Plain);
-        line_12->setLineWidth(3);
-        line_12->setFrameShape(QFrame::Shape::VLine);
-        publication4_2 = new QPushButton(page_16);
-        publication4_2->setObjectName("publication4_2");
-        publication4_2->setGeometry(QRect(20, 500, 41, 41));
-        publication4_2->setIcon(icon6);
-        Research4_2 = new QPushButton(page_16);
-        Research4_2->setObjectName("Research4_2");
-        Research4_2->setGeometry(QRect(20, 260, 41, 41));
-        Research4_2->setIcon(icon1);
-        conf3_2 = new QPushButton(page_16);
-        conf3_2->setObjectName("conf3_2");
-        conf3_2->setGeometry(QRect(20, 340, 41, 41));
-        conf3_2->setIcon(icon2);
-        homeButton3_2 = new QPushButton(page_16);
-        homeButton3_2->setObjectName("homeButton3_2");
-        homeButton3_2->setEnabled(true);
-        homeButton3_2->setGeometry(QRect(20, 80, 40, 40));
-        homeButton3_2->setMinimumSize(QSize(40, 40));
-        homeButton3_2->setMaximumSize(QSize(40, 40));
-        homeButton3_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton3_2->setMouseTracking(true);
-        homeButton3_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton3_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton3_2->setAutoFillBackground(false);
-        homeButton3_2->setIcon(icon3);
-        homeButton3_2->setIconSize(QSize(22, 22));
-        homeButton3_2->setFlat(true);
-        reveiw3_2 = new QPushButton(page_16);
-        reveiw3_2->setObjectName("reveiw3_2");
-        reveiw3_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw3_2->setIcon(icon);
-        pic_12 = new QLabel(page_16);
-        pic_12->setObjectName("pic_12");
-        pic_12->setGeometry(QRect(20, 10, 41, 41));
-        pic_12->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_12->setScaledContents(true);
-        pic_12->setWordWrap(false);
-        collab4_2 = new QPushButton(page_16);
-        collab4_2->setObjectName("collab4_2");
-        collab4_2->setGeometry(QRect(20, 420, 41, 41));
-        collab4_2->setIcon(icon5);
-        modeSwitch3_2 = new QPushButton(page_16);
-        modeSwitch3_2->setObjectName("modeSwitch3_2");
-        modeSwitch3_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch3_2->setIcon(icon7);
         frame_3 = new QFrame(page_16);
         frame_3->setObjectName("frame_3");
-        frame_3->setGeometry(QRect(100, 20, 1151, 671));
+        frame_3->setGeometry(QRect(10, 20, 1151, 671));
         frame_3->setFrameShape(QFrame::Shape::StyledPanel);
         frame_3->setFrameShadow(QFrame::Shadow::Raised);
         layoutWidget_3 = new QWidget(frame_3);
@@ -6141,7 +2552,7 @@ public:
         saveConfBtn = new QPushButton(layoutWidget_3);
         saveConfBtn->setObjectName("saveConfBtn");
         saveConfBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        saveConfBtn->setIcon(icon11);
+        saveConfBtn->setIcon(icon3);
 
         horizontalLayout->addWidget(saveConfBtn);
 
@@ -6230,7 +2641,7 @@ public:
         saveButton_2 = new QPushButton(layoutWidget_4);
         saveButton_2->setObjectName("saveButton_2");
         saveButton_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        saveButton_2->setIcon(icon11);
+        saveButton_2->setIcon(icon3);
 
         horizontalLayout_8->addWidget(saveButton_2);
 
@@ -6345,22 +2756,22 @@ public:
         profile5_2->setObjectName("profile5_2");
         profile5_2->setGeometry(QRect(20, 600, 41, 41));
         profile5_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile5_2->setIcon(icon4);
+        profile5_2->setIcon(icon18);
         line_13 = new QFrame(page_18);
         line_13->setObjectName("line_13");
         line_13->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette19;
-        palette19.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette19.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette19.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette19.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette19.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette19.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette19.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette19.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette19.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_13->setPalette(palette19);
-        line_13->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
+        QPalette palette13;
+        palette13.setBrush(QPalette::Active, QPalette::Button, brush10);
+        palette13.setBrush(QPalette::Active, QPalette::Base, brush10);
+        palette13.setBrush(QPalette::Active, QPalette::Window, brush10);
+        palette13.setBrush(QPalette::Inactive, QPalette::Button, brush10);
+        palette13.setBrush(QPalette::Inactive, QPalette::Base, brush10);
+        palette13.setBrush(QPalette::Inactive, QPalette::Window, brush10);
+        palette13.setBrush(QPalette::Disabled, QPalette::Button, brush10);
+        palette13.setBrush(QPalette::Disabled, QPalette::Base, brush10);
+        palette13.setBrush(QPalette::Disabled, QPalette::Window, brush10);
+        line_13->setPalette(palette13);
+        line_13->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         line_13->setAutoFillBackground(false);
         line_13->setFrameShadow(QFrame::Shadow::Plain);
         line_13->setLineWidth(3);
@@ -6368,19 +2779,19 @@ public:
         modeSwitch5_2 = new QPushButton(page_18);
         modeSwitch5_2->setObjectName("modeSwitch5_2");
         modeSwitch5_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch5_2->setIcon(icon7);
+        modeSwitch5_2->setIcon(icon21);
         conf4_2 = new QPushButton(page_18);
         conf4_2->setObjectName("conf4_2");
         conf4_2->setGeometry(QRect(20, 340, 41, 41));
-        conf4_2->setIcon(icon2);
+        conf4_2->setIcon(icon16);
         Research5_2 = new QPushButton(page_18);
         Research5_2->setObjectName("Research5_2");
         Research5_2->setGeometry(QRect(20, 260, 41, 41));
-        Research5_2->setIcon(icon1);
+        Research5_2->setIcon(icon15);
         reveiw5_2 = new QPushButton(page_18);
         reveiw5_2->setObjectName("reveiw5_2");
         reveiw5_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw5_2->setIcon(icon);
+        reveiw5_2->setIcon(icon14);
         homeButton5_2 = new QPushButton(page_18);
         homeButton5_2->setObjectName("homeButton5_2");
         homeButton5_2->setEnabled(true);
@@ -6392,13 +2803,13 @@ public:
         homeButton5_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton5_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton5_2->setAutoFillBackground(false);
-        homeButton5_2->setIcon(icon3);
+        homeButton5_2->setIcon(icon17);
         homeButton5_2->setIconSize(QSize(22, 22));
         homeButton5_2->setFlat(true);
         collab5_2 = new QPushButton(page_18);
         collab5_2->setObjectName("collab5_2");
         collab5_2->setGeometry(QRect(20, 420, 41, 41));
-        collab5_2->setIcon(icon5);
+        collab5_2->setIcon(icon19);
         pic_13 = new QLabel(page_18);
         pic_13->setObjectName("pic_13");
         pic_13->setGeometry(QRect(20, 10, 41, 41));
@@ -6408,7 +2819,7 @@ public:
         publication5_2 = new QPushButton(page_18);
         publication5_2->setObjectName("publication5_2");
         publication5_2->setGeometry(QRect(20, 500, 41, 41));
-        publication5_2->setIcon(icon6);
+        publication5_2->setIcon(icon20);
         stackedWidget_2->addWidget(page_18);
         page_19 = new QWidget();
         page_19->setObjectName("page_19");
@@ -6419,38 +2830,38 @@ public:
         pushButton_25 = new QPushButton(page_19);
         pushButton_25->setObjectName("pushButton_25");
         pushButton_25->setGeometry(QRect(360, 640, 161, 41));
-        QPalette palette20;
-        palette20.setBrush(QPalette::Active, QPalette::WindowText, brush3);
-        palette20.setBrush(QPalette::Active, QPalette::Button, brush4);
-        palette20.setBrush(QPalette::Active, QPalette::Text, brush3);
-        palette20.setBrush(QPalette::Active, QPalette::ButtonText, brush3);
-        palette20.setBrush(QPalette::Active, QPalette::Base, brush4);
-        palette20.setBrush(QPalette::Active, QPalette::Window, brush4);
-        palette20.setBrush(QPalette::Active, QPalette::Highlight, brush5);
+        QPalette palette14;
+        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette14.setBrush(QPalette::Active, QPalette::Button, brush3);
+        palette14.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette14.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
+        palette14.setBrush(QPalette::Active, QPalette::Base, brush3);
+        palette14.setBrush(QPalette::Active, QPalette::Window, brush3);
+        palette14.setBrush(QPalette::Active, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette20.setBrush(QPalette::Active, QPalette::PlaceholderText, brush6);
+        palette14.setBrush(QPalette::Active, QPalette::PlaceholderText, brush5);
 #endif
-        palette20.setBrush(QPalette::Inactive, QPalette::WindowText, brush3);
-        palette20.setBrush(QPalette::Inactive, QPalette::Button, brush4);
-        palette20.setBrush(QPalette::Inactive, QPalette::Text, brush3);
-        palette20.setBrush(QPalette::Inactive, QPalette::ButtonText, brush3);
-        palette20.setBrush(QPalette::Inactive, QPalette::Base, brush4);
-        palette20.setBrush(QPalette::Inactive, QPalette::Window, brush4);
-        palette20.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
+        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette14.setBrush(QPalette::Inactive, QPalette::Button, brush3);
+        palette14.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette14.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
+        palette14.setBrush(QPalette::Inactive, QPalette::Base, brush3);
+        palette14.setBrush(QPalette::Inactive, QPalette::Window, brush3);
+        palette14.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette20.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush6);
+        palette14.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush5);
 #endif
-        palette20.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette20.setBrush(QPalette::Disabled, QPalette::Button, brush4);
-        palette20.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette20.setBrush(QPalette::Disabled, QPalette::ButtonText, brush3);
-        palette20.setBrush(QPalette::Disabled, QPalette::Base, brush4);
-        palette20.setBrush(QPalette::Disabled, QPalette::Window, brush4);
-        palette20.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        palette14.setBrush(QPalette::Disabled, QPalette::Button, brush3);
+        palette14.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        palette14.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
+        palette14.setBrush(QPalette::Disabled, QPalette::Base, brush3);
+        palette14.setBrush(QPalette::Disabled, QPalette::Window, brush3);
+        palette14.setBrush(QPalette::Disabled, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette20.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush6);
+        palette14.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
 #endif
-        pushButton_25->setPalette(palette20);
+        pushButton_25->setPalette(palette14);
         pushButton_25->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         QIcon icon22;
         icon22.addFile(QString::fromUtf8("icons/plus.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
@@ -6458,33 +2869,33 @@ public:
         groupBox_7 = new QGroupBox(page_19);
         groupBox_7->setObjectName("groupBox_7");
         groupBox_7->setGeometry(QRect(180, 70, 901, 551));
-        QPalette palette21;
-        palette21.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette21.setBrush(QPalette::Active, QPalette::Button, brush8);
-        palette21.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette21.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette21.setBrush(QPalette::Active, QPalette::Window, brush9);
+        QPalette palette15;
+        palette15.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette15.setBrush(QPalette::Active, QPalette::Button, brush7);
+        palette15.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette15.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette15.setBrush(QPalette::Active, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette21.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette15.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette21.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette21.setBrush(QPalette::Inactive, QPalette::Button, brush8);
-        palette21.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette21.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette21.setBrush(QPalette::Inactive, QPalette::Window, brush9);
+        palette15.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette15.setBrush(QPalette::Inactive, QPalette::Button, brush7);
+        palette15.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette15.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette15.setBrush(QPalette::Inactive, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette21.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette15.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette21.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette21.setBrush(QPalette::Disabled, QPalette::Button, brush8);
-        palette21.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette21.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette21.setBrush(QPalette::Disabled, QPalette::Base, brush9);
-        palette21.setBrush(QPalette::Disabled, QPalette::Window, brush9);
+        palette15.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette15.setBrush(QPalette::Disabled, QPalette::Button, brush7);
+        palette15.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette15.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette15.setBrush(QPalette::Disabled, QPalette::Base, brush8);
+        palette15.setBrush(QPalette::Disabled, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette21.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette15.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        groupBox_7->setPalette(palette21);
+        groupBox_7->setPalette(palette15);
         groupBox_7->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
 "\n"
 "* {\n"
@@ -6999,35 +3410,35 @@ public:
         dropPlace_2 = new QLabel(groupBox_7);
         dropPlace_2->setObjectName("dropPlace_2");
         dropPlace_2->setGeometry(QRect(290, 400, 531, 101));
-        QPalette palette22;
-        palette22.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette22.setBrush(QPalette::Active, QPalette::Button, brush13);
-        palette22.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette22.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette22.setBrush(QPalette::Active, QPalette::Base, brush13);
-        palette22.setBrush(QPalette::Active, QPalette::Window, brush13);
+        QPalette palette16;
+        palette16.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette16.setBrush(QPalette::Active, QPalette::Button, brush13);
+        palette16.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette16.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette16.setBrush(QPalette::Active, QPalette::Base, brush13);
+        palette16.setBrush(QPalette::Active, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette22.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette16.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette22.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette22.setBrush(QPalette::Inactive, QPalette::Button, brush13);
-        palette22.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette22.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette22.setBrush(QPalette::Inactive, QPalette::Base, brush13);
-        palette22.setBrush(QPalette::Inactive, QPalette::Window, brush13);
+        palette16.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette16.setBrush(QPalette::Inactive, QPalette::Button, brush13);
+        palette16.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette16.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette16.setBrush(QPalette::Inactive, QPalette::Base, brush13);
+        palette16.setBrush(QPalette::Inactive, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette22.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette16.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette22.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette22.setBrush(QPalette::Disabled, QPalette::Button, brush13);
-        palette22.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette22.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette22.setBrush(QPalette::Disabled, QPalette::Base, brush13);
-        palette22.setBrush(QPalette::Disabled, QPalette::Window, brush13);
+        palette16.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette16.setBrush(QPalette::Disabled, QPalette::Button, brush13);
+        palette16.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette16.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette16.setBrush(QPalette::Disabled, QPalette::Base, brush13);
+        palette16.setBrush(QPalette::Disabled, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette22.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette16.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        dropPlace_2->setPalette(palette22);
+        dropPlace_2->setPalette(palette16);
         dropPlace_2->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/drop.png")));
         dropPlace_2->setScaledContents(false);
         textEdit_5 = new QTextEdit(groupBox_7);
@@ -7064,22 +3475,22 @@ public:
         profile6_2->setObjectName("profile6_2");
         profile6_2->setGeometry(QRect(20, 600, 41, 41));
         profile6_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile6_2->setIcon(icon4);
+        profile6_2->setIcon(icon18);
         line_14 = new QFrame(page_19);
         line_14->setObjectName("line_14");
         line_14->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette23;
-        palette23.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette23.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette23.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette23.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette23.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette23.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette23.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette23.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette23.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_14->setPalette(palette23);
-        line_14->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
+        QPalette palette17;
+        palette17.setBrush(QPalette::Active, QPalette::Button, brush10);
+        palette17.setBrush(QPalette::Active, QPalette::Base, brush10);
+        palette17.setBrush(QPalette::Active, QPalette::Window, brush10);
+        palette17.setBrush(QPalette::Inactive, QPalette::Button, brush10);
+        palette17.setBrush(QPalette::Inactive, QPalette::Base, brush10);
+        palette17.setBrush(QPalette::Inactive, QPalette::Window, brush10);
+        palette17.setBrush(QPalette::Disabled, QPalette::Button, brush10);
+        palette17.setBrush(QPalette::Disabled, QPalette::Base, brush10);
+        palette17.setBrush(QPalette::Disabled, QPalette::Window, brush10);
+        line_14->setPalette(palette17);
+        line_14->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         line_14->setAutoFillBackground(false);
         line_14->setFrameShadow(QFrame::Shadow::Plain);
         line_14->setLineWidth(3);
@@ -7087,15 +3498,15 @@ public:
         modeSwitch6_2 = new QPushButton(page_19);
         modeSwitch6_2->setObjectName("modeSwitch6_2");
         modeSwitch6_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch6_2->setIcon(icon7);
+        modeSwitch6_2->setIcon(icon21);
         conf5_2 = new QPushButton(page_19);
         conf5_2->setObjectName("conf5_2");
         conf5_2->setGeometry(QRect(20, 340, 41, 41));
-        conf5_2->setIcon(icon2);
+        conf5_2->setIcon(icon16);
         Research6_2 = new QPushButton(page_19);
         Research6_2->setObjectName("Research6_2");
         Research6_2->setGeometry(QRect(20, 260, 41, 41));
-        Research6_2->setIcon(icon1);
+        Research6_2->setIcon(icon15);
         homeButton7_2 = new QPushButton(page_19);
         homeButton7_2->setObjectName("homeButton7_2");
         homeButton7_2->setEnabled(true);
@@ -7107,17 +3518,17 @@ public:
         homeButton7_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton7_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton7_2->setAutoFillBackground(false);
-        homeButton7_2->setIcon(icon3);
+        homeButton7_2->setIcon(icon17);
         homeButton7_2->setIconSize(QSize(22, 22));
         homeButton7_2->setFlat(true);
         reveiw6_2 = new QPushButton(page_19);
         reveiw6_2->setObjectName("reveiw6_2");
         reveiw6_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw6_2->setIcon(icon);
+        reveiw6_2->setIcon(icon14);
         collab6_2 = new QPushButton(page_19);
         collab6_2->setObjectName("collab6_2");
         collab6_2->setGeometry(QRect(20, 420, 41, 41));
-        collab6_2->setIcon(icon5);
+        collab6_2->setIcon(icon19);
         pic_14 = new QLabel(page_19);
         pic_14->setObjectName("pic_14");
         pic_14->setGeometry(QRect(20, 10, 41, 41));
@@ -7127,7 +3538,7 @@ public:
         publication6_2 = new QPushButton(page_19);
         publication6_2->setObjectName("publication6_2");
         publication6_2->setGeometry(QRect(20, 500, 41, 41));
-        publication6_2->setIcon(icon6);
+        publication6_2->setIcon(icon20);
         stackedWidget_2->addWidget(page_19);
         page_20 = new QWidget();
         page_20->setObjectName("page_20");
@@ -7263,7 +3674,7 @@ public:
         page_6->setObjectName("page_6");
         mainContent = new QWidget(page_6);
         mainContent->setObjectName("mainContent");
-        mainContent->setGeometry(QRect(110, 20, 1114, 640));
+        mainContent->setGeometry(QRect(20, 40, 1114, 640));
         verticalLayout_main = new QVBoxLayout(mainContent);
         verticalLayout_main->setObjectName("verticalLayout_main");
         pubInfoGroup = new QGroupBox(mainContent);
@@ -7348,696 +3759,113 @@ public:
 
         verticalLayout_main->addWidget(FeatsGroup);
 
-        statusLabel = new QLabel(mainContent);
-        statusLabel->setObjectName("statusLabel");
-
-        verticalLayout_main->addWidget(statusLabel);
-
-        profile5 = new QPushButton(page_6);
-        profile5->setObjectName("profile5");
-        profile5->setGeometry(QRect(20, 600, 41, 41));
-        profile5->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile5->setIcon(icon4);
-        line_4 = new QFrame(page_6);
-        line_4->setObjectName("line_4");
-        line_4->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette24;
-        palette24.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette24.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette24.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette24.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette24.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette24.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette24.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette24.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette24.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_4->setPalette(palette24);
-        line_4->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_4->setAutoFillBackground(false);
-        line_4->setFrameShadow(QFrame::Shadow::Plain);
-        line_4->setLineWidth(3);
-        line_4->setFrameShape(QFrame::Shape::VLine);
-        modeSwitch5 = new QPushButton(page_6);
-        modeSwitch5->setObjectName("modeSwitch5");
-        modeSwitch5->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch5->setIcon(icon7);
-        conf4 = new QPushButton(page_6);
-        conf4->setObjectName("conf4");
-        conf4->setGeometry(QRect(20, 340, 41, 41));
-        conf4->setIcon(icon2);
-        Research5 = new QPushButton(page_6);
-        Research5->setObjectName("Research5");
-        Research5->setGeometry(QRect(20, 260, 41, 41));
-        Research5->setIcon(icon1);
-        reveiw5 = new QPushButton(page_6);
-        reveiw5->setObjectName("reveiw5");
-        reveiw5->setGeometry(QRect(20, 180, 41, 41));
-        reveiw5->setIcon(icon);
-        homeButton5 = new QPushButton(page_6);
-        homeButton5->setObjectName("homeButton5");
-        homeButton5->setEnabled(true);
-        homeButton5->setGeometry(QRect(20, 80, 40, 40));
-        homeButton5->setMinimumSize(QSize(40, 40));
-        homeButton5->setMaximumSize(QSize(40, 40));
-        homeButton5->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton5->setMouseTracking(true);
-        homeButton5->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton5->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton5->setAutoFillBackground(false);
-        homeButton5->setIcon(icon3);
-        homeButton5->setIconSize(QSize(22, 22));
-        homeButton5->setFlat(true);
-        collab5 = new QPushButton(page_6);
-        collab5->setObjectName("collab5");
-        collab5->setGeometry(QRect(20, 420, 41, 41));
-        collab5->setIcon(icon5);
-        pic_5 = new QLabel(page_6);
-        pic_5->setObjectName("pic_5");
-        pic_5->setGeometry(QRect(20, 10, 41, 41));
-        pic_5->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_5->setScaledContents(true);
-        pic_5->setWordWrap(false);
-        publication5 = new QPushButton(page_6);
-        publication5->setObjectName("publication5");
-        publication5->setGeometry(QRect(20, 500, 41, 41));
-        publication5->setIcon(icon6);
         stackedWidget->addWidget(page_6);
         page_7 = new QWidget();
         page_7->setObjectName("page_7");
         backHome2 = new QPushButton(page_7);
         backHome2->setObjectName("backHome2");
-        backHome2->setGeometry(QRect(790, 640, 81, 41));
+        backHome2->setGeometry(QRect(700, 630, 81, 41));
         backHome2->setIconSize(QSize(25, 25));
         pushButton_2 = new QPushButton(page_7);
         pushButton_2->setObjectName("pushButton_2");
-        pushButton_2->setGeometry(QRect(360, 640, 161, 41));
-        QPalette palette25;
-        palette25.setBrush(QPalette::Active, QPalette::WindowText, brush3);
-        palette25.setBrush(QPalette::Active, QPalette::Button, brush4);
-        palette25.setBrush(QPalette::Active, QPalette::Text, brush3);
-        palette25.setBrush(QPalette::Active, QPalette::ButtonText, brush3);
-        palette25.setBrush(QPalette::Active, QPalette::Base, brush4);
-        palette25.setBrush(QPalette::Active, QPalette::Window, brush4);
-        palette25.setBrush(QPalette::Active, QPalette::Highlight, brush5);
+        pushButton_2->setGeometry(QRect(270, 630, 161, 41));
+        QPalette palette18;
+        palette18.setBrush(QPalette::Active, QPalette::WindowText, brush2);
+        palette18.setBrush(QPalette::Active, QPalette::Button, brush3);
+        palette18.setBrush(QPalette::Active, QPalette::Text, brush2);
+        palette18.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
+        palette18.setBrush(QPalette::Active, QPalette::Base, brush3);
+        palette18.setBrush(QPalette::Active, QPalette::Window, brush3);
+        palette18.setBrush(QPalette::Active, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette25.setBrush(QPalette::Active, QPalette::PlaceholderText, brush6);
+        palette18.setBrush(QPalette::Active, QPalette::PlaceholderText, brush5);
 #endif
-        palette25.setBrush(QPalette::Inactive, QPalette::WindowText, brush3);
-        palette25.setBrush(QPalette::Inactive, QPalette::Button, brush4);
-        palette25.setBrush(QPalette::Inactive, QPalette::Text, brush3);
-        palette25.setBrush(QPalette::Inactive, QPalette::ButtonText, brush3);
-        palette25.setBrush(QPalette::Inactive, QPalette::Base, brush4);
-        palette25.setBrush(QPalette::Inactive, QPalette::Window, brush4);
-        palette25.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
+        palette18.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
+        palette18.setBrush(QPalette::Inactive, QPalette::Button, brush3);
+        palette18.setBrush(QPalette::Inactive, QPalette::Text, brush2);
+        palette18.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
+        palette18.setBrush(QPalette::Inactive, QPalette::Base, brush3);
+        palette18.setBrush(QPalette::Inactive, QPalette::Window, brush3);
+        palette18.setBrush(QPalette::Inactive, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette25.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush6);
+        palette18.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush5);
 #endif
-        palette25.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette25.setBrush(QPalette::Disabled, QPalette::Button, brush4);
-        palette25.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette25.setBrush(QPalette::Disabled, QPalette::ButtonText, brush3);
-        palette25.setBrush(QPalette::Disabled, QPalette::Base, brush4);
-        palette25.setBrush(QPalette::Disabled, QPalette::Window, brush4);
-        palette25.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
+        palette18.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        palette18.setBrush(QPalette::Disabled, QPalette::Button, brush3);
+        palette18.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        palette18.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
+        palette18.setBrush(QPalette::Disabled, QPalette::Base, brush3);
+        palette18.setBrush(QPalette::Disabled, QPalette::Window, brush3);
+        palette18.setBrush(QPalette::Disabled, QPalette::Highlight, brush4);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette25.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush6);
+        palette18.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
 #endif
-        pushButton_2->setPalette(palette25);
+        pushButton_2->setPalette(palette18);
         pushButton_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         pushButton_2->setIcon(icon22);
         groupBox_3 = new QGroupBox(page_7);
         groupBox_3->setObjectName("groupBox_3");
-        groupBox_3->setGeometry(QRect(180, 70, 901, 551));
-        QPalette palette26;
-        palette26.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette26.setBrush(QPalette::Active, QPalette::Button, brush8);
-        palette26.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette26.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette26.setBrush(QPalette::Active, QPalette::Window, brush9);
+        groupBox_3->setGeometry(QRect(90, 60, 901, 551));
+        QPalette palette19;
+        palette19.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette19.setBrush(QPalette::Active, QPalette::Button, brush7);
+        palette19.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette19.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette19.setBrush(QPalette::Active, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette26.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette19.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette26.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette26.setBrush(QPalette::Inactive, QPalette::Button, brush8);
-        palette26.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette26.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette26.setBrush(QPalette::Inactive, QPalette::Window, brush9);
+        palette19.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette19.setBrush(QPalette::Inactive, QPalette::Button, brush7);
+        palette19.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette19.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette19.setBrush(QPalette::Inactive, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette26.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette19.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette26.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette26.setBrush(QPalette::Disabled, QPalette::Button, brush8);
-        palette26.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette26.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette26.setBrush(QPalette::Disabled, QPalette::Base, brush9);
-        palette26.setBrush(QPalette::Disabled, QPalette::Window, brush9);
+        palette19.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette19.setBrush(QPalette::Disabled, QPalette::Button, brush7);
+        palette19.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette19.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette19.setBrush(QPalette::Disabled, QPalette::Base, brush8);
+        palette19.setBrush(QPalette::Disabled, QPalette::Window, brush8);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette26.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette19.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        groupBox_3->setPalette(palette26);
-        groupBox_3->setStyleSheet(QString::fromUtf8("/* Research Publication App Stylesheet - LIGHT MODE */\n"
-"\n"
-"* {\n"
-"    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif;\n"
-"}\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"#sidebar {\n"
-"    background-color: #ffffff;\n"
-"    border-right: 1px solid #d8e0f0;\n"
-"}\n"
-"\n"
-"#appTitle {\n"
-"    color: #1a7a7f;                /* darker version of your teal */\n"
-"    font-size: 20pt;\n"
-"    font-weight: bold;\n"
-"    padding: 16px;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Navigation Buttons */\n"
-"#homeNavButton, #myPageNavButton, #quitb {\n"
-"    text-align: left;\n"
-"    padding: 12px 16px;\n"
-"    border-radius: 8px;\n"
-"    background-color: transparent;\n"
-"    color: #2d3748;\n"
-"    font-size: 11pt;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeNavButton:hover, #myPageNavButton:hover {\n"
-"    background-color: rgba(48, 185, 191, 0.08);\n"
-"}\n"
-"\n"
-"#homeNavButton:pressed, #myPageNavButton:pressed {\n"
-"    background-co"
-                        "lor: rgba(48, 185, 191, 0.15);\n"
-"}\n"
-"\n"
-"#quitb {\n"
-"    color: #2d3748;\n"
-"    margin-top: 8px;\n"
-"}\n"
-"\n"
-"#quitb:hover {\n"
-"    background-color: rgba(200, 30, 30, 0.08);\n"
-"    color: #c62828;\n"
-"}\n"
-"\n"
-"/* Top Bars */\n"
-"#homeTopBar, #myPageTopBar {\n"
-"    background-color: #f6f8fc;\n"
-"    padding: 16px 24px;\n"
-"}\n"
-"\n"
-"#homeTitle, #myPageTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 18pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Search Bar */\n"
-"QLineEdit#searchBar {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 16px;\n"
-"    color: #1f2937;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"    background-color: #ffffff !important;\n"
-"}\n"
-"\n"
-"QLineEdit#searchBar:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Scroll Areas */\n"
-"#homeScrollArea, #myScrollArea {\n"
-"    backgro"
-                        "und-color: #f6f8fc;\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"#homeScrollArea > QWidget, #myScrollArea > QWidget {\n"
-"    background-color: #f6f8fc;\n"
-"}\n"
-"\n"
-"/* Publication Cards */\n"
-"#publicationCard {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    box-shadow: 0 1px 3px rgba(0,0,0,0.06);\n"
-"}\n"
-"\n"
-"#publicationCard:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"    background-color: #f8fcff;\n"
-"    box-shadow: 0 4px 12px rgba(48,185,191,0.12);\n"
-"}\n"
-"\n"
-"#cardTitle {\n"
-"    color: #1f2937;\n"
-"    font-size: 14pt;\n"
-"    font-weight: bold;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardAuthors {\n"
-"    color: #4b5563;\n"
-"    font-size: 10pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#cardDate {\n"
-"    color: #6b7280;\n"
-"    font-size: 9pt;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"/* Primary Button (Upload/Browse) */\n"
-"#Browse {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"    b"
-                        "order: none;\n"
-"    border-radius: 20px;\n"
-"    padding: 10px 20px;\n"
-"    font-weight: bold;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"#Browse:hover {\n"
-"    background-color: #3dd4db;\n"
-"}\n"
-"\n"
-"#Browse:pressed {\n"
-"    background-color: #26a0a6;\n"
-"}\n"
-"\n"
-"/* Secondary Buttons (View, Download) */\n"
-"#secondaryButton {\n"
-"    background-color: transparent;\n"
-"    border: 1px solid #30b9bf;\n"
-"    color: #30b9bf;\n"
-"    border-radius: 16px;\n"
-"    padding: 6px 16px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: 600;\n"
-"}\n"
-"\n"
-"#secondaryButton:hover {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"#secondaryButton:pressed {\n"
-"    background-color: #26a0a6;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Default QPushButton */\n"
-"QPushButton {\n"
-"    background-color: #e2efff;\n"
-"    color: #1e40af;\n"
-"    border: 1px solid #bfdbfe;\n"
-"    border-radius: 8px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 10pt;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-col"
-                        "or: #dbeafe;\n"
-"    border-color: #93c5fd;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #bfdbfe;\n"
-"    border-color: #60a5fa;\n"
-"}\n"
-"\n"
-"/* ALL QLabel */\n"
-"QLabel {\n"
-"    color: #1f2937;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#sidebar QLabel {\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"/* Status Badges */\n"
-".statusAccepted {\n"
-"    background-color: #dcfce7;\n"
-"    color: #166534;\n"
-"    border: 1px solid #86efac;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusReview {\n"
-"    background-color: #fef3c7;\n"
-"    color: #92400e;\n"
-"    border: 1px solid #fcd34d;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-".statusRejected {\n"
-"    background-color: #fee2e2;\n"
-"    color: #991b1b;\n"
-"    border: 1px solid #fca5a5;\n"
-"    border-radius: 12px;\n"
-"    padding: 4px 12px;\n"
-"    font-size: 9pt;\n"
-"    font-wei"
-                        "ght: bold;\n"
-"}\n"
-"\n"
-"/* Scrollbars */\n"
-"QScrollBar:vertical {\n"
-"    background: #f6f8fc;\n"
-"    width: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #c0d0e8;\n"
-"    min-height: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #f6f8fc;\n"
-"    height: 10px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #c0d0e8;\n"
-"    min-width: 30px;\n"
-"    border-radius: 5px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #30b9bf;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"\n"
-"/* ALL Input Fields */\n"
-"QLineEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-" "
-                        "   border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit, QPlainTextEdit {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"}\n"
-"\n"
-"QTextEdit:focus, QPlainTextEdit:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTextEdit:hover, QPlainTextEdit:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Combo Boxes */\n"
-"QComboBox {\n"
-"    background-color: #ffffff !important;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    color: #1f2937;\n"
-"    min-width: 100px;\n"
-"}\n"
-"\n"
-"QComboBox:hover {\n"
-"    bo"
-                        "rder: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox:focus {\n"
-"    border: 2px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"    border-left: 5px solid transparent;\n"
-"    border-right: 5px solid transparent;\n"
-"    border-top: 5px solid #6b7280;\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"/* Checkboxes & Radio */\n"
-"QCheckBox, QRadioButton {\n"
-"    spacing: 8px;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator, QRadioButton::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 4px;     /* radio will override radius */\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked {\n"
-"    background-color: #30"
-                        "b9bf;\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator {\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QRadioButton::indicator:checked {\n"
-"    background-color: #ffffff;\n"
-"    border: 5px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:hover, QRadioButton::indicator:hover {\n"
-"    border: 1px solid #30b9bf;\n"
-"}\n"
-"\n"
-"/* Progress Bar */\n"
-"QProgressBar {\n"
-"    border: 1px solid #c0d0e8;\n"
-"    border-radius: 6px;\n"
-"    text-align: center;\n"
-"    background-color: #f1f5f9;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"    background-color: #30b9bf;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tooltips */\n"
-"QToolTip {\n"
-"    background-color: #1e293b;\n"
-"    color: #f1f5f9;\n"
-"    border: 1px solid #30b9bf;\n"
-"    padding: 6px 8px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"/* Tables / List / Tree */\n"
-"QTableView, QListView, QTreeView {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    bor"
-                        "der-radius: 8px;\n"
-"    gridline-color: #e2e8f0;\n"
-"    selection-background-color: #30b9bf;\n"
-"    selection-color: white;\n"
-"    color: #1f2937;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"QTableView::item:hover, QListView::item:hover, QTreeView::item:hover {\n"
-"    background-color: #f0f9ff;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #f1f5f9;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    border-right: 1px solid #e2e8f0;\n"
-"    border-bottom: 1px solid #e2e8f0;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"    font-size: 9pt;\n"
-"}\n"
-"\n"
-"/* Menu Bar */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #e2efff;\n"
-"}\n"
-"\n"
-"QMenu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #d8e0f0;\n"
-"    color: #1f2937;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #30b9bf;\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Sta"
-                        "tus Bar */\n"
-"QStatusBar {\n"
-"    background-color: #f1f5f9;\n"
-"    border-top: 1px solid #d8e0f0;\n"
-"    color: #4b5563;\n"
-"}\n"
-"\n"
-"/* Group Box */\n"
-"QGroupBox {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    border-radius: 8px;\n"
-"    margin-top: 12px;\n"
-"    padding-top: 12px;\n"
-"    color: #1f2937;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    subcontrol-position: top left;\n"
-"    padding: 0 8px;\n"
-"    color: #1a7a7f;\n"
-"}\n"
-"\n"
-"/* Tabs */\n"
-"QTabWidget::pane {\n"
-"    border: 1px solid #d8e0f0;\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"\n"
-"QTabBar::tab {\n"
-"    background-color: #f8fafc;\n"
-"    color: #64748b;\n"
-"    border: none;\n"
-"    border-bottom: 3px solid transparent;\n"
-"    padding: 12px 20px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QTabBar::tab:selected {\n"
-"    color: #1f2937;\n"
-"    background-color: #ffffff;\n"
-"    border-bottom: 3px solid #30b9bf;\n"
-"}\n"
-"\n"
-"QTabBar::tab:hov"
-                        "er {\n"
-"    color: #1f2937;\n"
-"    background-color: #f1f5f9;\n"
-"}"));
+        groupBox_3->setPalette(palette19);
+        groupBox_3->setStyleSheet(QString::fromUtf8(""));
         dropPlace = new QLabel(groupBox_3);
         dropPlace->setObjectName("dropPlace");
         dropPlace->setGeometry(QRect(290, 400, 531, 101));
-        QPalette palette27;
-        palette27.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette27.setBrush(QPalette::Active, QPalette::Button, brush13);
-        palette27.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette27.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette27.setBrush(QPalette::Active, QPalette::Base, brush13);
-        palette27.setBrush(QPalette::Active, QPalette::Window, brush13);
+        QPalette palette20;
+        palette20.setBrush(QPalette::Active, QPalette::WindowText, brush6);
+        palette20.setBrush(QPalette::Active, QPalette::Button, brush13);
+        palette20.setBrush(QPalette::Active, QPalette::Text, brush6);
+        palette20.setBrush(QPalette::Active, QPalette::ButtonText, brush6);
+        palette20.setBrush(QPalette::Active, QPalette::Base, brush13);
+        palette20.setBrush(QPalette::Active, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette27.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette20.setBrush(QPalette::Active, QPalette::PlaceholderText, brush9);
 #endif
-        palette27.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette27.setBrush(QPalette::Inactive, QPalette::Button, brush13);
-        palette27.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette27.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette27.setBrush(QPalette::Inactive, QPalette::Base, brush13);
-        palette27.setBrush(QPalette::Inactive, QPalette::Window, brush13);
+        palette20.setBrush(QPalette::Inactive, QPalette::WindowText, brush6);
+        palette20.setBrush(QPalette::Inactive, QPalette::Button, brush13);
+        palette20.setBrush(QPalette::Inactive, QPalette::Text, brush6);
+        palette20.setBrush(QPalette::Inactive, QPalette::ButtonText, brush6);
+        palette20.setBrush(QPalette::Inactive, QPalette::Base, brush13);
+        palette20.setBrush(QPalette::Inactive, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette27.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette20.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush9);
 #endif
-        palette27.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette27.setBrush(QPalette::Disabled, QPalette::Button, brush13);
-        palette27.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette27.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette27.setBrush(QPalette::Disabled, QPalette::Base, brush13);
-        palette27.setBrush(QPalette::Disabled, QPalette::Window, brush13);
+        palette20.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette20.setBrush(QPalette::Disabled, QPalette::Button, brush13);
+        palette20.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette20.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        palette20.setBrush(QPalette::Disabled, QPalette::Base, brush13);
+        palette20.setBrush(QPalette::Disabled, QPalette::Window, brush13);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette27.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette20.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush9);
 #endif
-        dropPlace->setPalette(palette27);
+        dropPlace->setPalette(palette20);
         dropPlace->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/drop.png")));
         dropPlace->setScaledContents(false);
         textEdit_4 = new QTextEdit(groupBox_3);
@@ -8070,80 +3898,12 @@ public:
         comboBox_2->addItem(QString());
         comboBox_2->setObjectName("comboBox_2");
         comboBox_2->setGeometry(QRect(290, 70, 331, 41));
-        profile6 = new QPushButton(page_7);
-        profile6->setObjectName("profile6");
-        profile6->setGeometry(QRect(20, 600, 41, 41));
-        profile6->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile6->setIcon(icon4);
-        line_6 = new QFrame(page_7);
-        line_6->setObjectName("line_6");
-        line_6->setGeometry(QRect(80, -30, 20, 841));
-        QPalette palette28;
-        palette28.setBrush(QPalette::Active, QPalette::Button, brush2);
-        palette28.setBrush(QPalette::Active, QPalette::Base, brush2);
-        palette28.setBrush(QPalette::Active, QPalette::Window, brush2);
-        palette28.setBrush(QPalette::Inactive, QPalette::Button, brush2);
-        palette28.setBrush(QPalette::Inactive, QPalette::Base, brush2);
-        palette28.setBrush(QPalette::Inactive, QPalette::Window, brush2);
-        palette28.setBrush(QPalette::Disabled, QPalette::Button, brush2);
-        palette28.setBrush(QPalette::Disabled, QPalette::Base, brush2);
-        palette28.setBrush(QPalette::Disabled, QPalette::Window, brush2);
-        line_6->setPalette(palette28);
-        line_6->setCursor(QCursor(Qt::CursorShape::ForbiddenCursor));
-        line_6->setAutoFillBackground(false);
-        line_6->setFrameShadow(QFrame::Shadow::Plain);
-        line_6->setLineWidth(3);
-        line_6->setFrameShape(QFrame::Shape::VLine);
-        modeSwitch6 = new QPushButton(page_7);
-        modeSwitch6->setObjectName("modeSwitch6");
-        modeSwitch6->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch6->setIcon(icon7);
-        conf5 = new QPushButton(page_7);
-        conf5->setObjectName("conf5");
-        conf5->setGeometry(QRect(20, 340, 41, 41));
-        conf5->setIcon(icon2);
-        Research6 = new QPushButton(page_7);
-        Research6->setObjectName("Research6");
-        Research6->setGeometry(QRect(20, 260, 41, 41));
-        Research6->setIcon(icon1);
-        homeButton7 = new QPushButton(page_7);
-        homeButton7->setObjectName("homeButton7");
-        homeButton7->setEnabled(true);
-        homeButton7->setGeometry(QRect(20, 80, 40, 40));
-        homeButton7->setMinimumSize(QSize(40, 40));
-        homeButton7->setMaximumSize(QSize(40, 40));
-        homeButton7->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        homeButton7->setMouseTracking(true);
-        homeButton7->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        homeButton7->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        homeButton7->setAutoFillBackground(false);
-        homeButton7->setIcon(icon3);
-        homeButton7->setIconSize(QSize(22, 22));
-        homeButton7->setFlat(true);
-        reveiw6 = new QPushButton(page_7);
-        reveiw6->setObjectName("reveiw6");
-        reveiw6->setGeometry(QRect(20, 180, 41, 41));
-        reveiw6->setIcon(icon);
-        collab6 = new QPushButton(page_7);
-        collab6->setObjectName("collab6");
-        collab6->setGeometry(QRect(20, 420, 41, 41));
-        collab6->setIcon(icon5);
-        pic_6 = new QLabel(page_7);
-        pic_6->setObjectName("pic_6");
-        pic_6->setGeometry(QRect(20, 10, 41, 41));
-        pic_6->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
-        pic_6->setScaledContents(true);
-        pic_6->setWordWrap(false);
-        publication6 = new QPushButton(page_7);
-        publication6->setObjectName("publication6");
-        publication6->setGeometry(QRect(20, 500, 41, 41));
-        publication6->setIcon(icon6);
         stackedWidget->addWidget(page_7);
         page_8 = new QWidget();
         page_8->setObjectName("page_8");
         frame_7 = new QFrame(page_8);
         frame_7->setObjectName("frame_7");
-        frame_7->setGeometry(QRect(350, 90, 561, 511));
+        frame_7->setGeometry(QRect(250, 130, 561, 511));
         frame_7->setFrameShape(QFrame::Shape::StyledPanel);
         frame_7->setFrameShadow(QFrame::Shadow::Raised);
         groupBox_2 = new QGroupBox(frame_7);
@@ -8180,7 +3940,7 @@ public:
         page_10->setObjectName("page_10");
         frame_8 = new QFrame(page_10);
         frame_8->setObjectName("frame_8");
-        frame_8->setGeometry(QRect(350, 90, 561, 511));
+        frame_8->setGeometry(QRect(250, 130, 561, 511));
         frame_8->setFrameShape(QFrame::Shape::StyledPanel);
         frame_8->setFrameShadow(QFrame::Shadow::Raised);
         groupBox_5 = new QGroupBox(frame_8);
@@ -8231,7 +3991,7 @@ public:
         page_11->setObjectName("page_11");
         frame_9 = new QFrame(page_11);
         frame_9->setObjectName("frame_9");
-        frame_9->setGeometry(QRect(350, 90, 561, 511));
+        frame_9->setGeometry(QRect(250, 130, 561, 511));
         frame_9->setFrameShape(QFrame::Shape::StyledPanel);
         frame_9->setFrameShadow(QFrame::Shadow::Raised);
         groupBox_4 = new QGroupBox(frame_9);
@@ -8275,7 +4035,7 @@ public:
         page_23->setObjectName("page_23");
         groupBox_11 = new QGroupBox(page_23);
         groupBox_11->setObjectName("groupBox_11");
-        groupBox_11->setGeometry(QRect(230, 70, 811, 561));
+        groupBox_11->setGeometry(QRect(170, 90, 811, 561));
         lineEdit_16 = new QLineEdit(groupBox_11);
         lineEdit_16->setObjectName("lineEdit_16");
         lineEdit_16->setGeometry(QRect(130, 110, 211, 41));
@@ -8295,14 +4055,73 @@ public:
         useListView->setObjectName("useListView");
         useListView->setGeometry(QRect(120, 210, 561, 192));
         stackedWidget->addWidget(page_23);
+        sideBarStack = new QStackedWidget(centralwidget);
+        sideBarStack->setObjectName("sideBarStack");
+        sideBarStack->setGeometry(QRect(0, 0, 91, 741));
+        page_24 = new QWidget();
+        page_24->setObjectName("page_24");
+        homeButton = new QPushButton(page_24);
+        homeButton->setObjectName("homeButton");
+        homeButton->setEnabled(true);
+        homeButton->setGeometry(QRect(20, 80, 40, 40));
+        homeButton->setMinimumSize(QSize(40, 40));
+        homeButton->setMaximumSize(QSize(40, 40));
+        homeButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        homeButton->setMouseTracking(true);
+        homeButton->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+        homeButton->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+        homeButton->setAutoFillBackground(false);
+        homeButton->setIcon(icon17);
+        homeButton->setIconSize(QSize(22, 22));
+        homeButton->setFlat(true);
+        conf = new QPushButton(page_24);
+        conf->setObjectName("conf");
+        conf->setGeometry(QRect(20, 340, 41, 41));
+        conf->setIcon(icon16);
+        pic = new QLabel(page_24);
+        pic->setObjectName("pic");
+        pic->setGeometry(QRect(20, 10, 41, 41));
+        pic->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
+        pic->setScaledContents(true);
+        pic->setWordWrap(false);
+        collab = new QPushButton(page_24);
+        collab->setObjectName("collab");
+        collab->setGeometry(QRect(20, 420, 41, 41));
+        collab->setIcon(icon19);
+        profile = new QPushButton(page_24);
+        profile->setObjectName("profile");
+        profile->setGeometry(QRect(20, 600, 41, 41));
+        profile->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        profile->setIcon(icon18);
+        reveiw = new QPushButton(page_24);
+        reveiw->setObjectName("reveiw");
+        reveiw->setGeometry(QRect(20, 180, 41, 41));
+        reveiw->setIcon(icon14);
+        Research = new QPushButton(page_24);
+        Research->setObjectName("Research");
+        Research->setGeometry(QRect(20, 260, 41, 41));
+        Research->setIcon(icon15);
+        modeSwitch = new QPushButton(page_24);
+        modeSwitch->setObjectName("modeSwitch");
+        modeSwitch->setGeometry(QRect(20, 660, 41, 41));
+        modeSwitch->setIcon(icon21);
+        publication = new QPushButton(page_24);
+        publication->setObjectName("publication");
+        publication->setGeometry(QRect(20, 500, 41, 41));
+        publication->setIcon(icon20);
+        sideBarStack->addWidget(page_24);
+        page_25 = new QWidget();
+        page_25->setObjectName("page_25");
+        sideBarStack->addWidget(page_25);
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(4);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
+        sideBarStack->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -8311,39 +4130,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-#if QT_CONFIG(tooltip)
-        reveiw4->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw4->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research7->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research7->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf6->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf6->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton4->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton4->setText(QString());
-        pic_4->setText(QString());
-#if QT_CONFIG(tooltip)
-        profile4->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile4->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab7->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab7->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication7->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication7->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch4->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch4->setText(QString());
         chart->setText(QString());
         bar->setText(QString());
 #if QT_CONFIG(tooltip)
@@ -8374,72 +4160,6 @@ public:
         comboBox_3->setItemText(2, QCoreApplication::translate("MainWindow", "Physics", nullptr));
 
         comboBox_3->setCurrentText(QCoreApplication::translate("MainWindow", "Chemistry", nullptr));
-#if QT_CONFIG(tooltip)
-        profile->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication->setText(QString());
-        pic->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch->setText(QString());
-#if QT_CONFIG(tooltip)
-        profile2->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile2->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research2->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research2->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw2->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw2->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf2->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf2->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton2->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton2->setText(QString());
-        pic_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab2->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab2->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication2->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication2->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch2->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch2->setText(QString());
         label_17->setText(QCoreApplication::translate("MainWindow", "Collaborations: ", nullptr));
         collabsGroupChatButton->setText(QCoreApplication::translate("MainWindow", "  Group Chat", nullptr));
         collabsDeleteButton->setText(QCoreApplication::translate("MainWindow", "Delete ", nullptr));
@@ -8489,39 +4209,6 @@ public:
         lineEdit_4->setText(QString());
         label_37->setText(QCoreApplication::translate("MainWindow", "[ Collaborators ]", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "Personal Collaborations", nullptr));
-#if QT_CONFIG(tooltip)
-        Research3->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research3->setText(QString());
-#if QT_CONFIG(tooltip)
-        profile7->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile7->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw7->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw7->setText(QString());
-        pic_7->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton6->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton6->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf7->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf7->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication3->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication3->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch7->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch7->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab3->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab3->setText(QString());
         userPic->setText(QString());
         label_6->setText(QCoreApplication::translate("MainWindow", "[ Username ]", nullptr));
         label_7->setText(QCoreApplication::translate("MainWindow", "[ Title / Specialty ]", nullptr));
@@ -8541,41 +4228,8 @@ public:
         mapBtn->setText(QCoreApplication::translate("MainWindow", "View in Map", nullptr));
         editBtn->setText(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         deleteBtn->setText(QCoreApplication::translate("MainWindow", "Delete", nullptr));
-#if QT_CONFIG(tooltip)
-        profile3->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile3->setText(QString());
         viewCalendarBtn->setText(QCoreApplication::translate("MainWindow", "View Calendar", nullptr));
         addConferenceBtn->setText(QCoreApplication::translate("MainWindow", "Add Conference", nullptr));
-#if QT_CONFIG(tooltip)
-        publication4->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication4->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research4->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research4->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf3->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf3->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton3->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton3->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw3->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw3->setText(QString());
-        pic_3->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab4->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab4->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch3->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch3->setText(QString());
         confStatsBtn->setText(QCoreApplication::translate("MainWindow", "Conference Statistics", nullptr));
 #if QT_CONFIG(tooltip)
         reveiw4_2->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
@@ -8787,39 +4441,6 @@ public:
         temp_2->setText(QCoreApplication::translate("MainWindow", "Home page", nullptr));
         temp2_2->setText(QCoreApplication::translate("MainWindow", "Login Page", nullptr));
         mkUser_2->setText(QCoreApplication::translate("MainWindow", "Make a New User", nullptr));
-#if QT_CONFIG(tooltip)
-        profile3_2->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile3_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication4_2->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication4_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research4_2->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research4_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf3_2->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf3_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton3_2->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton3_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw3_2->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw3_2->setText(QString());
-        pic_12->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab4_2->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab4_2->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch3_2->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch3_2->setText(QString());
         label_42->setText(QCoreApplication::translate("MainWindow", "Title", nullptr));
         cTitleEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter The Title", nullptr));
         label_25->setText(QCoreApplication::translate("MainWindow", "Topic", nullptr));
@@ -8993,40 +4614,6 @@ public:
         FeatsGroup->setTitle(QCoreApplication::translate("MainWindow", "Innovative Features", nullptr));
         summaryButton->setText(QCoreApplication::translate("MainWindow", "Summary", nullptr));
         emailButton->setText(QCoreApplication::translate("MainWindow", "Send Email Notification", nullptr));
-        statusLabel->setText(QString());
-#if QT_CONFIG(tooltip)
-        profile5->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile5->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch5->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch5->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf4->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf4->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research5->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research5->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw5->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw5->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton5->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton5->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab5->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab5->setText(QString());
-        pic_5->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication5->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication5->setText(QString());
 #if QT_CONFIG(tooltip)
         backHome2->setToolTip(QCoreApplication::translate("MainWindow", "Quit", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -9047,39 +4634,6 @@ public:
         comboBox_2->setItemText(1, QCoreApplication::translate("MainWindow", "Research 2", nullptr));
         comboBox_2->setItemText(2, QCoreApplication::translate("MainWindow", "Research 3", nullptr));
 
-#if QT_CONFIG(tooltip)
-        profile6->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
-#endif // QT_CONFIG(tooltip)
-        profile6->setText(QString());
-#if QT_CONFIG(tooltip)
-        modeSwitch6->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
-#endif // QT_CONFIG(tooltip)
-        modeSwitch6->setText(QString());
-#if QT_CONFIG(tooltip)
-        conf5->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
-#endif // QT_CONFIG(tooltip)
-        conf5->setText(QString());
-#if QT_CONFIG(tooltip)
-        Research6->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
-#endif // QT_CONFIG(tooltip)
-        Research6->setText(QString());
-#if QT_CONFIG(tooltip)
-        homeButton7->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
-#endif // QT_CONFIG(tooltip)
-        homeButton7->setText(QString());
-#if QT_CONFIG(tooltip)
-        reveiw6->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
-#endif // QT_CONFIG(tooltip)
-        reveiw6->setText(QString());
-#if QT_CONFIG(tooltip)
-        collab6->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
-#endif // QT_CONFIG(tooltip)
-        collab6->setText(QString());
-        pic_6->setText(QString());
-#if QT_CONFIG(tooltip)
-        publication6->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
-#endif // QT_CONFIG(tooltip)
-        publication6->setText(QString());
         groupBox_2->setTitle(QString());
         lineEdit_8->setText(QString());
         lineEdit_8->setPlaceholderText(QCoreApplication::translate("MainWindow", "Email", nullptr));
@@ -9112,6 +4666,39 @@ public:
         userCheckBox_2->setText(QCoreApplication::translate("MainWindow", "CheckBox", nullptr));
         userCheckBox_3->setText(QCoreApplication::translate("MainWindow", "CheckBox", nullptr));
         userSearchBackBTN->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
+#if QT_CONFIG(tooltip)
+        homeButton->setToolTip(QCoreApplication::translate("MainWindow", "Home", nullptr));
+#endif // QT_CONFIG(tooltip)
+        homeButton->setText(QString());
+#if QT_CONFIG(tooltip)
+        conf->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+#endif // QT_CONFIG(tooltip)
+        conf->setText(QString());
+        pic->setText(QString());
+#if QT_CONFIG(tooltip)
+        collab->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+#endif // QT_CONFIG(tooltip)
+        collab->setText(QString());
+#if QT_CONFIG(tooltip)
+        profile->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
+        profile->setText(QString());
+#if QT_CONFIG(tooltip)
+        reveiw->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
+#endif // QT_CONFIG(tooltip)
+        reveiw->setText(QString());
+#if QT_CONFIG(tooltip)
+        Research->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
+#endif // QT_CONFIG(tooltip)
+        Research->setText(QString());
+#if QT_CONFIG(tooltip)
+        modeSwitch->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
+#endif // QT_CONFIG(tooltip)
+        modeSwitch->setText(QString());
+#if QT_CONFIG(tooltip)
+        publication->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
+#endif // QT_CONFIG(tooltip)
+        publication->setText(QString());
     } // retranslateUi
 
 };
