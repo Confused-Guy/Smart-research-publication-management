@@ -38,6 +38,10 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QChart>
 #include <QtCharts/QPieSeries>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlQueryModel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -52,7 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pic->setPixmap(logo);//logo stuff!
 
 
-    //ui->stackedWidget->setCurrentIndex(3);
+    //StyleSheet and default index
+    ui->stackedWidget->setCurrentIndex(3);
     toggleDarkMode();
 
     QPixmap userPic("user.png"); //temporary until user gets an actual db
@@ -102,7 +107,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//********************REVIEW START**************************************************//
+//********************REVIEW START*********************************************************************************************************************//
 
 void MainWindow::loadReviews(bool ascending, QString searchFilter)
 {
@@ -130,12 +135,19 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
     reviewQuery.prepare(reviewQueryStr);
     if (!searchFilter.trimmed().isEmpty())
         reviewQuery.bindValue(":search", "%" + searchFilter.trimmed() + "%");
-    reviewQuery.exec();
+
+    if (!reviewQuery.exec()) {
+        QLabel* errorLabel = new QLabel("Error loading reviews: " + reviewQuery.lastError().text());
+        errorLabel->setAlignment(Qt::AlignCenter);
+        reviewLayout->addWidget(errorLabel);
+        return;
+    }
 
     bool reviewsFound = false;
 
     while (reviewQuery.next()) {
         reviewsFound = true;
+
         int reviewId         = reviewQuery.value(0).toInt();
         QString reviewerName = reviewQuery.value(1).toString();
         QDate reviewDate     = reviewQuery.value(2).toDate();
@@ -180,75 +192,17 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
             deleteReviewQuery.prepare("DELETE FROM REVIEW WHERE IDREVIEW = ?");
             deleteReviewQuery.addBindValue(reviewId);
             deleteReviewQuery.exec();
-            loadReviews(ascending, searchFilter);
+            loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
         });
 
-        // Edit
+        // Edit - USES DIALOG
         connect(editReviewBtn, &QPushButton::clicked, this, [=]() {
-            QSqlQuery fetchReviewQuery;
-            fetchReviewQuery.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW FROM REVIEW WHERE IDREVIEW=:id");
-            fetchReviewQuery.bindValue(":id", reviewId);
-            fetchReviewQuery.exec();
-            if (!fetchReviewQuery.next()) return;
-
-            QDialog* editDialog = new QDialog(this);
-            editDialog->setWindowTitle("Edit Review");
-            editDialog->setMinimumWidth(400);
-
-            QFormLayout* formLayout = new QFormLayout(editDialog);
-
-            QLineEdit* nameInput    = new QLineEdit(fetchReviewQuery.value(0).toString());
-            QDateEdit* dateInput    = new QDateEdit(fetchReviewQuery.value(1).toDate());
-            dateInput->setCalendarPopup(true);
-            QSpinBox*  subIdInput   = new QSpinBox();
-            subIdInput->setMaximum(999999);
-            subIdInput->setValue(fetchReviewQuery.value(2).toInt());
-            QSpinBox*  pubIdInput   = new QSpinBox();
-            pubIdInput->setMaximum(999999);
-            pubIdInput->setValue(fetchReviewQuery.value(3).toInt());
-            QTextEdit* commentInput = new QTextEdit(fetchReviewQuery.value(4).toString());
-            commentInput->setFixedHeight(80);
-
-            formLayout->addRow("Reviewer Name:",  nameInput);
-            formLayout->addRow("Review Date:",    dateInput);
-            formLayout->addRow("Submission ID:",  subIdInput);
-            formLayout->addRow("Publication ID:", pubIdInput);
-            formLayout->addRow("Comment:",        commentInput);
-
-            QHBoxLayout* dialogBtnLayout = new QHBoxLayout();
-            QPushButton* saveBtn         = new QPushButton("Save");
-            QPushButton* cancelBtn       = new QPushButton("Cancel");
-            dialogBtnLayout->addWidget(saveBtn);
-            dialogBtnLayout->addWidget(cancelBtn);
-            formLayout->addRow(dialogBtnLayout);
-
-            connect(cancelBtn, &QPushButton::clicked, editDialog, &QDialog::reject);
-
-            connect(saveBtn, &QPushButton::clicked, this, [=]() {
-                QSqlQuery updateQuery;
-                updateQuery.prepare("UPDATE REVIEW SET REVIEWER_NAME=:name, REVIEW_DATE=:date, SUBMISSION_ID=:sid, PUBLICATION_ID=:pid, COMMENTREVIEW=:comment WHERE IDREVIEW=:id");
-                updateQuery.bindValue(":name",    nameInput->text());
-                updateQuery.bindValue(":date",    dateInput->date());
-                updateQuery.bindValue(":sid",     subIdInput->value());
-                updateQuery.bindValue(":pid",     pubIdInput->value());
-                updateQuery.bindValue(":comment", commentInput->toPlainText());
-                updateQuery.bindValue(":id",      reviewId);
-                if (updateQuery.exec()) {
-                    editDialog->accept();
-                    loadReviews(ascending, searchFilter);
-                }
-            });
-
-            editDialog->exec();
+            showReviewDialog(reviewId);
         });
 
         // PDF
         connect(pdfReviewBtn, &QPushButton::clicked, this, [=]() {
-            QSqlQuery pdfReviewQuery;
-            pdfReviewQuery.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW FROM REVIEW WHERE IDREVIEW=:id");
-            pdfReviewQuery.bindValue(":id", reviewId);
-            pdfReviewQuery.exec();
-
+            exportReviewPDF(reviewId, reviewerName, reviewDate, submissionId, publicationId, comment);
         });
     }
 
@@ -260,14 +214,401 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
 
     reviewLayout->addStretch();
 }
-//********************REVIEW END**************************************************//
 
-//********************CONFERENCE START***********************************************************************************************************//
+void MainWindow::showReviewDialog(int reviewId)
+{
+    bool isEditing = (reviewId != -1);
+
+    QDialog* dialog = new QDialog(this);
+    dialog->setWindowTitle(isEditing ? "Edit Review" : "Add Review");
+    dialog->setFixedSize(520, 550);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
+
+    const bool dark = !mode;
+    const QString bgPage = dark ? "#1a1f2e" : "#f6f8fc";
+    const QString bgCard = dark ? "#252b3d" : "#ffffff";
+    const QString border = dark ? "#3e4859" : "#e2e8f0";
+    const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
+    const QString txtSub = dark ? "#8892a4" : "#64748b";
+
+    dialog->setStyleSheet(QString("QDialog { background-color: %1; }").arg(bgPage));
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(dialog);
+    mainLayout->setContentsMargins(24, 24, 24, 24);
+    mainLayout->setSpacing(19);
+
+    QLabel* titleLabel = new QLabel(isEditing ? "Edit Review" : "Add New Review");
+    titleLabel->setStyleSheet(QString(
+                                  "font-size: 18pt; font-weight: 700; color: %1; background: transparent;"
+                                  ).arg(txtPrimary));
+    mainLayout->addWidget(titleLabel);
+
+    QFrame* formCard = new QFrame();
+    formCard->setStyleSheet(QString(
+                                "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 12px; }"
+                                ).arg(bgCard, border));
+
+    QVBoxLayout* formLayout = new QVBoxLayout(formCard);
+    formLayout->setSpacing(19);
+    formLayout->setContentsMargins(24, 24, 24, 24);
+
+    auto makeLabel = [&](const QString& text) -> QLabel* {
+        QLabel* lbl = new QLabel(text);
+        lbl->setStyleSheet(QString(
+                               "font-size: 10pt; font-weight: 600; color: %1; background: transparent;"
+                               ).arg(txtSub));
+        lbl->setFixedHeight(15);
+        return lbl;
+    };
+
+    auto addField = [&](const QString& labelText, QWidget* widget) {
+        QVBoxLayout* fieldGroup = new QVBoxLayout();
+        fieldGroup->setSpacing(6);
+        fieldGroup->setContentsMargins(0, 0, 0, 0);
+        QLabel* label = makeLabel(labelText);
+        widget->setFixedHeight(44);
+        fieldGroup->addWidget(label);
+        fieldGroup->addWidget(widget);
+        formLayout->addLayout(fieldGroup);
+    };
+
+    QLineEdit* nameInput = new QLineEdit();
+    nameInput->setPlaceholderText("Reviewer Name");
+    nameInput->setStyleSheet(QString(
+                                 "QLineEdit { "
+                                 "   background-color: %1; border: 1.5px solid %2; "
+                                 "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                 "}"
+                                 "QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QDateEdit* dateInput = new QDateEdit(QDate::currentDate());
+    dateInput->setCalendarPopup(true);
+    dateInput->setDisplayFormat("dd/MM/yyyy");
+    dateInput->setStyleSheet(QString(
+                                 "QDateEdit { "
+                                 "   background-color: %1; border: 1.5px solid %2; "
+                                 "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                 "}"
+                                 "QDateEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QSpinBox* subIdInput = new QSpinBox();
+    subIdInput->setRange(1, 999999);
+    subIdInput->setStyleSheet(QString(
+                                  "QSpinBox { "
+                                  "   background-color: %1; border: 1.5px solid %2; "
+                                  "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                  "}"
+                                  "QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                  ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QSpinBox* pubIdInput = new QSpinBox();
+    pubIdInput->setRange(1, 999999);
+    pubIdInput->setStyleSheet(QString(
+                                  "QSpinBox { "
+                                  "   background-color: %1; border: 1.5px solid %2; "
+                                  "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                  "}"
+                                  "QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                  ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QTextEdit* commentInput = new QTextEdit();
+    commentInput->setPlaceholderText("Review comments...");
+    commentInput->setFixedHeight(100);
+    commentInput->setStyleSheet(QString(
+                                    "QTextEdit { "
+                                    "   background-color: %1; border: 1.5px solid %2; "
+                                    "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                    "}"
+                                    "QTextEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                    ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    addField("Reviewer Name", nameInput);
+    addField("Review Date", dateInput);
+    addField("Submission ID", subIdInput);
+    addField("Publication ID", pubIdInput);
+
+    QLabel* commentLabel = makeLabel("Comment");
+    formLayout->addWidget(commentLabel);
+    formLayout->addWidget(commentInput);
+
+    mainLayout->addWidget(formCard);
+
+    if (isEditing) {
+        QSqlQuery q;
+        q.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW FROM REVIEW WHERE IDREVIEW = ?");
+        q.addBindValue(reviewId);
+        q.exec();
+        if (q.next()) {
+            nameInput->setText(q.value(0).toString());
+            dateInput->setDate(q.value(1).toDate());
+            subIdInput->setValue(q.value(2).toInt());
+            pubIdInput->setValue(q.value(3).toInt());
+            commentInput->setPlainText(q.value(4).toString());
+        }
+    }
+
+    mainLayout->addStretch();
+
+    QHBoxLayout* btnLayout = new QHBoxLayout();
+    btnLayout->setSpacing(12);
+
+    QPushButton* cancelBtn = new QPushButton("Cancel");
+    cancelBtn->setFixedHeight(44);
+    cancelBtn->setMinimumWidth(100);
+    cancelBtn->setCursor(Qt::PointingHandCursor);
+    cancelBtn->setStyleSheet(QString(
+                                 "QPushButton { background-color: %1; color: %2; border: 1px solid %3; "
+                                 "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 600; }"
+                                 "QPushButton:hover { background-color: %4; }"
+                                 ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f8fafc"));
+
+    QPushButton* saveBtn = new QPushButton(isEditing ? "Update" : "Add Review");
+    saveBtn->setFixedHeight(44);
+    saveBtn->setMinimumWidth(140);
+    saveBtn->setCursor(Qt::PointingHandCursor);
+    saveBtn->setStyleSheet(
+        "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+        "stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
+        "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; }"
+        "QPushButton:hover { background-color: #22d3dd; }"
+        );
+
+    btnLayout->addStretch();
+    btnLayout->addWidget(cancelBtn);
+    btnLayout->addWidget(saveBtn);
+    mainLayout->addLayout(btnLayout);
+
+    connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
+
+    connect(saveBtn, &QPushButton::clicked, this, [=]() {
+        if (nameInput->text().trimmed().isEmpty()) {
+            QMessageBox::warning(dialog, "Validation Error", "Please enter a reviewer name.");
+            return;
+        }
+        if (commentInput->toPlainText().trimmed().isEmpty()) {
+            QMessageBox::warning(dialog, "Validation Error", "Please enter a comment.");
+            return;
+        }
+
+        QSqlQuery query;
+        if (isEditing) {
+            query.prepare("UPDATE REVIEW SET REVIEWER_NAME=:name, REVIEW_DATE=:date, "
+                          "SUBMISSION_ID=:sid, PUBLICATION_ID=:pid, COMMENTREVIEW=:comment "
+                          "WHERE IDREVIEW=:id");
+            query.bindValue(":id", reviewId);
+        } else {
+            query.prepare("INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, "
+                          "SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW) "
+                          "VALUES (REVIEW_SEQ.NEXTVAL, :name, :date, :sid, :pid, :comment)");
+        }
+
+        query.bindValue(":name", nameInput->text().trimmed());
+        query.bindValue(":date", dateInput->date());
+        query.bindValue(":sid", subIdInput->value());
+        query.bindValue(":pid", pubIdInput->value());
+        query.bindValue(":comment", commentInput->toPlainText().trimmed());
+
+        if (query.exec()) {
+            loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
+            dialog->accept();
+        } else {
+            QMessageBox::critical(dialog, "Error", "Failed to save review: " + query.lastError().text());
+        }
+    });
+
+    dialog->exec();
+}
+
+void MainWindow::exportReviewPDF(int reviewId, const QString& reviewerName, const QDate& reviewDate,
+                                 int submissionId, int publicationId, const QString& comment)
+{
+    QString fileName = reviewerName;
+    fileName.replace(" ", "_");
+
+    QString filePath = QFileDialog::getSaveFileName(
+        this,
+        "Export Review PDF",
+        QDir::homePath() + "/" + fileName + "_Review.pdf",
+        "PDF Files (*.pdf)"
+        );
+
+    if (filePath.isEmpty())
+        return;
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filePath);
+    printer.setPageLayout(QPageLayout(
+        QPageSize(QPageSize::A4),
+        QPageLayout::Portrait,
+        QMarginsF(15, 15, 15, 15),
+        QPageLayout::Millimeter
+        ));
+
+    QString generatedDate = QDate::currentDate().toString("MMMM dd, yyyy");
+    QString reviewDateStr = reviewDate.toString("MMMM dd, yyyy");
+
+    QString html = QString(R"(
+        <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    color: #1a1a2e;
+                    margin: 0;
+                    padding: 0;
+                    font-size: 48px;
+                }
+                .header {
+                    background-color: #30b9bf;
+                    color: white;
+                    padding: 60px 80px;
+                }
+                .header h1 {
+                    margin: 0 0 16px 0;
+                    font-size: 72px;
+                    font-weight: bold;
+                }
+                .header p {
+                    margin: 0;
+                    font-size: 40px;
+                    opacity: 0.9;
+                }
+                .section {
+                    padding: 60px 80px;
+                }
+                .section h2 {
+                    color: #30b9bf;
+                    font-size: 44px;
+                    text-transform: uppercase;
+                    letter-spacing: 4px;
+                    border-bottom: 4px solid #30b9bf;
+                    padding-bottom: 16px;
+                    margin-bottom: 40px;
+                }
+                .info-grid {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 40px;
+                }
+                .info-grid td {
+                    padding: 28px 32px;
+                    font-size: 44px;
+                    vertical-align: top;
+                }
+                .info-grid tr:nth-child(odd) td {
+                    background-color: #f0f9fa;
+                }
+                .label {
+                    font-weight: bold;
+                    color: #555555;
+                    width: 30%;
+                }
+                .value {
+                    color: #1a1a2e;
+                }
+                .comment-box {
+                    background-color: #f8fcfc;
+                    border-left: 8px solid #30b9bf;
+                    padding: 40px;
+                    margin: 40px 0;
+                    font-size: 40px;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                .footer {
+                    margin-top: 80px;
+                    padding: 40px 80px;
+                    border-top: 3px solid #e2e8f0;
+                    font-size: 36px;
+                    color: #9ca3af;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>Review Report</h1>
+                <p>Review ID: #%1 &nbsp;&bull;&nbsp; Generated on %2</p>
+            </div>
+            <div class="section">
+                <h2>Review Details</h2>
+                <table class="info-grid">
+                    <tr>
+                        <td class="label">Reviewer</td>
+                        <td class="value">%3</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Review Date</td>
+                        <td class="value">%4</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Submission ID</td>
+                        <td class="value">%5</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Publication ID</td>
+                        <td class="value">%6</td>
+                    </tr>
+                </table>
+                <h2>Comments</h2>
+                <div class="comment-box">
+                    %7
+                </div>
+            </div>
+            <div class="footer">
+                Peerly Research Platform &bull; Exported %2
+            </div>
+        </body>
+        </html>
+    )")
+                       .arg(QString::number(reviewId),
+                            generatedDate,
+                            reviewerName.toHtmlEscaped(),
+                            reviewDateStr,
+                            QString::number(submissionId),
+                            QString::number(publicationId),
+                            comment.toHtmlEscaped().replace("\n", "<br>"));
+
+    QTextDocument doc;
+    doc.setHtml(html);
+    doc.setDefaultFont(QFont("Arial", 24));
+
+    QSizeF paperSize = printer.pageLayout().paintRectPixels(printer.resolution()).size();
+    doc.setPageSize(paperSize);
+
+    doc.print(&printer);
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+}
+
+void MainWindow::on_sortReviewBtn_clicked()
+{
+    reviewSortAscending = !reviewSortAscending;
+    ui->sortReviewBtn->setText(reviewSortAscending ? "Date ↑" : "Date ↓");
+    loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
+}
+
+void MainWindow::on_searchReviewBtn_clicked()
+{
+    loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
+}
+
+//Linking Buttons
+void MainWindow::on_reviewSub_clicked(){ui->stackedWidget->setCurrentIndex(5); loadReviews(true, "");}
+void MainWindow::on_review_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
+
+//********************REVIEW END****************************************************************************************************************************************//
+//**********************************************************************************************************************************************************************//
+//**********************************************************************************************************************************************************************//
+//********************CONFERENCE START**********************************************************************************************************************************//
 
 //1 LOAD
 void MainWindow::loadConferences(bool ascending, QString searchFilter)
 {
-    // Clear
+    //Clear
     QLayoutItem* item;
     while ((item = ui->conferenceLayout->takeAt(0)) != nullptr) {
         delete item->widget();
@@ -276,18 +617,14 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
 
     //Query
     QString queryStr = "SELECT ID, TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE";
-
     if (!searchFilter.trimmed().isEmpty())
         queryStr += " WHERE UPPER(TITLE) LIKE UPPER(:search)";
-
     queryStr += ascending ? " ORDER BY PRICE ASC" : " ORDER BY PRICE DESC";
 
     QSqlQuery query;
     query.prepare(queryStr);
-
     if (!searchFilter.trimmed().isEmpty())
         query.bindValue(":search", "%" + searchFilter.trimmed() + "%");
-
     query.exec();
 
     bool anyResults = false;
@@ -330,7 +667,7 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
 
         ui->conferenceLayout->addWidget(card);
 
-        // Delete
+        //Delete
         connect(deleteBtn, &QPushButton::clicked, this, [=]() {
             QSqlQuery del;
             del.prepare("DELETE FROM CONFERENCE WHERE ID = ?");
@@ -339,22 +676,10 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
             loadConferences(sortAscending, ui->searchConfEdit->text());
         });
 
-        // Edit
+        //Edit
         connect(editBtn, &QPushButton::clicked, this, [=]() {
-            QSqlQuery q;
-            q.prepare("SELECT TITLE, TOPIC_ID, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID=:id");
-            q.bindValue(":id", id);
-            q.exec();
-            if (q.next()) {
-                editingConferenceId = id;
-                ui->cTitleEdit->setText(q.value(0).toString());
-                ui->dateEdit->setDate(q.value(2).toDate());
-                ui->locationEdit->setText(q.value(3).toString());
-                ui->priceSpin->setValue(q.value(4).toDouble());
-                ui->stackedWidget->setCurrentIndex(5);
-            }
+            showConferenceDialog(id);
         });
-
 
         //MAP
         connect(mapBtn, &QPushButton::clicked, this, [=]() {
@@ -364,8 +689,8 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
         //PDF
         connect(pdfBtn, &QPushButton::clicked, this, [=]() {
             QSqlQuery q;
-            q.prepare("SELECT TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID=:id");
-            q.bindValue(":id", id);
+            q.prepare("SELECT TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID = ?");
+            q.addBindValue(id);
             q.exec();
 
             if (q.next()) {
@@ -389,47 +714,225 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
     ui->conferenceLayout->addStretch();
 }
 
-//2 ADD EDIT
-void MainWindow::on_cancelConfBtn_clicked() {
-    editingConferenceId = -1;
-    ui->stackedWidget->setCurrentIndex(4);
-}
-
+//2 ADD/EDIT DIALOG
 void MainWindow::on_addConferenceBtn_clicked() {
-    editingConferenceId = -1;
-    ui->cTitleEdit->clear();
-    ui->dateEdit->setDate(QDate::currentDate());
-    ui->locationEdit->clear();
-    ui->priceSpin->setValue(0);
-    ui->stackedWidget->setCurrentIndex(5);
+    showConferenceDialog();
 }
 
-void MainWindow::on_saveConfBtn_clicked()
+void MainWindow::showConferenceDialog(int conferenceId)
 {
-    Conference c(
-        editingConferenceId,
-        ui->cTitleEdit->text(),
-        1,
-        ui->dateEdit->date(),
-        ui->locationEdit->text(),
-        ui->priceSpin->value()
+    //Determine if adding or editing
+    bool isEditing = (conferenceId != -1);
+
+    //Create dialog
+    QDialog* dialog = new QDialog(this);
+    dialog->setWindowTitle(isEditing ? "Edit Conference" : "Add Conference");
+    dialog->setFixedSize(520, 500);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
+
+    //Dark mode
+    const bool dark = !mode;
+    const QString bgPage = dark ? "#1a1f2e" : "#f6f8fc";
+    const QString bgCard = dark ? "#252b3d" : "#ffffff";
+    const QString border = dark ? "#3e4859" : "#e2e8f0";
+    const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
+    const QString txtSub = dark ? "#8892a4" : "#64748b";
+
+    dialog->setStyleSheet(QString("QDialog { background-color: %1; }").arg(bgPage));
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(dialog);
+    mainLayout->setContentsMargins(24, 24, 24, 24);
+    mainLayout->setSpacing(20);
+
+    //Header
+    QLabel* titleLabel = new QLabel(isEditing ? "Edit Conference" : "Add New Conference");
+    titleLabel->setStyleSheet(QString(
+                                  "font-size: 18pt; font-weight: 700; color: %1; background: transparent;"
+                                  ).arg(txtPrimary));
+    mainLayout->addWidget(titleLabel);
+
+    //Form card
+    QFrame* formCard = new QFrame();
+    formCard->setStyleSheet(QString(
+                                "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 12px; }"
+                                ).arg(bgCard, border));
+
+    QVBoxLayout* formLayout = new QVBoxLayout(formCard);
+    formLayout->setSpacing(16);
+    formLayout->setContentsMargins(24, 24, 24, 24);
+
+    //Helper function to create label
+    auto makeLabel = [&](const QString& text) -> QLabel* {
+        QLabel* lbl = new QLabel(text);
+        lbl->setStyleSheet(QString(
+                               "font-size: 10pt; font-weight: 600; color: %1; background: transparent; margin-bottom: 6px;"
+                               ).arg(txtSub));
+        lbl->setFixedHeight(20);
+        return lbl;
+    };
+
+    //Helper function to create field group
+    auto addField = [&](const QString& labelText, QWidget* widget) {
+        QVBoxLayout* fieldGroup = new QVBoxLayout();
+        fieldGroup->setSpacing(6);
+        fieldGroup->setContentsMargins(0, 0, 0, 0);
+
+        QLabel* label = makeLabel(labelText);
+        widget->setFixedHeight(44);
+
+        fieldGroup->addWidget(label);
+        fieldGroup->addWidget(widget);
+
+        formLayout->addLayout(fieldGroup);
+    };
+
+    //Create input fields
+    QLineEdit* titleEdit = new QLineEdit();
+    titleEdit->setPlaceholderText("Conference Title");
+    titleEdit->setStyleSheet(QString(
+                                 "QLineEdit { "
+                                 "   background-color: %1; border: 1.5px solid %2; "
+                                 "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                 "}"
+                                 "QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QDateEdit* dateEdit = new QDateEdit(QDate::currentDate());
+    dateEdit->setCalendarPopup(true);
+    dateEdit->setDisplayFormat("dd/MM/yyyy");
+    dateEdit->setStyleSheet(QString(
+                                "QDateEdit { "
+                                "   background-color: %1; border: 1.5px solid %2; "
+                                "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                "}"
+                                "QDateEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                "QDateEdit::drop-down { border: none; width: 20px; }"
+                                ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QLineEdit* locationEdit = new QLineEdit();
+    locationEdit->setPlaceholderText("Location");
+    locationEdit->setStyleSheet(QString(
+                                    "QLineEdit { "
+                                    "   background-color: %1; border: 1.5px solid %2; "
+                                    "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                    "}"
+                                    "QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                    ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QDoubleSpinBox* priceSpin = new QDoubleSpinBox();
+    priceSpin->setRange(0, 999999);
+    priceSpin->setDecimals(2);
+    priceSpin->setPrefix("$ ");
+    priceSpin->setStyleSheet(QString(
+                                 "QDoubleSpinBox { "
+                                 "   background-color: %1; border: 1.5px solid %2; "
+                                 "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                 "}"
+                                 "QDoubleSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 "QDoubleSpinBox::up-button, QDoubleSpinBox::down-button { "
+                                 "   width: 20px; border: none; background: transparent; "
+                                 "}"
+                                 ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    //Add all fields
+    addField("Title", titleEdit);
+    addField("Date", dateEdit);
+    addField("Location", locationEdit);
+    addField("Price", priceSpin);
+
+    mainLayout->addWidget(formCard);
+
+    //If editing, load existing data
+    if (isEditing) {
+        QSqlQuery q;
+        q.prepare("SELECT TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID = ?");
+        q.addBindValue(conferenceId);
+        q.exec();
+        if (q.next()) {
+            titleEdit->setText(q.value(0).toString());
+            dateEdit->setDate(q.value(1).toDate());
+            locationEdit->setText(q.value(2).toString());
+            priceSpin->setValue(q.value(3).toDouble());
+        }
+    }
+
+    mainLayout->addStretch();
+
+    //Button row
+    QHBoxLayout* btnLayout = new QHBoxLayout();
+    btnLayout->setSpacing(12);
+
+    QPushButton* cancelBtn = new QPushButton("Cancel");
+    cancelBtn->setFixedHeight(44);
+    cancelBtn->setMinimumWidth(100);
+    cancelBtn->setCursor(Qt::PointingHandCursor);
+    cancelBtn->setStyleSheet(QString(
+                                 "QPushButton { "
+                                 "   background-color: %1; color: %2; border: 1px solid %3; "
+                                 "   border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 600; "
+                                 "}"
+                                 "QPushButton:hover { background-color: %4; }"
+                                 "QPushButton:pressed { background-color: %5; }"
+                                 ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f8fafc", dark ? "#3e4859" : "#e2e8f0"));
+
+    QPushButton* saveBtn = new QPushButton(isEditing ? "Update" : "Add Conference");
+    saveBtn->setFixedHeight(44);
+    saveBtn->setMinimumWidth(140);
+    saveBtn->setCursor(Qt::PointingHandCursor);
+    saveBtn->setStyleSheet(
+        "QPushButton { "
+        "   background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+        "   stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
+        "   border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; "
+        "}"
+        "QPushButton:hover { background-color: #22d3dd; }"
+        "QPushButton:pressed { background-color: #26a0a6; }"
         );
 
-    bool success = false;
+    btnLayout->addStretch();
+    btnLayout->addWidget(cancelBtn);
+    btnLayout->addWidget(saveBtn);
 
-    if (editingConferenceId == -1)
-        success = c.add();
-    else
-        success = c.update();
+    mainLayout->addLayout(btnLayout);
 
-    if (success) {
-        qDebug() << (editingConferenceId == -1 ? "Conference added" : "Conference updated");
-        editingConferenceId = -1;
-        loadConferences(sortAscending, "");
-        ui->stackedWidget->setCurrentIndex(4);
-    } else {
-        qDebug() << "Conference failed";
-    }
+    //Connect buttons
+    connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
+
+    connect(saveBtn, &QPushButton::clicked, dialog, [=]() {
+        //Validate
+        if (titleEdit->text().trimmed().isEmpty()) {
+            QMessageBox::warning(dialog, "Validation Error", "Please enter a conference title.");
+            return;
+        }
+        if (locationEdit->text().trimmed().isEmpty()) {
+            QMessageBox::warning(dialog, "Validation Error", "Please enter a location.");
+            return;
+        }
+
+        //Create conference object
+        Conference c(
+            conferenceId,
+            titleEdit->text().trimmed(),
+            1,
+            dateEdit->date(),
+            locationEdit->text().trimmed(),
+            priceSpin->value()
+            );
+
+        //Save
+        bool success = isEditing ? c.update() : c.add();
+
+        if (success) {
+            qDebug() << (isEditing ? "Conference updated" : "Conference added");
+            loadConferences(sortAscending, ui->searchConfEdit->text());
+            dialog->accept();
+        } else {
+            QMessageBox::critical(dialog, "Error",
+                                  "Failed to " + QString(isEditing ? "update" : "add") + " conference.");
+        }
+    });
+
+    dialog->exec();
 }
 
 //3 STATS
@@ -1602,45 +2105,10 @@ void MainWindow::on_searchConfBtn_clicked()
 //LINKING BUTTONS
 void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
-//********************CONFERENCE END*************************************************************************************************************//
+//********************CONFERENCE END*************************************************************************************************************************//
+//***********************************************************************************************************************************************************//
+//***********************************************************************************************************************************************************//
 
-//********************Review Start*************************************//
-
-void MainWindow::on_exportPDF_clicked()
-{
-    QString fileNam = QFileDialog::getSaveFileName(
-        this,
-        tr("Export to PDF"),
-        QDir::homePath() + "/export.pdf",
-        tr("PDF Files (*.pdf)")
-        );
-    // Check
-    if (fileNam.isEmpty()) {
-        return;
-    }
-    if (!fileNam.endsWith(".pdf", Qt::CaseInsensitive)) {
-        fileNam += ".pdf";
-    }
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(fileNam);
-    printer.setPageSize(QPageSize::A4);
-
-    // Create QPainter and begin painting
-    QPainter painter;
-    if (!painter.begin(&printer)) {
-        QMessageBox::warning(this, tr("Export Failed"),
-                             tr("Could not create PDF file."));
-        return;
-    }
-
-    // For now, just placeholder text
-    painter.setFont(QFont("Arial", 12));
-    painter.drawText(100, 100, "PDF Export - Data will be added here");
-    painter.end();
-}
-
-//***************Reveiw End*********************************//
 
 void MainWindow::on_Browse_pressed()
 {
@@ -1660,13 +2128,9 @@ void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);
 
 void MainWindow::on_backHome_clicked(){   ui->stackedWidget->setCurrentIndex(0);}
 
-void MainWindow::on_review_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
-
 void MainWindow::on_collab_clicked(){ ui->stackedWidget->setCurrentIndex(2);}
 
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
-
-void MainWindow::on_reviewSub_clicked(){ui->stackedWidget->setCurrentIndex(5);}
 
 void MainWindow::on_login_clicked()
 {

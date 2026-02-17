@@ -1553,7 +1553,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="movable">
        <bool>false</bool>
@@ -6528,9 +6528,9 @@ QScrollArea &gt; QWidget {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>0</y>
-          <width>1201</width>
-          <height>711</height>
+          <y>70</y>
+          <width>1181</width>
+          <height>611</height>
          </rect>
         </property>
         <property name="widgetResizable">
@@ -6541,71 +6541,61 @@ QScrollArea &gt; QWidget {
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>1199</width>
-           <height>709</height>
+           <width>1179</width>
+           <height>609</height>
           </rect>
          </property>
-         <widget class="QWidget" name="widget_2" native="true">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>10</y>
-            <width>1181</width>
-            <height>691</height>
-           </rect>
-          </property>
-          <widget class="QWidget" name="verticalLayoutWidget">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>70</y>
-             <width>1181</width>
-             <height>631</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="reviewLayout"/>
-          </widget>
-          <widget class="QLineEdit" name="lineEdit_31">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>10</y>
-             <width>921</width>
-             <height>41</height>
-            </rect>
-           </property>
-           <property name="placeholderText">
-            <string>Search</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_9">
-           <property name="geometry">
-            <rect>
-             <x>1070</x>
-             <y>10</y>
-             <width>80</width>
-             <height>24</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Filter</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_15">
-           <property name="geometry">
-            <rect>
-             <x>960</x>
-             <y>10</y>
-             <width>80</width>
-             <height>24</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Sort</string>
-           </property>
-          </widget>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <layout class="QVBoxLayout" name="reviewLayout"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </widget>
+       </widget>
+       <widget class="QLineEdit" name="searchReviewEdit">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>20</y>
+          <width>921</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="placeholderText">
+         <string>Search</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="sortReviewBtn">
+        <property name="geometry">
+         <rect>
+          <x>1070</x>
+          <y>20</y>
+          <width>80</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Sort</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="searchReviewBtn">
+        <property name="geometry">
+         <rect>
+          <x>970</x>
+          <y>20</y>
+          <width>80</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Search</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="page_17">

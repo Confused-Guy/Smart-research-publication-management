@@ -57,8 +57,6 @@ private slots:
 
     //************CONFERENCE START***************************//
     void on_addConferenceBtn_clicked();
-    void      on_saveConfBtn_clicked();
-    void    on_cancelConfBtn_clicked();
     void      on_sortConfBtn_clicked();
     void    on_searchConfBtn_clicked();
     void     on_confStatsBtn_clicked();
@@ -70,12 +68,13 @@ private slots:
 
     //************Reveiw Start***************************//
 
-    void on_exportPDF_clicked();
 
-    void  on_review_clicked();
-
+    void on_review_clicked();
     void on_reviewSub_clicked();
+    void on_sortReviewBtn_clicked();
+    void on_searchReviewBtn_clicked();
 
+    //void extracted(QSqlQuery &reviewQuery);
     void loadReviews(bool Rascending, QString RsearchFilter);
 
     //************Reveiw Start***************************//
@@ -96,6 +95,7 @@ private:
     //Functions
     void showConferenceStats();
     void showConferenceCalendar();
+    void showConferenceDialog(int conferenceId = -1);
     void showConferenceMap(const QString& location,
                            const QString& title);
     void loadConferences(bool ascending = true,
@@ -106,5 +106,15 @@ private:
                              const QString& location,
                              double price);
     //************CONFERENCE END***************************//
+
+    //************REVIEW START***************************//
+    //Variables
+    bool reviewSortAscending = true;
+
+    //Functions
+    void showReviewDialog(int reviewId = -1);
+    void exportReviewPDF(int reviewId, const QString& reviewerName, const QDate& reviewDate,
+                         int submissionId, int publicationId, const QString& comment);
+    //************REVIEW END***************************//
 };
 #endif // MAINWINDOW_H

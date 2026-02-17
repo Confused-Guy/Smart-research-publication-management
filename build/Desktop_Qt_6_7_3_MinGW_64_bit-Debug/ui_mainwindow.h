@@ -284,12 +284,13 @@ public:
     QWidget *page_16;
     QScrollArea *scrollArea_2;
     QWidget *reviewScrollArea;
+    QVBoxLayout *verticalLayout_4;
     QWidget *widget_2;
-    QWidget *verticalLayoutWidget;
+    QVBoxLayout *verticalLayout_5;
     QVBoxLayout *reviewLayout;
-    QLineEdit *lineEdit_31;
-    QPushButton *pushButton_9;
-    QPushButton *pushButton_15;
+    QLineEdit *searchReviewEdit;
+    QPushButton *sortReviewBtn;
+    QPushButton *searchReviewBtn;
     QWidget *page_17;
     QFrame *frame_15;
     QWidget *layoutWidget_4;
@@ -2478,30 +2479,35 @@ public:
         page_16->setObjectName("page_16");
         scrollArea_2 = new QScrollArea(page_16);
         scrollArea_2->setObjectName("scrollArea_2");
-        scrollArea_2->setGeometry(QRect(10, 0, 1201, 711));
+        scrollArea_2->setGeometry(QRect(10, 70, 1181, 611));
         scrollArea_2->setWidgetResizable(true);
         reviewScrollArea = new QWidget();
         reviewScrollArea->setObjectName("reviewScrollArea");
-        reviewScrollArea->setGeometry(QRect(0, 0, 1199, 709));
+        reviewScrollArea->setGeometry(QRect(0, 0, 1179, 609));
+        verticalLayout_4 = new QVBoxLayout(reviewScrollArea);
+        verticalLayout_4->setObjectName("verticalLayout_4");
         widget_2 = new QWidget(reviewScrollArea);
         widget_2->setObjectName("widget_2");
-        widget_2->setGeometry(QRect(0, 10, 1181, 691));
-        verticalLayoutWidget = new QWidget(widget_2);
-        verticalLayoutWidget->setObjectName("verticalLayoutWidget");
-        verticalLayoutWidget->setGeometry(QRect(0, 70, 1181, 631));
-        reviewLayout = new QVBoxLayout(verticalLayoutWidget);
+        verticalLayout_5 = new QVBoxLayout(widget_2);
+        verticalLayout_5->setObjectName("verticalLayout_5");
+        reviewLayout = new QVBoxLayout();
         reviewLayout->setObjectName("reviewLayout");
-        reviewLayout->setContentsMargins(0, 0, 0, 0);
-        lineEdit_31 = new QLineEdit(widget_2);
-        lineEdit_31->setObjectName("lineEdit_31");
-        lineEdit_31->setGeometry(QRect(10, 10, 921, 41));
-        pushButton_9 = new QPushButton(widget_2);
-        pushButton_9->setObjectName("pushButton_9");
-        pushButton_9->setGeometry(QRect(1070, 10, 80, 24));
-        pushButton_15 = new QPushButton(widget_2);
-        pushButton_15->setObjectName("pushButton_15");
-        pushButton_15->setGeometry(QRect(960, 10, 80, 24));
+
+        verticalLayout_5->addLayout(reviewLayout);
+
+
+        verticalLayout_4->addWidget(widget_2);
+
         scrollArea_2->setWidget(reviewScrollArea);
+        searchReviewEdit = new QLineEdit(page_16);
+        searchReviewEdit->setObjectName("searchReviewEdit");
+        searchReviewEdit->setGeometry(QRect(20, 20, 921, 41));
+        sortReviewBtn = new QPushButton(page_16);
+        sortReviewBtn->setObjectName("sortReviewBtn");
+        sortReviewBtn->setGeometry(QRect(1070, 20, 80, 24));
+        searchReviewBtn = new QPushButton(page_16);
+        searchReviewBtn->setObjectName("searchReviewBtn");
+        searchReviewBtn->setGeometry(QRect(970, 20, 80, 24));
         stackedWidget_2->addWidget(page_16);
         page_17 = new QWidget();
         page_17->setObjectName("page_17");
@@ -4071,7 +4077,7 @@ public:
         retranslateUi(MainWindow);
 
         stackedWidget->setCurrentIndex(5);
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
         sideBarStack->setCurrentIndex(0);
@@ -4395,9 +4401,9 @@ public:
         temp_2->setText(QCoreApplication::translate("MainWindow", "Home page", nullptr));
         temp2_2->setText(QCoreApplication::translate("MainWindow", "Login Page", nullptr));
         mkUser_2->setText(QCoreApplication::translate("MainWindow", "Make a New User", nullptr));
-        lineEdit_31->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("MainWindow", "Filter", nullptr));
-        pushButton_15->setText(QCoreApplication::translate("MainWindow", "Sort", nullptr));
+        searchReviewEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search", nullptr));
+        sortReviewBtn->setText(QCoreApplication::translate("MainWindow", "Sort", nullptr));
+        searchReviewBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         label_70->setText(QCoreApplication::translate("MainWindow", "Title", nullptr));
         cTitleEdit_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter The Title", nullptr));
         label_71->setText(QCoreApplication::translate("MainWindow", "Topic", nullptr));

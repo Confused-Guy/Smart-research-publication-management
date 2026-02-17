@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
     db.setDatabaseName("OraclePeerly");
     db.setUserName("system");
-    db.setPassword("root");
+    db.setPassword("123");
 
     if (!db.open())
         qDebug() << "Database Error:" << db.lastError().text();
