@@ -72,7 +72,11 @@ private slots:
 
     void on_exportPDF_clicked();
 
-    void  on_reveiw_clicked();
+    void  on_review_clicked();
+
+    void on_reviewSub_clicked();
+
+    void loadReviews(bool Rascending, QString RsearchFilter);
 
     //************Reveiw Start***************************//
 

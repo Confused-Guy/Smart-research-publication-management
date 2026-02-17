@@ -87,10 +87,8 @@ public:
     QLabel *label_32;
     QLineEdit *lineEdit;
     QLineEdit *lineEdit_2;
-    QLabel *label_33;
     QPushButton *approve;
     QPushButton *pending;
-    QLabel *label_34;
     QPushButton *denied;
     QLineEdit *lineEdit_3;
     QPushButton *pushButton_4;
@@ -132,6 +130,7 @@ public:
     QPushButton *temp2;
     QPushButton *mkUser;
     QPushButton *searchUserBTN;
+    QPushButton *reviewSub;
     QWidget *page_4;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
@@ -283,25 +282,14 @@ public:
     QPushButton *temp2_2;
     QPushButton *mkUser_2;
     QWidget *page_16;
-    QFrame *frame_3;
-    QWidget *layoutWidget_3;
-    QFormLayout *formLayout;
-    QSpacerItem *verticalSpacer_3;
-    QLabel *label_42;
-    QLineEdit *cTitleEdit;
-    QLabel *label_25;
-    QComboBox *topicCombo;
-    QLabel *label_26;
-    QDateEdit *dateEdit;
-    QLabel *label_27;
-    QLineEdit *locationEdit;
-    QLabel *label_28;
-    QDoubleSpinBox *priceSpin;
-    QSpacerItem *verticalSpacer;
-    QHBoxLayout *horizontalLayout;
-    QPushButton *saveConfBtn;
-    QPushButton *cancelConfBtn;
-    QLabel *collaborationCreationCollaborationTitleLabel_3;
+    QScrollArea *scrollArea_2;
+    QWidget *reviewScrollArea;
+    QWidget *widget_2;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *reviewLayout;
+    QLineEdit *lineEdit_31;
+    QPushButton *pushButton_9;
+    QPushButton *pushButton_15;
     QWidget *page_17;
     QFrame *frame_15;
     QWidget *layoutWidget_4;
@@ -414,8 +402,13 @@ public:
     QSpacerItem *horizontalSpacer;
     QGroupBox *FeatsGroup;
     QHBoxLayout *horizontalLayout_features;
+    QPushButton *export_2;
     QPushButton *summaryButton;
     QPushButton *emailButton;
+    QWidget *horizontalLayoutWidget;
+    QHBoxLayout *horizontalLayout_5;
+    QLineEdit *lineEdit_23;
+    QPushButton *searchbt;
     QWidget *page_7;
     QPushButton *backHome2;
     QPushButton *pushButton_2;
@@ -468,7 +461,7 @@ public:
     QLabel *pic;
     QPushButton *collab;
     QPushButton *profile;
-    QPushButton *reveiw;
+    QPushButton *review;
     QPushButton *Research;
     QPushButton *modeSwitch;
     QPushButton *publication;
@@ -503,7 +496,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         stackedWidget = new QStackedWidget(centralwidget);
         stackedWidget->setObjectName("stackedWidget");
-        stackedWidget->setGeometry(QRect(90, 0, 1191, 741));
+        stackedWidget->setGeometry(QRect(70, 0, 1211, 741));
         stackedWidget->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         stackedWidget->setStyleSheet(QString::fromUtf8(""));
         stackedWidget->setFrameShape(QFrame::Shape::NoFrame);
@@ -805,7 +798,7 @@ public:
         page_3->setObjectName("page_3");
         tabWidget = new QTabWidget(page_3);
         tabWidget->setObjectName("tabWidget");
-        tabWidget->setGeometry(QRect(20, 240, 1141, 471));
+        tabWidget->setGeometry(QRect(20, 240, 1161, 471));
         tabWidget->setTabPosition(QTabWidget::TabPosition::North);
         tabWidget->setTabShape(QTabWidget::TabShape::Rounded);
         tabWidget->setMovable(false);
@@ -829,27 +822,21 @@ public:
         lineEdit_2 = new QLineEdit(ReveiwT);
         lineEdit_2->setObjectName("lineEdit_2");
         lineEdit_2->setGeometry(QRect(40, 80, 113, 27));
-        label_33 = new QLabel(ReveiwT);
-        label_33->setObjectName("label_33");
-        label_33->setGeometry(QRect(410, 70, 21, 41));
         approve = new QPushButton(ReveiwT);
         approve->setObjectName("approve");
-        approve->setGeometry(QRect(320, 80, 31, 27));
+        approve->setGeometry(QRect(310, 80, 41, 16));
         QIcon icon4;
         icon4.addFile(QString::fromUtf8("icons/thumbs-up.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         approve->setIcon(icon4);
         pending = new QPushButton(ReveiwT);
         pending->setObjectName("pending");
-        pending->setGeometry(QRect(370, 80, 31, 27));
+        pending->setGeometry(QRect(370, 80, 41, 16));
         QIcon icon5;
         icon5.addFile(QString::fromUtf8("icons/clock.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         pending->setIcon(icon5);
-        label_34 = new QLabel(ReveiwT);
-        label_34->setObjectName("label_34");
-        label_34->setGeometry(QRect(360, 70, 21, 41));
         denied = new QPushButton(ReveiwT);
         denied->setObjectName("denied");
-        denied->setGeometry(QRect(420, 80, 31, 27));
+        denied->setGeometry(QRect(430, 80, 41, 16));
         QIcon icon6;
         icon6.addFile(QString::fromUtf8("icons/x.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         denied->setIcon(icon6);
@@ -1063,6 +1050,11 @@ public:
         searchUserBTN = new QPushButton(page_3);
         searchUserBTN->setObjectName("searchUserBTN");
         searchUserBTN->setGeometry(QRect(1050, 90, 121, 41));
+        reviewSub = new QPushButton(page_3);
+        reviewSub->setObjectName("reviewSub");
+        reviewSub->setGeometry(QRect(550, 20, 161, 41));
+        QIcon icon14(QIcon::fromTheme(QIcon::ThemeIcon::FolderOpen));
+        reviewSub->setIcon(icon14);
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");
@@ -1220,21 +1212,21 @@ public:
         reveiw4_2 = new QPushButton(page_12);
         reveiw4_2->setObjectName("reveiw4_2");
         reveiw4_2->setGeometry(QRect(20, 180, 41, 41));
-        QIcon icon14;
-        icon14.addFile(QString::fromUtf8("icons/plus-square.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        reveiw4_2->setIcon(icon14);
+        QIcon icon15;
+        icon15.addFile(QString::fromUtf8("icons/plus-square.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        reveiw4_2->setIcon(icon15);
         Research7_2 = new QPushButton(page_12);
         Research7_2->setObjectName("Research7_2");
         Research7_2->setGeometry(QRect(20, 260, 41, 41));
-        QIcon icon15;
-        icon15.addFile(QString::fromUtf8("icons/pie-chart.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        Research7_2->setIcon(icon15);
+        QIcon icon16;
+        icon16.addFile(QString::fromUtf8("icons/pie-chart.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        Research7_2->setIcon(icon16);
         conf6_2 = new QPushButton(page_12);
         conf6_2->setObjectName("conf6_2");
         conf6_2->setGeometry(QRect(20, 340, 41, 41));
-        QIcon icon16;
-        icon16.addFile(QString::fromUtf8("icons/calendar.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        conf6_2->setIcon(icon16);
+        QIcon icon17;
+        icon17.addFile(QString::fromUtf8("icons/calendar.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        conf6_2->setIcon(icon17);
         homeButton4_2 = new QPushButton(page_12);
         homeButton4_2->setObjectName("homeButton4_2");
         homeButton4_2->setEnabled(true);
@@ -1246,9 +1238,9 @@ public:
         homeButton4_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton4_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton4_2->setAutoFillBackground(false);
-        QIcon icon17;
-        icon17.addFile(QString::fromUtf8("icons/menu.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        homeButton4_2->setIcon(icon17);
+        QIcon icon18;
+        icon18.addFile(QString::fromUtf8("icons/menu.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        homeButton4_2->setIcon(icon18);
         homeButton4_2->setIconSize(QSize(22, 22));
         homeButton4_2->setFlat(true);
         pic_8 = new QLabel(page_12);
@@ -1261,9 +1253,9 @@ public:
         profile4_2->setObjectName("profile4_2");
         profile4_2->setGeometry(QRect(20, 600, 41, 41));
         profile4_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon18;
-        icon18.addFile(QString::fromUtf8("icons/user.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        profile4_2->setIcon(icon18);
+        QIcon icon19;
+        icon19.addFile(QString::fromUtf8("icons/user.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        profile4_2->setIcon(icon19);
         line_8 = new QFrame(page_12);
         line_8->setObjectName("line_8");
         line_8->setGeometry(QRect(80, -30, 20, 841));
@@ -1286,21 +1278,21 @@ public:
         collab7_2 = new QPushButton(page_12);
         collab7_2->setObjectName("collab7_2");
         collab7_2->setGeometry(QRect(20, 420, 41, 41));
-        QIcon icon19;
-        icon19.addFile(QString::fromUtf8("icons/share-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        collab7_2->setIcon(icon19);
+        QIcon icon20;
+        icon20.addFile(QString::fromUtf8("icons/share-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        collab7_2->setIcon(icon20);
         publication7_2 = new QPushButton(page_12);
         publication7_2->setObjectName("publication7_2");
         publication7_2->setGeometry(QRect(20, 500, 41, 41));
-        QIcon icon20;
-        icon20.addFile(QString::fromUtf8("icons/send.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        publication7_2->setIcon(icon20);
+        QIcon icon21;
+        icon21.addFile(QString::fromUtf8("icons/send.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        publication7_2->setIcon(icon21);
         modeSwitch4_2 = new QPushButton(page_12);
         modeSwitch4_2->setObjectName("modeSwitch4_2");
         modeSwitch4_2->setGeometry(QRect(20, 660, 41, 41));
-        QIcon icon21;
-        icon21.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        modeSwitch4_2->setIcon(icon21);
+        QIcon icon22;
+        icon22.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        modeSwitch4_2->setIcon(icon22);
         chart_2 = new QLabel(page_12);
         chart_2->setObjectName("chart_2");
         chart_2->setGeometry(QRect(710, 60, 421, 271));
@@ -1997,19 +1989,19 @@ public:
         profile_2->setObjectName("profile_2");
         profile_2->setGeometry(QRect(20, 600, 41, 41));
         profile_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile_2->setIcon(icon18);
+        profile_2->setIcon(icon19);
         conf_2 = new QPushButton(page_13);
         conf_2->setObjectName("conf_2");
         conf_2->setGeometry(QRect(20, 340, 41, 41));
-        conf_2->setIcon(icon16);
+        conf_2->setIcon(icon17);
         Research_2 = new QPushButton(page_13);
         Research_2->setObjectName("Research_2");
         Research_2->setGeometry(QRect(20, 260, 41, 41));
-        Research_2->setIcon(icon15);
+        Research_2->setIcon(icon16);
         reveiw_2 = new QPushButton(page_13);
         reveiw_2->setObjectName("reveiw_2");
         reveiw_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw_2->setIcon(icon14);
+        reveiw_2->setIcon(icon15);
         homeButton_2 = new QPushButton(page_13);
         homeButton_2->setObjectName("homeButton_2");
         homeButton_2->setEnabled(true);
@@ -2021,17 +2013,17 @@ public:
         homeButton_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton_2->setAutoFillBackground(false);
-        homeButton_2->setIcon(icon17);
+        homeButton_2->setIcon(icon18);
         homeButton_2->setIconSize(QSize(22, 22));
         homeButton_2->setFlat(true);
         collab_2 = new QPushButton(page_13);
         collab_2->setObjectName("collab_2");
         collab_2->setGeometry(QRect(20, 420, 41, 41));
-        collab_2->setIcon(icon19);
+        collab_2->setIcon(icon20);
         publication_2 = new QPushButton(page_13);
         publication_2->setObjectName("publication_2");
         publication_2->setGeometry(QRect(20, 500, 41, 41));
-        publication_2->setIcon(icon20);
+        publication_2->setIcon(icon21);
         line_9 = new QFrame(page_13);
         line_9->setObjectName("line_9");
         line_9->setGeometry(QRect(80, -30, 20, 841));
@@ -2060,7 +2052,7 @@ public:
         modeSwitch_2 = new QPushButton(page_13);
         modeSwitch_2->setObjectName("modeSwitch_2");
         modeSwitch_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch_2->setIcon(icon21);
+        modeSwitch_2->setIcon(icon22);
         stackedWidget_2->addWidget(page_13);
         page_14 = new QWidget();
         page_14->setObjectName("page_14");
@@ -2087,19 +2079,19 @@ public:
         profile2_2->setObjectName("profile2_2");
         profile2_2->setGeometry(QRect(20, 600, 41, 41));
         profile2_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile2_2->setIcon(icon18);
+        profile2_2->setIcon(icon19);
         Research2_2 = new QPushButton(page_14);
         Research2_2->setObjectName("Research2_2");
         Research2_2->setGeometry(QRect(20, 260, 41, 41));
-        Research2_2->setIcon(icon15);
+        Research2_2->setIcon(icon16);
         reveiw2_2 = new QPushButton(page_14);
         reveiw2_2->setObjectName("reveiw2_2");
         reveiw2_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw2_2->setIcon(icon14);
+        reveiw2_2->setIcon(icon15);
         conf2_2 = new QPushButton(page_14);
         conf2_2->setObjectName("conf2_2");
         conf2_2->setGeometry(QRect(20, 340, 41, 41));
-        conf2_2->setIcon(icon16);
+        conf2_2->setIcon(icon17);
         homeButton2_2 = new QPushButton(page_14);
         homeButton2_2->setObjectName("homeButton2_2");
         homeButton2_2->setEnabled(true);
@@ -2111,7 +2103,7 @@ public:
         homeButton2_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton2_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton2_2->setAutoFillBackground(false);
-        homeButton2_2->setIcon(icon17);
+        homeButton2_2->setIcon(icon18);
         homeButton2_2->setIconSize(QSize(22, 22));
         homeButton2_2->setFlat(true);
         pic_10 = new QLabel(page_14);
@@ -2123,15 +2115,15 @@ public:
         collab2_2 = new QPushButton(page_14);
         collab2_2->setObjectName("collab2_2");
         collab2_2->setGeometry(QRect(20, 420, 41, 41));
-        collab2_2->setIcon(icon19);
+        collab2_2->setIcon(icon20);
         publication2_2 = new QPushButton(page_14);
         publication2_2->setObjectName("publication2_2");
         publication2_2->setGeometry(QRect(20, 500, 41, 41));
-        publication2_2->setIcon(icon20);
+        publication2_2->setIcon(icon21);
         modeSwitch2_2 = new QPushButton(page_14);
         modeSwitch2_2->setObjectName("modeSwitch2_2");
         modeSwitch2_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch2_2->setIcon(icon21);
+        modeSwitch2_2->setIcon(icon22);
         frame_10 = new QFrame(page_14);
         frame_10->setObjectName("frame_10");
         frame_10->setGeometry(QRect(100, 410, 1151, 311));
@@ -2345,16 +2337,16 @@ public:
         Research3_2 = new QPushButton(page_15);
         Research3_2->setObjectName("Research3_2");
         Research3_2->setGeometry(QRect(20, 260, 41, 41));
-        Research3_2->setIcon(icon15);
+        Research3_2->setIcon(icon16);
         profile7_2 = new QPushButton(page_15);
         profile7_2->setObjectName("profile7_2");
         profile7_2->setGeometry(QRect(20, 600, 41, 41));
         profile7_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile7_2->setIcon(icon18);
+        profile7_2->setIcon(icon19);
         reveiw7_2 = new QPushButton(page_15);
         reveiw7_2->setObjectName("reveiw7_2");
         reveiw7_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw7_2->setIcon(icon14);
+        reveiw7_2->setIcon(icon15);
         pic_11 = new QLabel(page_15);
         pic_11->setObjectName("pic_11");
         pic_11->setGeometry(QRect(20, 10, 41, 41));
@@ -2372,25 +2364,25 @@ public:
         homeButton6_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton6_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton6_2->setAutoFillBackground(false);
-        homeButton6_2->setIcon(icon17);
+        homeButton6_2->setIcon(icon18);
         homeButton6_2->setIconSize(QSize(22, 22));
         homeButton6_2->setFlat(true);
         conf7_2 = new QPushButton(page_15);
         conf7_2->setObjectName("conf7_2");
         conf7_2->setGeometry(QRect(20, 340, 41, 41));
-        conf7_2->setIcon(icon16);
+        conf7_2->setIcon(icon17);
         publication3_2 = new QPushButton(page_15);
         publication3_2->setObjectName("publication3_2");
         publication3_2->setGeometry(QRect(20, 500, 41, 41));
-        publication3_2->setIcon(icon20);
+        publication3_2->setIcon(icon21);
         modeSwitch7_2 = new QPushButton(page_15);
         modeSwitch7_2->setObjectName("modeSwitch7_2");
         modeSwitch7_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch7_2->setIcon(icon21);
+        modeSwitch7_2->setIcon(icon22);
         collab3_2 = new QPushButton(page_15);
         collab3_2->setObjectName("collab3_2");
         collab3_2->setGeometry(QRect(20, 420, 41, 41));
-        collab3_2->setIcon(icon19);
+        collab3_2->setIcon(icon20);
         line_11 = new QFrame(page_15);
         line_11->setObjectName("line_11");
         line_11->setGeometry(QRect(80, -20, 20, 841));
@@ -2484,100 +2476,32 @@ public:
         stackedWidget_2->addWidget(page_15);
         page_16 = new QWidget();
         page_16->setObjectName("page_16");
-        frame_3 = new QFrame(page_16);
-        frame_3->setObjectName("frame_3");
-        frame_3->setGeometry(QRect(10, 20, 1151, 671));
-        frame_3->setFrameShape(QFrame::Shape::StyledPanel);
-        frame_3->setFrameShadow(QFrame::Shadow::Raised);
-        layoutWidget_3 = new QWidget(frame_3);
-        layoutWidget_3->setObjectName("layoutWidget_3");
-        layoutWidget_3->setGeometry(QRect(10, 0, 1121, 661));
-        formLayout = new QFormLayout(layoutWidget_3);
-        formLayout->setObjectName("formLayout");
-        formLayout->setContentsMargins(10, 10, 10, 0);
-        verticalSpacer_3 = new QSpacerItem(20, 200, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Preferred);
-
-        formLayout->setItem(0, QFormLayout::FieldRole, verticalSpacer_3);
-
-        label_42 = new QLabel(layoutWidget_3);
-        label_42->setObjectName("label_42");
-
-        formLayout->setWidget(2, QFormLayout::LabelRole, label_42);
-
-        cTitleEdit = new QLineEdit(layoutWidget_3);
-        cTitleEdit->setObjectName("cTitleEdit");
-
-        formLayout->setWidget(2, QFormLayout::FieldRole, cTitleEdit);
-
-        label_25 = new QLabel(layoutWidget_3);
-        label_25->setObjectName("label_25");
-
-        formLayout->setWidget(3, QFormLayout::LabelRole, label_25);
-
-        topicCombo = new QComboBox(layoutWidget_3);
-        topicCombo->setObjectName("topicCombo");
-
-        formLayout->setWidget(3, QFormLayout::FieldRole, topicCombo);
-
-        label_26 = new QLabel(layoutWidget_3);
-        label_26->setObjectName("label_26");
-
-        formLayout->setWidget(4, QFormLayout::LabelRole, label_26);
-
-        dateEdit = new QDateEdit(layoutWidget_3);
-        dateEdit->setObjectName("dateEdit");
-        dateEdit->setStyleSheet(QString::fromUtf8(""));
-
-        formLayout->setWidget(4, QFormLayout::FieldRole, dateEdit);
-
-        label_27 = new QLabel(layoutWidget_3);
-        label_27->setObjectName("label_27");
-
-        formLayout->setWidget(5, QFormLayout::LabelRole, label_27);
-
-        locationEdit = new QLineEdit(layoutWidget_3);
-        locationEdit->setObjectName("locationEdit");
-
-        formLayout->setWidget(5, QFormLayout::FieldRole, locationEdit);
-
-        label_28 = new QLabel(layoutWidget_3);
-        label_28->setObjectName("label_28");
-
-        formLayout->setWidget(7, QFormLayout::LabelRole, label_28);
-
-        priceSpin = new QDoubleSpinBox(layoutWidget_3);
-        priceSpin->setObjectName("priceSpin");
-        priceSpin->setStyleSheet(QString::fromUtf8(""));
-
-        formLayout->setWidget(7, QFormLayout::FieldRole, priceSpin);
-
-        verticalSpacer = new QSpacerItem(20, 200, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Preferred);
-
-        formLayout->setItem(8, QFormLayout::FieldRole, verticalSpacer);
-
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName("horizontalLayout");
-        saveConfBtn = new QPushButton(layoutWidget_3);
-        saveConfBtn->setObjectName("saveConfBtn");
-        saveConfBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        saveConfBtn->setIcon(icon3);
-
-        horizontalLayout->addWidget(saveConfBtn);
-
-        cancelConfBtn = new QPushButton(layoutWidget_3);
-        cancelConfBtn->setObjectName("cancelConfBtn");
-
-        horizontalLayout->addWidget(cancelConfBtn);
-
-
-        formLayout->setLayout(9, QFormLayout::FieldRole, horizontalLayout);
-
-        collaborationCreationCollaborationTitleLabel_3 = new QLabel(layoutWidget_3);
-        collaborationCreationCollaborationTitleLabel_3->setObjectName("collaborationCreationCollaborationTitleLabel_3");
-        collaborationCreationCollaborationTitleLabel_3->setFont(font);
-
-        formLayout->setWidget(1, QFormLayout::FieldRole, collaborationCreationCollaborationTitleLabel_3);
-
+        scrollArea_2 = new QScrollArea(page_16);
+        scrollArea_2->setObjectName("scrollArea_2");
+        scrollArea_2->setGeometry(QRect(10, 0, 1201, 711));
+        scrollArea_2->setWidgetResizable(true);
+        reviewScrollArea = new QWidget();
+        reviewScrollArea->setObjectName("reviewScrollArea");
+        reviewScrollArea->setGeometry(QRect(0, 0, 1199, 709));
+        widget_2 = new QWidget(reviewScrollArea);
+        widget_2->setObjectName("widget_2");
+        widget_2->setGeometry(QRect(0, 10, 1181, 691));
+        verticalLayoutWidget = new QWidget(widget_2);
+        verticalLayoutWidget->setObjectName("verticalLayoutWidget");
+        verticalLayoutWidget->setGeometry(QRect(0, 70, 1181, 631));
+        reviewLayout = new QVBoxLayout(verticalLayoutWidget);
+        reviewLayout->setObjectName("reviewLayout");
+        reviewLayout->setContentsMargins(0, 0, 0, 0);
+        lineEdit_31 = new QLineEdit(widget_2);
+        lineEdit_31->setObjectName("lineEdit_31");
+        lineEdit_31->setGeometry(QRect(10, 10, 921, 41));
+        pushButton_9 = new QPushButton(widget_2);
+        pushButton_9->setObjectName("pushButton_9");
+        pushButton_9->setGeometry(QRect(1070, 10, 80, 24));
+        pushButton_15 = new QPushButton(widget_2);
+        pushButton_15->setObjectName("pushButton_15");
+        pushButton_15->setGeometry(QRect(960, 10, 80, 24));
+        scrollArea_2->setWidget(reviewScrollArea);
         stackedWidget_2->addWidget(page_16);
         page_17 = new QWidget();
         page_17->setObjectName("page_17");
@@ -2764,7 +2688,7 @@ public:
         profile5_2->setObjectName("profile5_2");
         profile5_2->setGeometry(QRect(20, 600, 41, 41));
         profile5_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile5_2->setIcon(icon18);
+        profile5_2->setIcon(icon19);
         line_13 = new QFrame(page_18);
         line_13->setObjectName("line_13");
         line_13->setGeometry(QRect(80, -30, 20, 841));
@@ -2787,19 +2711,19 @@ public:
         modeSwitch5_2 = new QPushButton(page_18);
         modeSwitch5_2->setObjectName("modeSwitch5_2");
         modeSwitch5_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch5_2->setIcon(icon21);
+        modeSwitch5_2->setIcon(icon22);
         conf4_2 = new QPushButton(page_18);
         conf4_2->setObjectName("conf4_2");
         conf4_2->setGeometry(QRect(20, 340, 41, 41));
-        conf4_2->setIcon(icon16);
+        conf4_2->setIcon(icon17);
         Research5_2 = new QPushButton(page_18);
         Research5_2->setObjectName("Research5_2");
         Research5_2->setGeometry(QRect(20, 260, 41, 41));
-        Research5_2->setIcon(icon15);
+        Research5_2->setIcon(icon16);
         reveiw5_2 = new QPushButton(page_18);
         reveiw5_2->setObjectName("reveiw5_2");
         reveiw5_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw5_2->setIcon(icon14);
+        reveiw5_2->setIcon(icon15);
         homeButton5_2 = new QPushButton(page_18);
         homeButton5_2->setObjectName("homeButton5_2");
         homeButton5_2->setEnabled(true);
@@ -2811,13 +2735,13 @@ public:
         homeButton5_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton5_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton5_2->setAutoFillBackground(false);
-        homeButton5_2->setIcon(icon17);
+        homeButton5_2->setIcon(icon18);
         homeButton5_2->setIconSize(QSize(22, 22));
         homeButton5_2->setFlat(true);
         collab5_2 = new QPushButton(page_18);
         collab5_2->setObjectName("collab5_2");
         collab5_2->setGeometry(QRect(20, 420, 41, 41));
-        collab5_2->setIcon(icon19);
+        collab5_2->setIcon(icon20);
         pic_13 = new QLabel(page_18);
         pic_13->setObjectName("pic_13");
         pic_13->setGeometry(QRect(20, 10, 41, 41));
@@ -2827,7 +2751,7 @@ public:
         publication5_2 = new QPushButton(page_18);
         publication5_2->setObjectName("publication5_2");
         publication5_2->setGeometry(QRect(20, 500, 41, 41));
-        publication5_2->setIcon(icon20);
+        publication5_2->setIcon(icon21);
         stackedWidget_2->addWidget(page_18);
         page_19 = new QWidget();
         page_19->setObjectName("page_19");
@@ -2871,9 +2795,9 @@ public:
 #endif
         pushButton_25->setPalette(palette14);
         pushButton_25->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon22;
-        icon22.addFile(QString::fromUtf8("icons/plus.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        pushButton_25->setIcon(icon22);
+        QIcon icon23;
+        icon23.addFile(QString::fromUtf8("icons/plus.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        pushButton_25->setIcon(icon23);
         groupBox_7 = new QGroupBox(page_19);
         groupBox_7->setObjectName("groupBox_7");
         groupBox_7->setGeometry(QRect(180, 70, 901, 551));
@@ -3483,7 +3407,7 @@ public:
         profile6_2->setObjectName("profile6_2");
         profile6_2->setGeometry(QRect(20, 600, 41, 41));
         profile6_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile6_2->setIcon(icon18);
+        profile6_2->setIcon(icon19);
         line_14 = new QFrame(page_19);
         line_14->setObjectName("line_14");
         line_14->setGeometry(QRect(80, -30, 20, 841));
@@ -3506,15 +3430,15 @@ public:
         modeSwitch6_2 = new QPushButton(page_19);
         modeSwitch6_2->setObjectName("modeSwitch6_2");
         modeSwitch6_2->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch6_2->setIcon(icon21);
+        modeSwitch6_2->setIcon(icon22);
         conf5_2 = new QPushButton(page_19);
         conf5_2->setObjectName("conf5_2");
         conf5_2->setGeometry(QRect(20, 340, 41, 41));
-        conf5_2->setIcon(icon16);
+        conf5_2->setIcon(icon17);
         Research6_2 = new QPushButton(page_19);
         Research6_2->setObjectName("Research6_2");
         Research6_2->setGeometry(QRect(20, 260, 41, 41));
-        Research6_2->setIcon(icon15);
+        Research6_2->setIcon(icon16);
         homeButton7_2 = new QPushButton(page_19);
         homeButton7_2->setObjectName("homeButton7_2");
         homeButton7_2->setEnabled(true);
@@ -3526,17 +3450,17 @@ public:
         homeButton7_2->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton7_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton7_2->setAutoFillBackground(false);
-        homeButton7_2->setIcon(icon17);
+        homeButton7_2->setIcon(icon18);
         homeButton7_2->setIconSize(QSize(22, 22));
         homeButton7_2->setFlat(true);
         reveiw6_2 = new QPushButton(page_19);
         reveiw6_2->setObjectName("reveiw6_2");
         reveiw6_2->setGeometry(QRect(20, 180, 41, 41));
-        reveiw6_2->setIcon(icon14);
+        reveiw6_2->setIcon(icon15);
         collab6_2 = new QPushButton(page_19);
         collab6_2->setObjectName("collab6_2");
         collab6_2->setGeometry(QRect(20, 420, 41, 41));
-        collab6_2->setIcon(icon19);
+        collab6_2->setIcon(icon20);
         pic_14 = new QLabel(page_19);
         pic_14->setObjectName("pic_14");
         pic_14->setGeometry(QRect(20, 10, 41, 41));
@@ -3546,7 +3470,7 @@ public:
         publication6_2 = new QPushButton(page_19);
         publication6_2->setObjectName("publication6_2");
         publication6_2->setGeometry(QRect(20, 500, 41, 41));
-        publication6_2->setIcon(icon20);
+        publication6_2->setIcon(icon21);
         stackedWidget_2->addWidget(page_19);
         page_20 = new QWidget();
         page_20->setObjectName("page_20");
@@ -3682,7 +3606,7 @@ public:
         page_6->setObjectName("page_6");
         mainContent = new QWidget(page_6);
         mainContent->setObjectName("mainContent");
-        mainContent->setGeometry(QRect(20, 40, 1114, 640));
+        mainContent->setGeometry(QRect(13, 79, 1121, 601));
         verticalLayout_main = new QVBoxLayout(mainContent);
         verticalLayout_main->setObjectName("verticalLayout_main");
         pubInfoGroup = new QGroupBox(mainContent);
@@ -3754,6 +3678,11 @@ public:
         FeatsGroup->setObjectName("FeatsGroup");
         horizontalLayout_features = new QHBoxLayout(FeatsGroup);
         horizontalLayout_features->setObjectName("horizontalLayout_features");
+        export_2 = new QPushButton(FeatsGroup);
+        export_2->setObjectName("export_2");
+
+        horizontalLayout_features->addWidget(export_2);
+
         summaryButton = new QPushButton(FeatsGroup);
         summaryButton->setObjectName("summaryButton");
 
@@ -3766,6 +3695,22 @@ public:
 
 
         verticalLayout_main->addWidget(FeatsGroup);
+
+        horizontalLayoutWidget = new QWidget(page_6);
+        horizontalLayoutWidget->setObjectName("horizontalLayoutWidget");
+        horizontalLayoutWidget->setGeometry(QRect(30, 40, 1101, 31));
+        horizontalLayout_5 = new QHBoxLayout(horizontalLayoutWidget);
+        horizontalLayout_5->setObjectName("horizontalLayout_5");
+        horizontalLayout_5->setContentsMargins(0, 0, 0, 0);
+        lineEdit_23 = new QLineEdit(horizontalLayoutWidget);
+        lineEdit_23->setObjectName("lineEdit_23");
+
+        horizontalLayout_5->addWidget(lineEdit_23);
+
+        searchbt = new QPushButton(horizontalLayoutWidget);
+        searchbt->setObjectName("searchbt");
+
+        horizontalLayout_5->addWidget(searchbt);
 
         stackedWidget->addWidget(page_6);
         page_7 = new QWidget();
@@ -3810,7 +3755,7 @@ public:
 #endif
         pushButton_2->setPalette(palette18);
         pushButton_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        pushButton_2->setIcon(icon22);
+        pushButton_2->setIcon(icon23);
         groupBox_3 = new QGroupBox(page_7);
         groupBox_3->setObjectName("groupBox_3");
         groupBox_3->setGeometry(QRect(90, 60, 901, 551));
@@ -4065,13 +4010,13 @@ public:
         stackedWidget->addWidget(page_23);
         sideBarStack = new QStackedWidget(centralwidget);
         sideBarStack->setObjectName("sideBarStack");
-        sideBarStack->setGeometry(QRect(0, 0, 91, 741));
+        sideBarStack->setGeometry(QRect(10, 0, 61, 741));
         page_24 = new QWidget();
         page_24->setObjectName("page_24");
         homeButton = new QPushButton(page_24);
         homeButton->setObjectName("homeButton");
         homeButton->setEnabled(true);
-        homeButton->setGeometry(QRect(20, 80, 40, 40));
+        homeButton->setGeometry(QRect(10, 80, 40, 40));
         homeButton->setMinimumSize(QSize(40, 40));
         homeButton->setMaximumSize(QSize(40, 40));
         homeButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
@@ -4079,44 +4024,44 @@ public:
         homeButton->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         homeButton->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         homeButton->setAutoFillBackground(false);
-        homeButton->setIcon(icon17);
+        homeButton->setIcon(icon18);
         homeButton->setIconSize(QSize(22, 22));
         homeButton->setFlat(true);
         conf = new QPushButton(page_24);
         conf->setObjectName("conf");
-        conf->setGeometry(QRect(20, 340, 41, 41));
-        conf->setIcon(icon16);
+        conf->setGeometry(QRect(10, 330, 41, 41));
+        conf->setIcon(icon17);
         pic = new QLabel(page_24);
         pic->setObjectName("pic");
-        pic->setGeometry(QRect(20, 10, 41, 41));
+        pic->setGeometry(QRect(10, 20, 41, 41));
         pic->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/icons/user.svg")));
         pic->setScaledContents(true);
         pic->setWordWrap(false);
         collab = new QPushButton(page_24);
         collab->setObjectName("collab");
-        collab->setGeometry(QRect(20, 420, 41, 41));
-        collab->setIcon(icon19);
+        collab->setGeometry(QRect(10, 410, 41, 41));
+        collab->setIcon(icon20);
         profile = new QPushButton(page_24);
         profile->setObjectName("profile");
-        profile->setGeometry(QRect(20, 600, 41, 41));
+        profile->setGeometry(QRect(10, 570, 41, 41));
         profile->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        profile->setIcon(icon18);
-        reveiw = new QPushButton(page_24);
-        reveiw->setObjectName("reveiw");
-        reveiw->setGeometry(QRect(20, 180, 41, 41));
-        reveiw->setIcon(icon14);
+        profile->setIcon(icon19);
+        review = new QPushButton(page_24);
+        review->setObjectName("review");
+        review->setGeometry(QRect(10, 170, 41, 41));
+        review->setIcon(icon15);
         Research = new QPushButton(page_24);
         Research->setObjectName("Research");
-        Research->setGeometry(QRect(20, 260, 41, 41));
-        Research->setIcon(icon15);
+        Research->setGeometry(QRect(10, 250, 41, 41));
+        Research->setIcon(icon16);
         modeSwitch = new QPushButton(page_24);
         modeSwitch->setObjectName("modeSwitch");
-        modeSwitch->setGeometry(QRect(20, 660, 41, 41));
-        modeSwitch->setIcon(icon21);
+        modeSwitch->setGeometry(QRect(10, 640, 41, 41));
+        modeSwitch->setIcon(icon22);
         publication = new QPushButton(page_24);
         publication->setObjectName("publication");
-        publication->setGeometry(QRect(20, 500, 41, 41));
-        publication->setIcon(icon20);
+        publication->setGeometry(QRect(10, 490, 41, 41));
+        publication->setIcon(icon21);
         sideBarStack->addWidget(page_24);
         page_25 = new QWidget();
         page_25->setObjectName("page_25");
@@ -4125,8 +4070,8 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(7);
-        tabWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(5);
+        tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
         sideBarStack->setCurrentIndex(0);
@@ -4185,10 +4130,8 @@ public:
         label_30->setText(QCoreApplication::translate("MainWindow", "[ Status of the review ]", nullptr));
         label_31->setText(QCoreApplication::translate("MainWindow", "[ Category ]", nullptr));
         label_32->setText(QCoreApplication::translate("MainWindow", "[ Comments ]", nullptr));
-        label_33->setText(QCoreApplication::translate("MainWindow", "/", nullptr));
         approve->setText(QString());
         pending->setText(QString());
-        label_34->setText(QCoreApplication::translate("MainWindow", "/", nullptr));
         denied->setText(QString());
         pushButton_4->setText(QString());
         pushButton_5->setText(QString());
@@ -4226,6 +4169,7 @@ public:
         temp2->setText(QCoreApplication::translate("MainWindow", "Login Page", nullptr));
         mkUser->setText(QCoreApplication::translate("MainWindow", "Make a New User", nullptr));
         searchUserBTN->setText(QCoreApplication::translate("MainWindow", "Search user", nullptr));
+        reviewSub->setText(QCoreApplication::translate("MainWindow", "Review Submissions", nullptr));
         searchConfEdit->setText(QString());
         searchConfEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search for something...", nullptr));
         searchConfBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
@@ -4451,17 +4395,9 @@ public:
         temp_2->setText(QCoreApplication::translate("MainWindow", "Home page", nullptr));
         temp2_2->setText(QCoreApplication::translate("MainWindow", "Login Page", nullptr));
         mkUser_2->setText(QCoreApplication::translate("MainWindow", "Make a New User", nullptr));
-        label_42->setText(QCoreApplication::translate("MainWindow", "Title", nullptr));
-        cTitleEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter The Title", nullptr));
-        label_25->setText(QCoreApplication::translate("MainWindow", "Topic", nullptr));
-        topicCombo->setPlaceholderText(QCoreApplication::translate("MainWindow", "Topic of Conference", nullptr));
-        label_26->setText(QCoreApplication::translate("MainWindow", "Date", nullptr));
-        label_27->setText(QCoreApplication::translate("MainWindow", "Location", nullptr));
-        locationEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter The Location", nullptr));
-        label_28->setText(QCoreApplication::translate("MainWindow", "Price", nullptr));
-        saveConfBtn->setText(QCoreApplication::translate("MainWindow", "Save", nullptr));
-        cancelConfBtn->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
-        collaborationCreationCollaborationTitleLabel_3->setText(QCoreApplication::translate("MainWindow", "Add a Conference", nullptr));
+        lineEdit_31->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search", nullptr));
+        pushButton_9->setText(QCoreApplication::translate("MainWindow", "Filter", nullptr));
+        pushButton_15->setText(QCoreApplication::translate("MainWindow", "Sort", nullptr));
         label_70->setText(QCoreApplication::translate("MainWindow", "Title", nullptr));
         cTitleEdit_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "Enter The Title", nullptr));
         label_71->setText(QCoreApplication::translate("MainWindow", "Topic", nullptr));
@@ -4621,9 +4557,12 @@ public:
 
         addButton->setText(QCoreApplication::translate("MainWindow", " Add Publication", nullptr));
         deleteButton->setText(QCoreApplication::translate("MainWindow", "Delete Selected", nullptr));
-        FeatsGroup->setTitle(QCoreApplication::translate("MainWindow", "Innovative Features", nullptr));
+        FeatsGroup->setTitle(QString());
+        export_2->setText(QCoreApplication::translate("MainWindow", "export to pdf", nullptr));
         summaryButton->setText(QCoreApplication::translate("MainWindow", "Summary", nullptr));
         emailButton->setText(QCoreApplication::translate("MainWindow", "Send Email Notification", nullptr));
+        lineEdit_23->setPlaceholderText(QCoreApplication::translate("MainWindow", "search ", nullptr));
+        searchbt->setText(QCoreApplication::translate("MainWindow", "search", nullptr));
 #if QT_CONFIG(tooltip)
         backHome2->setToolTip(QCoreApplication::translate("MainWindow", "Quit", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -4691,9 +4630,9 @@ public:
 #endif // QT_CONFIG(tooltip)
         profile->setText(QString());
 #if QT_CONFIG(tooltip)
-        reveiw->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
+        review->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
-        reveiw->setText(QString());
+        review->setText(QString());
 #if QT_CONFIG(tooltip)
         Research->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
 #endif // QT_CONFIG(tooltip)

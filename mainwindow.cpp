@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pic->setPixmap(logo);//logo stuff!
 
 
-    ui->stackedWidget->setCurrentIndex(3);
+    //ui->stackedWidget->setCurrentIndex(3);
     toggleDarkMode();
 
     QPixmap userPic("user.png"); //temporary until user gets an actual db
@@ -102,6 +102,165 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//********************REVIEW START**************************************************//
+
+void MainWindow::loadReviews(bool ascending, QString searchFilter)
+{
+    // Get or create layout on widget_2
+    QVBoxLayout* reviewLayout = qobject_cast<QVBoxLayout*>(ui->widget_2->layout());
+    if (!reviewLayout) {
+        reviewLayout = new QVBoxLayout(ui->widget_2);
+        ui->widget_2->setLayout(reviewLayout);
+    }
+
+    // Clear
+    QLayoutItem* reviewItem;
+    while ((reviewItem = reviewLayout->takeAt(0)) != nullptr) {
+        delete reviewItem->widget();
+        delete reviewItem;
+    }
+
+    // Query
+    QString reviewQueryStr = "SELECT IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW FROM REVIEW";
+    if (!searchFilter.trimmed().isEmpty())
+        reviewQueryStr += " WHERE UPPER(REVIEWER_NAME) LIKE UPPER(:search)";
+    reviewQueryStr += ascending ? " ORDER BY REVIEW_DATE ASC" : " ORDER BY REVIEW_DATE DESC";
+
+    QSqlQuery reviewQuery;
+    reviewQuery.prepare(reviewQueryStr);
+    if (!searchFilter.trimmed().isEmpty())
+        reviewQuery.bindValue(":search", "%" + searchFilter.trimmed() + "%");
+    reviewQuery.exec();
+
+    bool reviewsFound = false;
+
+    while (reviewQuery.next()) {
+        reviewsFound = true;
+        int reviewId         = reviewQuery.value(0).toInt();
+        QString reviewerName = reviewQuery.value(1).toString();
+        QDate reviewDate     = reviewQuery.value(2).toDate();
+        int submissionId     = reviewQuery.value(3).toInt();
+        int publicationId    = reviewQuery.value(4).toInt();
+        QString comment      = reviewQuery.value(5).toString();
+
+        QFrame* reviewCard = new QFrame();
+        reviewCard->setFrameShape(QFrame::StyledPanel);
+        reviewCard->setMinimumHeight(120);
+
+        QVBoxLayout* reviewCardLayout = new QVBoxLayout(reviewCard);
+
+        QLabel* reviewerLabel   = new QLabel("<b>" + reviewerName + "</b>");
+        QLabel* reviewInfoLabel = new QLabel(
+            "Date: " + reviewDate.toString("dd/MM/yyyy") +
+            " | Submission ID: " + QString::number(submissionId) +
+            " | Publication ID: " + QString::number(publicationId)
+            );
+        QLabel* commentLabel = new QLabel("Comment: " + comment);
+        commentLabel->setWordWrap(true);
+
+        QHBoxLayout* reviewBtnLayout = new QHBoxLayout();
+        QPushButton* editReviewBtn   = new QPushButton("Edit");
+        QPushButton* deleteReviewBtn = new QPushButton("Delete");
+        QPushButton* pdfReviewBtn    = new QPushButton("Export PDF");
+
+        reviewBtnLayout->addWidget(editReviewBtn);
+        reviewBtnLayout->addWidget(deleteReviewBtn);
+        reviewBtnLayout->addWidget(pdfReviewBtn);
+
+        reviewCardLayout->addWidget(reviewerLabel);
+        reviewCardLayout->addWidget(reviewInfoLabel);
+        reviewCardLayout->addWidget(commentLabel);
+        reviewCardLayout->addLayout(reviewBtnLayout);
+
+        reviewLayout->addWidget(reviewCard);
+
+        // Delete
+        connect(deleteReviewBtn, &QPushButton::clicked, this, [=]() {
+            QSqlQuery deleteReviewQuery;
+            deleteReviewQuery.prepare("DELETE FROM REVIEW WHERE IDREVIEW = ?");
+            deleteReviewQuery.addBindValue(reviewId);
+            deleteReviewQuery.exec();
+            loadReviews(ascending, searchFilter);
+        });
+
+        // Edit
+        connect(editReviewBtn, &QPushButton::clicked, this, [=]() {
+            QSqlQuery fetchReviewQuery;
+            fetchReviewQuery.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW FROM REVIEW WHERE IDREVIEW=:id");
+            fetchReviewQuery.bindValue(":id", reviewId);
+            fetchReviewQuery.exec();
+            if (!fetchReviewQuery.next()) return;
+
+            QDialog* editDialog = new QDialog(this);
+            editDialog->setWindowTitle("Edit Review");
+            editDialog->setMinimumWidth(400);
+
+            QFormLayout* formLayout = new QFormLayout(editDialog);
+
+            QLineEdit* nameInput    = new QLineEdit(fetchReviewQuery.value(0).toString());
+            QDateEdit* dateInput    = new QDateEdit(fetchReviewQuery.value(1).toDate());
+            dateInput->setCalendarPopup(true);
+            QSpinBox*  subIdInput   = new QSpinBox();
+            subIdInput->setMaximum(999999);
+            subIdInput->setValue(fetchReviewQuery.value(2).toInt());
+            QSpinBox*  pubIdInput   = new QSpinBox();
+            pubIdInput->setMaximum(999999);
+            pubIdInput->setValue(fetchReviewQuery.value(3).toInt());
+            QTextEdit* commentInput = new QTextEdit(fetchReviewQuery.value(4).toString());
+            commentInput->setFixedHeight(80);
+
+            formLayout->addRow("Reviewer Name:",  nameInput);
+            formLayout->addRow("Review Date:",    dateInput);
+            formLayout->addRow("Submission ID:",  subIdInput);
+            formLayout->addRow("Publication ID:", pubIdInput);
+            formLayout->addRow("Comment:",        commentInput);
+
+            QHBoxLayout* dialogBtnLayout = new QHBoxLayout();
+            QPushButton* saveBtn         = new QPushButton("Save");
+            QPushButton* cancelBtn       = new QPushButton("Cancel");
+            dialogBtnLayout->addWidget(saveBtn);
+            dialogBtnLayout->addWidget(cancelBtn);
+            formLayout->addRow(dialogBtnLayout);
+
+            connect(cancelBtn, &QPushButton::clicked, editDialog, &QDialog::reject);
+
+            connect(saveBtn, &QPushButton::clicked, this, [=]() {
+                QSqlQuery updateQuery;
+                updateQuery.prepare("UPDATE REVIEW SET REVIEWER_NAME=:name, REVIEW_DATE=:date, SUBMISSION_ID=:sid, PUBLICATION_ID=:pid, COMMENTREVIEW=:comment WHERE IDREVIEW=:id");
+                updateQuery.bindValue(":name",    nameInput->text());
+                updateQuery.bindValue(":date",    dateInput->date());
+                updateQuery.bindValue(":sid",     subIdInput->value());
+                updateQuery.bindValue(":pid",     pubIdInput->value());
+                updateQuery.bindValue(":comment", commentInput->toPlainText());
+                updateQuery.bindValue(":id",      reviewId);
+                if (updateQuery.exec()) {
+                    editDialog->accept();
+                    loadReviews(ascending, searchFilter);
+                }
+            });
+
+            editDialog->exec();
+        });
+
+        // PDF
+        connect(pdfReviewBtn, &QPushButton::clicked, this, [=]() {
+            QSqlQuery pdfReviewQuery;
+            pdfReviewQuery.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW FROM REVIEW WHERE IDREVIEW=:id");
+            pdfReviewQuery.bindValue(":id", reviewId);
+            pdfReviewQuery.exec();
+
+        });
+    }
+
+    if (!reviewsFound) {
+        QLabel* noReviewsLabel = new QLabel("No reviews found.");
+        noReviewsLabel->setAlignment(Qt::AlignCenter);
+        reviewLayout->addWidget(noReviewsLabel);
+    }
+
+    reviewLayout->addStretch();
+}
+//********************REVIEW END**************************************************//
 
 //********************CONFERENCE START***********************************************************************************************************//
 
@@ -1501,11 +1660,13 @@ void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);
 
 void MainWindow::on_backHome_clicked(){   ui->stackedWidget->setCurrentIndex(0);}
 
-void MainWindow::on_reveiw_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
+void MainWindow::on_review_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
 
 void MainWindow::on_collab_clicked(){ ui->stackedWidget->setCurrentIndex(2);}
 
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
+
+void MainWindow::on_reviewSub_clicked(){ui->stackedWidget->setCurrentIndex(5);}
 
 void MainWindow::on_login_clicked()
 {
