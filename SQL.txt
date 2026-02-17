@@ -17,3 +17,5 @@ CREATE TABLE collaboration (
     publicationId NUMBER
 );
 
+CREATE SEQUENCE collab_SEQ START WITH 1 INCREMENT BY 1;
+
