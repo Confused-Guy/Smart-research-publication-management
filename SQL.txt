@@ -8,3 +8,12 @@ CREATE TABLE CONFERENCE (
 );
 
 CREATE SEQUENCE CONF_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE collaboration (
+    idCollaboration NUMBER PRIMARY KEY,
+    title VARCHAR2(50),
+    description VARCHAR2(600),
+    authorId NUMBER,
+    publicationId NUMBER
+);
+
