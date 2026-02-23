@@ -33,3 +33,27 @@ CREATE SEQUENCE review_seq
     INCREMENT BY 1
     NOCACHE
     NOCYCLE;
+
+CREATE TABLE Submission (
+    SubmissionID NUMBER PRIMARY KEY,
+    Title VARCHAR2(255) NOT NULL,
+    Status VARCHAR2(20) NOT NULL,
+    SourcesCitation CLOB,
+    CreatedAt DATE DEFAULT SYSDATE,
+    AuthorID NUMBER NOT NULL,
+    Topic VARCHAR2(255) NOT NULL,
+    Manuscript CLOB,
+
+    CONSTRAINT chk_submission_status 
+        CHECK (Status IN (
+            'Draft',
+            'Submitted',
+            'Under Review',
+            'Revision Required',
+            'Accepted',
+            'Rejected'
+        )),
+
+    CONSTRAINT fk_submission_author 
+        FOREIGN KEY (AuthorID) REFERENCES Users(UserID),
+);
