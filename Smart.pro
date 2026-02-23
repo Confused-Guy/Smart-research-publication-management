@@ -9,13 +9,15 @@ SOURCES += \
     collaboration.cpp \
     conference.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    user.cpp
 
 HEADERS += \
     collaboration.h \
     conference.h \
     mainwindow.h \
-    review.h
+    review.h \
+    user.h
 
 FORMS += \
     mainwindow.ui
