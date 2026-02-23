@@ -44,7 +44,9 @@ CREATE TABLE Submission (
     Topic VARCHAR2(255) NOT NULL,
     Manuscript CLOB,
 
-    CONSTRAINT chk_submission_status 
+CREATE SEQUENCE submission_seq START WITH 1 INCREMENT BY 1;
+
+CONSTRAINT chk_submission_status 
         CHECK (Status IN (
             'Draft',
             'Submitted',
