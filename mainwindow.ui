@@ -6580,6 +6580,9 @@ QScrollArea &gt; QWidget {
           <height>24</height>
          </rect>
         </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="text">
          <string>Sort</string>
         </property>
@@ -6592,6 +6595,9 @@ QScrollArea &gt; QWidget {
           <width>80</width>
           <height>24</height>
          </rect>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
          <string>Search</string>
@@ -10869,6 +10875,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="toolTip">
        <string>Conference</string>
       </property>
@@ -10888,6 +10897,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>ForbiddenCursor</cursorShape>
       </property>
       <property name="text">
        <string/>
@@ -10910,6 +10922,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="toolTip">
        <string>Collaborations</string>
@@ -10954,6 +10969,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="toolTip">
        <string>Send to Research Reveiw</string>
       </property>
@@ -10973,6 +10991,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="toolTip">
        <string>Add to Research</string>
@@ -10994,6 +11015,9 @@ QTabBar::tab:hover {
         <height>41</height>
        </rect>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="toolTip">
        <string>Mode Toggle</string>
       </property>
@@ -11013,6 +11037,9 @@ QTabBar::tab:hover {
         <width>41</width>
         <height>41</height>
        </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="toolTip">
        <string>Posts</string>
