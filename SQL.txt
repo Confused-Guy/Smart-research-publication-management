@@ -1,50 +1,12 @@
-
 CREATE TABLE USERS (
     userID NUMBER PRIMARY KEY,
-    EMAIL VARCHAR2(100),
-    PASSWORD VARCHAR2(256),
-    USERNAME VARCHAR2(100),
-    ROLE VARCHAR2(50)
+    EMAIL VARCHAR2(100) UNIQUE,
+    PASSWORD VARCHAR2(256) NOT NULL,
+    USERNAME VARCHAR2(100) UNIQUE NOT NULL,
+    ROLE VARCHAR2(50) CHECK (ROLE IN ('Admin','Researcher','Viewer'))
 );
 
 CREATE SEQUENCE user_SEQ START WITH 1 INCREMENT BY 1;
-
-CREATE TABLE CONFERENCE (
-    ID NUMBER PRIMARY KEY,
-    TITLE VARCHAR2(200),
-    TOPIC_ID NUMBER,
-    CONF_DATE DATE,
-    LOCATION VARCHAR2(200),
-    PRICE NUMBER
-);
-
-CREATE SEQUENCE CONF_SEQ START WITH 1 INCREMENT BY 1;
-
-CREATE TABLE collaboration (
-    idCollaboration NUMBER PRIMARY KEY,
-    title VARCHAR2(50),
-    description VARCHAR2(600),
-    authorId NUMBER,
-    publicationId NUMBER
-);
-
-CREATE SEQUENCE collab_SEQ START WITH 1 INCREMENT BY 1;
-
-CREATE TABLE REVIEW (
-    IDReview              NUMBER          PRIMARY KEY,
-    REVIEWER_NAME   VARCHAR2(255)   NOT NULL,
-    REVIEW_DATE     DATE            NOT NULL,
-    SUBMISSION_ID   NUMBER          NOT NULL,
-    PUBLICATION_ID  NUMBER          NOT NULL,
-    COMMENTReview         VARCHAR2(1000)
-);
-
-CREATE SEQUENCE review_seq
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
-
 CREATE TABLE Submission (
     SubmissionID NUMBER PRIMARY KEY,
     Title VARCHAR2(255) NOT NULL,
@@ -52,10 +14,10 @@ CREATE TABLE Submission (
     SourcesCitation CLOB,
     CreatedAt DATE DEFAULT SYSDATE,
     AuthorID NUMBER NOT NULL,
-    Topic VARCHAR2(255) NOT NULL,
+    TopicID NUMBER NOT NULL,
     Manuscript CLOB,
 
-CONSTRAINT chk_submission_status 
+    CONSTRAINT chk_submission_status 
         CHECK (Status IN (
             'Draft',
             'Submitted',
@@ -66,8 +28,14 @@ CONSTRAINT chk_submission_status
         )),
 
     CONSTRAINT fk_submission_author 
-        FOREIGN KEY (AuthorID) REFERENCES Users(UserID)
+        FOREIGN KEY (AuthorID)
+        REFERENCES USERS(UserID),
+
+    CONSTRAINT fk_submission_topic
+        FOREIGN KEY (TopicID)
+        REFERENCES TOPIC(TopicID)
 );
+
 CREATE SEQUENCE submission_seq START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE PUBLICATIONS (
@@ -75,7 +43,71 @@ CREATE TABLE PUBLICATIONS (
     AUTHORID NUMBER NOT NULL,
     SUBMISSIONID NUMBER NOT NULL,
     DESCRIPTION VARCHAR2(300),
-    Createddate DATE,
-    Field  VARCHAR2(50)
+    Createddate DATE DEFAULT SYSDATE,
+    Field VARCHAR2(50),
+
+    CONSTRAINT fk_publication_author
+        FOREIGN KEY (AUTHORID)
+        REFERENCES USERS(userID),
+
+    CONSTRAINT fk_publication_submission
+        FOREIGN KEY (SUBMISSIONID)
+        REFERENCES Submission(SubmissionID)
 );
+
 CREATE SEQUENCE PUB_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE REVIEW (
+    IDReview NUMBER PRIMARY KEY,
+    REVIEWER_NAME VARCHAR2(255) NOT NULL,
+    REVIEW_DATE DATE NOT NULL,
+    SUBMISSION_ID NUMBER NOT NULL,
+    PUBLICATION_ID NUMBER NOT NULL,
+    COMMENTReview VARCHAR2(1000),
+
+    CONSTRAINT fk_review_submission
+        FOREIGN KEY (SUBMISSION_ID)
+        REFERENCES Submission(SubmissionID),
+
+    CONSTRAINT fk_review_publication
+        FOREIGN KEY (PUBLICATION_ID)
+        REFERENCES PUBLICATIONS(PublicationID)
+);
+
+CREATE SEQUENCE review_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE TABLE collaboration (
+    idCollaboration NUMBER PRIMARY KEY,
+    title VARCHAR2(50),
+    description VARCHAR2(600),
+    authorId NUMBER,
+    publicationId NUMBER,
+
+    CONSTRAINT fk_collab_author
+        FOREIGN KEY (authorId)
+        REFERENCES USERS(userID),
+
+    CONSTRAINT fk_collab_publication
+        FOREIGN KEY (publicationId)
+        REFERENCES PUBLICATIONS(PublicationID)
+);
+
+CREATE SEQUENCE collab_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE CONFERENCE (
+    ID NUMBER PRIMARY KEY,
+    TITLE VARCHAR2(200),
+    TOPIC_ID NUMBER,
+    CONF_DATE DATE,
+    LOCATION VARCHAR2(200),
+    PRICE NUMBER,
+
+    CONSTRAINT fk_conference_publication
+        FOREIGN KEY (TOPIC_ID)
+        REFERENCES PUBLICATIONS(PublicationID)
+);
+CREATE SEQUENCE CONF_SEQ START WITH 1 INCREMENT BY 1;
