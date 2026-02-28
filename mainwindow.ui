@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -1553,231 +1553,18 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="movable">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="ReveiwT">
+      <widget class="QWidget" name="ReviewT">
        <attribute name="icon">
         <iconset theme="QIcon::ThemeIcon::AppointmentSoon"/>
        </attribute>
        <attribute name="title">
         <string>Review status</string>
        </attribute>
-       <widget class="QLabel" name="label_29">
-        <property name="geometry">
-         <rect>
-          <x>40</x>
-          <y>40</y>
-          <width>61</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>[ Title ]   </string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_30">
-        <property name="geometry">
-         <rect>
-          <x>310</x>
-          <y>40</y>
-          <width>171</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>[ Status of the review ]</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_31">
-        <property name="geometry">
-         <rect>
-          <x>180</x>
-          <y>40</y>
-          <width>91</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>[ Category ]</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_32">
-        <property name="geometry">
-         <rect>
-          <x>520</x>
-          <y>40</y>
-          <width>111</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>[ Comments ]</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit">
-        <property name="geometry">
-         <rect>
-          <x>180</x>
-          <y>80</y>
-          <width>113</width>
-          <height>27</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_2">
-        <property name="geometry">
-         <rect>
-          <x>40</x>
-          <y>80</y>
-          <width>113</width>
-          <height>27</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="approve">
-        <property name="geometry">
-         <rect>
-          <x>310</x>
-          <y>80</y>
-          <width>41</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/thumbs-up.svg</normaloff>icons/thumbs-up.svg</iconset>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pending">
-        <property name="geometry">
-         <rect>
-          <x>370</x>
-          <y>80</y>
-          <width>41</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/clock.svg</normaloff>icons/clock.svg</iconset>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="denied">
-        <property name="geometry">
-         <rect>
-          <x>430</x>
-          <y>80</y>
-          <width>41</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/x.svg</normaloff>icons/x.svg</iconset>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_3">
-        <property name="geometry">
-         <rect>
-          <x>520</x>
-          <y>80</y>
-          <width>321</width>
-          <height>27</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="geometry">
-         <rect>
-          <x>1080</x>
-          <y>70</y>
-          <width>31</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/trash-2.svg</normaloff>icons/trash-2.svg</iconset>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_5">
-        <property name="geometry">
-         <rect>
-          <x>1030</x>
-          <y>70</y>
-          <width>31</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/edit.svg</normaloff>icons/edit.svg</iconset>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_8">
-        <property name="geometry">
-         <rect>
-          <x>870</x>
-          <y>40</y>
-          <width>131</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>[ AI Percentage ]</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_13">
-        <property name="geometry">
-         <rect>
-          <x>910</x>
-          <y>80</y>
-          <width>70</width>
-          <height>19</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>20% &lt;</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="exportPDF">
-        <property name="geometry">
-         <rect>
-          <x>1080</x>
-          <y>10</y>
-          <width>31</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="toolTip">
-         <string>Export to PDF</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/printer.svg</normaloff>icons/printer.svg</iconset>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="icon">

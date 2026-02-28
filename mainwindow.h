@@ -74,8 +74,8 @@ private slots:
     void on_sortReviewBtn_clicked();
     void on_searchReviewBtn_clicked();
 
-    //void extracted(QSqlQuery &reviewQuery);
     void loadReviews(bool Rascending, QString RsearchFilter);
+    void loadReviewsReadOnly();
 
     //************Reveiw Start***************************//
 
@@ -114,7 +114,9 @@ private:
     //Functions
     void showReviewDialog(int reviewId = -1);
     void exportReviewPDF(int reviewId, const QString& reviewerName, const QDate& reviewDate,
-                         int submissionId, int publicationId, const QString& comment);
+                         int submissionId, int publicationId, const QString& comment,
+                         const QString& status);
+
     //************REVIEW END***************************//
 };
 #endif // MAINWINDOW_H
