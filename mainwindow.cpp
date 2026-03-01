@@ -325,13 +325,13 @@ void MainWindow::showReviewDialog(int reviewId)
     dateInput->setDisplayFormat("dd/MM/yyyy");
     dateInput->setStyleSheet(QString("QDateEdit { %1 } QDateEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
 
-    QSpinBox* subIdInput = new QSpinBox();
-    subIdInput->setRange(1, 999999);
-    subIdInput->setStyleSheet(QString("QSpinBox { %1 } QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
+    //QSpinBox* subIdInput = new QSpinBox();
+    //subIdInput->setRange(1, 999999);
+    //subIdInput->setStyleSheet(QString("QSpinBox { %1 } QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
 
-    QSpinBox* pubIdInput = new QSpinBox();
-    pubIdInput->setRange(1, 999999);
-    pubIdInput->setStyleSheet(QString("QSpinBox { %1 } QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
+    //QSpinBox* pubIdInput = new QSpinBox();
+    //pubIdInput->setRange(1, 999999);
+    //pubIdInput->setStyleSheet(QString("QSpinBox { %1 } QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
 
     QComboBox* statusInput = new QComboBox();
     statusInput->addItems({"Pending", "In Review", "Approved", "Rejected"});
@@ -349,8 +349,8 @@ void MainWindow::showReviewDialog(int reviewId)
 
     addField("Reviewer Name",  nameInput);
     addField("Review Date",    dateInput);
-    addField("Submission ID",  subIdInput);
-    addField("Publication ID", pubIdInput);
+    //addField("Submission ID",  subIdInput);
+    //addField("Publication ID", pubIdInput);
     addField("Status",         statusInput);
 
     QLabel* commentLabel = makeLabel("Comment");
@@ -368,8 +368,8 @@ void MainWindow::showReviewDialog(int reviewId)
         if (q.next()) {
             nameInput->setText(q.value(0).toString());
             dateInput->setDate(q.value(1).toDate());
-            subIdInput->setValue(q.value(2).toInt());
-            pubIdInput->setValue(q.value(3).toInt());
+            //subIdInput->setValue(q.value(2).toInt());
+            //pubIdInput->setValue(q.value(3).toInt());
             commentInput->setPlainText(q.value(4).toString());
             QString savedStatus = q.value(5).toString();
             int idx = statusInput->findText(savedStatus);
@@ -435,8 +435,8 @@ void MainWindow::showReviewDialog(int reviewId)
 
         query.bindValue(":name",    nameInput->text().trimmed());
         query.bindValue(":date",    dateInput->date());
-        query.bindValue(":sid",     subIdInput->value());
-        query.bindValue(":pid",     pubIdInput->value());
+        //query.bindValue(":sid",     subIdInput->value());
+        //query.bindValue(":pid",     pubIdInput->value());
         query.bindValue(":comment", commentInput->toPlainText().trimmed());
         query.bindValue(":status",  statusInput->currentText());
 

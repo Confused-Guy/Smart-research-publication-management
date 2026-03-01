@@ -3657,7 +3657,7 @@ public:
         page_7->setObjectName("page_7");
         backHome2 = new QPushButton(page_7);
         backHome2->setObjectName("backHome2");
-        backHome2->setGeometry(QRect(700, 630, 81, 41));
+        backHome2->setGeometry(QRect(690, 630, 91, 41));
         backHome2->setIconSize(QSize(25, 25));
         pushButton_2 = new QPushButton(page_7);
         pushButton_2->setObjectName("pushButton_2");
@@ -4017,7 +4017,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(3);
+        stackedWidget->setCurrentIndex(1);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -4499,7 +4499,7 @@ public:
         backHome2->setToolTip(QCoreApplication::translate("MainWindow", "Quit", nullptr));
 #endif // QT_CONFIG(tooltip)
         backHome2->setText(QCoreApplication::translate("MainWindow", "Go back", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Add To Research", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Add Research", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("MainWindow", "Research Information", nullptr));
         dropPlace->setText(QString());
         textEdit_4->setPlaceholderText(QCoreApplication::translate("MainWindow", "[ The selected Research description would be here ]", nullptr));

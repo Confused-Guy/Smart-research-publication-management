@@ -16,11 +16,11 @@ int main(int argc, char *argv[])
     db.setUserName("system");
     db.setPassword("root");
 
-    if (!db.open())
+    if (!db.open()){
         qDebug() << "Database Error:" << db.lastError().text();
-    else
+    }else{
         qDebug() << "Datbase Connected";
-
+        qDebug() << "Username:" << db.userName();}
 
     MainWindow w;
     w.show();

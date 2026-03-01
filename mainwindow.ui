@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -9289,9 +9289,9 @@ QTabBar::tab:hover {
      <widget class="QPushButton" name="backHome2">
       <property name="geometry">
        <rect>
-        <x>700</x>
+        <x>690</x>
         <y>630</y>
-        <width>81</width>
+        <width>91</width>
         <height>41</height>
        </rect>
       </property>
@@ -9547,7 +9547,7 @@ QTabBar::tab:hover {
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="text">
-       <string>Add To Research</string>
+       <string>Add Research</string>
       </property>
       <property name="icon">
        <iconset>
