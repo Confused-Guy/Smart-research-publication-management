@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "conference.h"
+#include "collaboration.h"
 #include <QSqlQuery>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintDialog>
@@ -2278,6 +2279,268 @@ void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadC
 //***********************************************************************************************************************************************************//
 //***********************************************************************************************************************************************************//
 
+//**********Collabs Start**********//
+int userIdForCollabs = 0; //for testing
+bool MainWindow::loadCollabs()
+{
+    ui->collabsList->clear();
+    ui->collabsDescription->clear();
+    ui->collabsDescription->setEnabled(false);
+    collaborations.clear();
+    ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(false);
+    ui->collaborationCreationCollaborationTitileEdit->setEnabled(false);
+    ui->collaborationCreationCollaborationDescriptionEdit->clear();
+    ui->collaborationCreationCollaborationTitileEdit->clear();
+    ui->collaborationCreationCancelButton->setEnabled(false);
+    ui->collabsGroupChatButton->hide();
+
+    QSqlQuery query;
+
+    QString queryString = "SELECT * FROM collaboration WHERE authorId = ?";
+    if (!ui->collabsSearchBox->toPlainText().isEmpty())
+        queryString += " AND title LIKE ? ";
+
+    if (ui->collaborationCreationSortSwitch->checkState() == Qt::CheckState::Checked)
+    {
+        queryString += " ORDER BY TITLE ";
+
+        if (ui->collaborationCreationDescSwitch->checkState() == Qt::CheckState::Checked)
+            queryString += " DESC ";
+
+    }
+
+    query.prepare(queryString);
+
+    query.addBindValue(userIdForCollabs);
+
+    if (!ui->collabsSearchBox->toPlainText().isEmpty())
+        query.addBindValue(ui->collabsSearchBox->toPlainText().trimmed());
+
+    if (!query.exec())
+        return false;
+
+    while (query.next()) {
+        Collaboration collab(query.value(0).toInt(),
+                             query.value(1).toString(),
+                             query.value(2).toString(),
+                             query.value(3).toInt(),
+                             query.value(4).toInt());
+
+        ui->collabsList->addItem(collab.getTitle());
+        collaborations.push_back(collab);
+    }
+
+    if (collaborations.empty())
+    {
+        ui->collaborationCreationSortSwitch->hide();
+        ui->collaborationCreationDescSwitch->hide();
+    }
+    else
+    {
+        ui->collaborationCreationSortSwitch->show();
+        ui->collaborationCreationDescSwitch->show();
+    }
+
+    return true;
+}
+
+void MainWindow::on_collaborationCreationSortSwitch_clicked()
+{
+    if (ui->collaborationCreationSortSwitch->checkState() == Qt::CheckState::Checked) {
+        ui->collaborationCreationDescSwitch->setEnabled(true);
+        ui->collaborationCreationDescSwitch->show();
+        qDebug() << "Sorting";
+    }
+
+    else if (ui->collaborationCreationSortSwitch->checkState() == Qt::CheckState::Unchecked) {
+        ui->collaborationCreationDescSwitch->setEnabled(false);
+        ui->collaborationCreationDescSwitch->hide();
+        ui->collaborationCreationDescSwitch->setCheckState(Qt::CheckState::Unchecked);
+    }
+
+    loadCollabs();
+}
+
+void MainWindow::on_collaborationCreationDescSwitch_clicked()
+{
+    loadCollabs();
+}
+
+void MainWindow::on_collabsList_clicked()
+{
+    const int i = ui->collabsList->currentRow();
+    ui->collaborationCreationCollaborationDescriptionEdit->setText(
+        collaborations[i].getDescription());
+    ui->collaborationCreationCollaborationTitileEdit->setPlainText(collaborations[i].getTitle());
+
+    ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(true);
+    ui->collaborationCreationCollaborationTitileEdit->setEnabled(true);
+
+    ui->collabsDeleteButton->setEnabled(true);
+    ui->collabsGroupChatButton->setEnabled(true);
+    ui->collabsExportButton->setEnabled(true);
+    ui->collabsStatsButton->setEnabled(true);
+
+    ui->collabsEditButton->setEnabled(true);
+
+    int _ = ui->collabsList->currentRow();
+    ui->collabsDescription->setText(collaborations[_].getDescription());
+}
+
+void MainWindow::on_collab_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    loadCollabs();
+}
+
+void MainWindow::on_collabsSearchBox_textChanged()
+{
+    loadCollabs();
+}
+
+void MainWindow::on_collaborationCreationNewButton_clicked()
+{
+    ui->collabsList->setCurrentRow(-1);
+    ui->collaborationCreationCollaborationDescriptionEdit->clear();
+    ui->collaborationCreationCollaborationTitileEdit->clear();
+    ui->collaborationCreationNewButton->setEnabled(false);
+
+    ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(true);
+    ui->collaborationCreationCollaborationTitileEdit->setEnabled(true);
+
+    ui->collabsDeleteButton->setEnabled(false);
+    ui->collabsGroupChatButton->setEnabled(false);
+    ui->collabsExportButton->setEnabled(false);
+    ui->collabsStatsButton->setEnabled(false);
+
+    ui->collaborationCreationCancelButton->setEnabled(true);
+
+    ui->stackedWidget->setCurrentIndex(12);
+}
+
+void MainWindow::on_collabsEditButton_clicked()
+{
+    //ui->collabsList->setCurrentRow(-1);
+    ui->collaborationCreationNewButton->setEnabled(false);
+
+    ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(true);
+    ui->collaborationCreationCollaborationTitileEdit->setEnabled(true);
+
+    ui->collabsDeleteButton->setEnabled(false);
+    ui->collabsGroupChatButton->setEnabled(false);
+    ui->collabsExportButton->setEnabled(false);
+    ui->collabsStatsButton->setEnabled(false);
+
+    ui->collaborationCreationCancelButton->setEnabled(true);
+
+    ui->stackedWidget->setCurrentIndex(12);
+}
+
+void MainWindow::on_collaborationCreationCancelButton_clicked()
+{
+    if (ui->collabsList->currentRow() >= 0) {
+        const int i = ui->collabsList->currentRow();
+        ui->collaborationCreationCollaborationDescriptionEdit->setText(
+            collaborations[i].getDescription());
+        ui->collaborationCreationCollaborationTitileEdit->setPlainText(collaborations[i].getTitle());
+    } else {
+        ui->collaborationCreationCollaborationDescriptionEdit->clear();
+        ui->collaborationCreationCollaborationTitileEdit->clear();
+        ui->collabsDeleteButton->setEnabled(false);
+        ui->collabsGroupChatButton->setEnabled(false);
+        ui->collabsExportButton->setEnabled(false);
+        ui->collabsStatsButton->setEnabled(false);
+        ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(false);
+        ui->collaborationCreationCollaborationDescriptionEdit->clear();
+        ui->collaborationCreationCollaborationTitileEdit->setEnabled(false);
+        ui->collaborationCreationCollaborationTitileEdit->clear();
+    }
+
+    ui->collaborationCreationCancelButton->setEnabled(false);
+    ui->collaborationCreationNewButton->setEnabled(true);
+
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_collaborationCreationConfirmButton_clicked()
+{
+    QString title = ui->collaborationCreationCollaborationTitileEdit->toPlainText();
+    QString description = ui->collaborationCreationCollaborationDescriptionEdit->toPlainText();
+
+    if (title.isEmpty() || description.isEmpty())
+    {
+        ui->collaborationCreationCollaborationTitileEdit->setPlaceholderText("Title Can't Be Blank");
+        ui->collaborationCreationCollaborationDescriptionEdit->setPlaceholderText("Description Can't Be Blank");
+        return;
+    }
+
+    ui->collaborationCreationCollaborationTitileEdit->setPlaceholderText("Title of The Collaboration");
+    ui->collaborationCreationCollaborationDescriptionEdit->setPlaceholderText("The Description of The Collaboration");
+
+    if (ui->collabsList->currentRow() < 0) {
+        int publicationId = 0;
+        Collaboration collab(0, title, description, userIdForCollabs, publicationId);
+        collab.create();
+    } else {
+        Collaboration collab = collaborations[ui->collabsList->currentRow()];
+        collab.setTitle(title);
+        collab.setDescription(description);
+        collab.update();
+    }
+
+    ui->collaborationCreationCancelButton->setEnabled(false);
+
+    ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(false);
+    ui->collaborationCreationCollaborationDescriptionEdit->clear();
+    ui->collaborationCreationCollaborationTitileEdit->setEnabled(false);
+    ui->collaborationCreationCollaborationTitileEdit->clear();
+    ui->collaborationCreationNewButton->setEnabled(true);
+
+    ui->collabsDeleteButton->setEnabled(false);
+    ui->collabsGroupChatButton->setEnabled(false);
+    ui->collabsExportButton->setEnabled(false);
+    ui->collabsStatsButton->setEnabled(false);
+
+    loadCollabs();
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_collabsDeleteButton_clicked()
+{
+    if (ui->collabsList->currentRow() < 0)
+        return;
+
+    const int i = ui->collabsList->currentRow();
+    Collaboration collab = collaborations[i];
+    collab.Delete();
+
+    ui->collaborationCreationCollaborationDescriptionEdit->setEnabled(false);
+    ui->collaborationCreationCollaborationDescriptionEdit->clear();
+    ui->collaborationCreationCollaborationTitileEdit->setEnabled(false);
+    ui->collaborationCreationCollaborationTitileEdit->clear();
+
+    ui->collabsDeleteButton->setEnabled(false);
+    ui->collabsGroupChatButton->setEnabled(false);
+    ui->collabsExportButton->setEnabled(false);
+    ui->collabsStatsButton->setEnabled(false);
+    ui->collabsEditButton->setEnabled(false);
+    ui->collaborationCreationCancelButton->setEnabled(false);
+
+    loadCollabs();
+}
+
+void MainWindow::on_collaborationCreationCollaborationDescriptionEdit_textChanged()
+{
+    ui->collaborationCreationCancelButton->setEnabled(true);
+}
+void MainWindow::on_collaborationCreationCollaborationTitileEdit_textChanged()
+{
+    ui->collaborationCreationCancelButton->setEnabled(true);
+}
+
+//**********Collabs End**********//
+
+
 
 void MainWindow::on_Browse_pressed()
 {
@@ -2297,7 +2560,6 @@ void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);
 
 void MainWindow::on_backHome_clicked(){   ui->stackedWidget->setCurrentIndex(0);}
 
-void MainWindow::on_collab_clicked(){ ui->stackedWidget->setCurrentIndex(2);}
 
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
 

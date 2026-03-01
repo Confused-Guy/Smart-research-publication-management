@@ -2,13 +2,14 @@
 #include <QSqlQueryModel>
 
 #include "collaboration.h"
+#include <ui_mainwindow.h>
 
 Collaboration::Collaboration(int collaborationId, QString title, QString description, int authorId, int publicationId)
     :   m_collaborationId(collaborationId),
-        m_title(title),
-        m_description(description),
-        m_authorId(authorId),
-         m_publicationId(publicationId)
+    m_title(title),
+    m_description(description),
+    m_authorId(authorId),
+    m_publicationId(publicationId)
 {
 
 }
@@ -27,13 +28,18 @@ void Collaboration::setPublicationId(int publicationId)             { m_publicat
 
 bool Collaboration::create()
 {
+    if (m_title.isEmpty())
+        return false;
+
+    if (m_description.isEmpty())
+        return false;
+
     QSqlQuery query;
     query.prepare(
         "INSERT INTO collaboration "
         "(idcollaboration, title, description, authorId, publicationId) "
-        "VALUES (collab_SEQ.NEXTVAL,?, ?, ?, ?)"
+        "VALUES (collab_SEQ.NEXTVAL, ?, ?, ?, ?)"
         );
-
     query.addBindValue(m_title);
     query.addBindValue(m_description);
     query.addBindValue(m_authorId);
@@ -42,17 +48,32 @@ bool Collaboration::create()
     if(!query.exec())
         return false;
 
+    qDebug() << "Inserted Collab With The Following Attributes:";
+    qDebug() << "Title: " << m_title;
+    qDebug() << "Description: " << m_description;
+    qDebug() << "authorId: " << m_authorId;
+    qDebug() << "publicationId: " << m_publicationId;
+    qDebug() << "Id: " << m_collaborationId;
+
+
     return true;
 }
 
 bool Collaboration::Delete()
 {
     QSqlQuery query;
-    query.prepare("DELETE FROM collaboration WHERE collaborationId = ?");
+    query.prepare("DELETE FROM collaboration WHERE idcollaboration = ?");
     query.addBindValue(m_collaborationId);
 
     if(!query.exec())
         return false;
+
+    qDebug() << "Deleted Collab With The Following Attributes:";
+    qDebug() << "Title: " << m_title;
+    qDebug() << "Description: " << m_description;
+    qDebug() << "authorId: " << m_authorId;
+    qDebug() << "publicationId: " << m_publicationId;
+    qDebug() << "Id: " << m_collaborationId;
 
     return true;
 }
@@ -65,13 +86,24 @@ bool Collaboration::update()
         "title = ?, "
         "description = ?, "
         "authorId = ?, "
-        "publicationId = ?, "
-        "WHERE collaborationId = ?"
+        "publicationId = ? "
+        "WHERE idcollaboration = ?"
         );
+    query.addBindValue(m_title);
+    query.addBindValue(m_description);
+    query.addBindValue(m_authorId);
+    query.addBindValue(m_publicationId);
     query.addBindValue(m_collaborationId);
 
     if(!query.exec())
         return false;
+
+    qDebug() << "UpdatedCollab With The Following Attributes:";
+    qDebug() << "Title: " << m_title;
+    qDebug() << "Description: " << m_description;
+    qDebug() << "authorId: " << m_authorId;
+    qDebug() << "publicationId: " << m_publicationId;
+    qDebug() << "Id: " << m_collaborationId;
 
     return true;
 }

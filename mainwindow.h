@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "collaboration.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -79,6 +80,21 @@ private slots:
 
     //************Reveiw Start***************************//
 
+    //***********Collabs Start*****************//
+
+    void on_collabsList_clicked();
+    void on_collaborationCreationNewButton_clicked();
+    void on_collaborationCreationConfirmButton_clicked();
+    void on_collaborationCreationSortSwitch_clicked();
+    void on_collaborationCreationDescSwitch_clicked();
+    void on_collaborationCreationCancelButton_clicked();
+    void on_collabsDeleteButton_clicked();
+    void on_collaborationCreationCollaborationDescriptionEdit_textChanged();
+    void on_collaborationCreationCollaborationTitileEdit_textChanged();
+    void on_collabsEditButton_clicked();
+    void on_collabsSearchBox_textChanged();
+
+    //***********Collabs End*******************//
 
 
 
@@ -118,5 +134,10 @@ private:
                          const QString& status);
 
     //************REVIEW END***************************//
+
+    //************collabs start*********//
+    bool loadCollabs();
+    std::vector<Collaboration> collaborations;
+    //************collabs end**********//
 };
 #endif // MAINWINDOW_H

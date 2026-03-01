@@ -1,8 +1,7 @@
 #ifndef COLLABORATION_H
 #define COLLABORATION_H
 
-#include "mainwindow.h"
-
+#include <QString>
 
 class Collaboration
 {

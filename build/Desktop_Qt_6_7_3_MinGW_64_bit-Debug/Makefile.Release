@@ -310,9 +310,11 @@ release/moc_mainwindow.cpp: ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qguiapplication_platform.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtabwidget.h \
+		../../collaboration.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QString \
 		release/moc_predefs.h \
 		C:/Qt/6.7.3/mingw_64/bin/moc.exe
-	C:\Qt\6.7.3\mingw_64\bin\moc.exe $(DEFINES) --include C:/Users/Ayoub/Documents/GitHub/Smart-research-publication-management/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/release/moc_predefs.h -IC:/Qt/6.7.3/mingw_64/mkspecs/win32-g++ -IC:/Users/Ayoub/Documents/GitHub/Smart-research-publication-management -IC:/Qt/6.7.3/mingw_64/include -IC:/Qt/6.7.3/mingw_64/include/QtPrintSupport -IC:/Qt/6.7.3/mingw_64/include/QtCharts -IC:/Qt/6.7.3/mingw_64/include/QtOpenGLWidgets -IC:/Qt/6.7.3/mingw_64/include/QtWidgets -IC:/Qt/6.7.3/mingw_64/include/QtOpenGL -IC:/Qt/6.7.3/mingw_64/include/QtGui -IC:/Qt/6.7.3/mingw_64/include/QtSql -IC:/Qt/6.7.3/mingw_64/include/QtNetwork -IC:/Qt/6.7.3/mingw_64/include/QtCore -I. -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\mainwindow.h -o release\moc_mainwindow.cpp
+	C:\Qt\6.7.3\mingw_64\bin\moc.exe $(DEFINES) --include C:/Users/wassimSDN/Documents/GitHub/Smart-research-publication-management/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/release/moc_predefs.h -IC:/Qt/6.7.3/mingw_64/mkspecs/win32-g++ -IC:/Users/wassimSDN/Documents/GitHub/Smart-research-publication-management -IC:/Qt/6.7.3/mingw_64/include -IC:/Qt/6.7.3/mingw_64/include/QtPrintSupport -IC:/Qt/6.7.3/mingw_64/include/QtCharts -IC:/Qt/6.7.3/mingw_64/include/QtOpenGLWidgets -IC:/Qt/6.7.3/mingw_64/include/QtWidgets -IC:/Qt/6.7.3/mingw_64/include/QtOpenGL -IC:/Qt/6.7.3/mingw_64/include/QtGui -IC:/Qt/6.7.3/mingw_64/include/QtSql -IC:/Qt/6.7.3/mingw_64/include/QtNetwork -IC:/Qt/6.7.3/mingw_64/include/QtCore -I. -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ..\..\mainwindow.h -o release\moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -459,83 +461,8 @@ release/collaboration.o: ../../collaboration.cpp C:/Qt/6.7.3/mingw_64/include/Qt
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlquerymodel.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../collaboration.h \
-		../../mainwindow.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QMainWindow \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qmainwindow.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgetsglobal.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtguiglobal.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtgui-config.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtguiexports.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtwidgetsexports.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qwidget.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qwindowdefs.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qwindowdefs_win.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qmargins.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qaction.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qkeysequence.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qicon.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qsize.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qpixmap.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qpaintdevice.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qrect.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qpoint.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qcolor.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qrgb.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qrgba64.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qimage.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qpixelformat.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qtransform.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qpolygon.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qregion.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qline.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qpalette.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qbrush.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qfont.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qendian.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qfontmetrics.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qfontinfo.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qsizepolicy.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qcursor.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qbitmap.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qevent.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qiodevice.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qurl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qeventpoint.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qvector2d.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qvectornd.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qpointingdevice.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qinputdevice.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qscreen.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QList \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QObject \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QRect \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QSize \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QSizeF \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/QTransform \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qnativeinterface.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qscreen_platform.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qguiapplication.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qcoreapplication.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qdeadlinetimer.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qelapsedtimer.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qeventloop.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qcoreapplication_platform.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qfuture.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qfutureinterface.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qmutex.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qtsan_impl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qresultstore.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qfuture_impl.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qthreadpool.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qthread.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qrunnable.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qexception.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qpromise.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qinputmethod.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
-		C:/Qt/6.7.3/mingw_64/include/QtGui/qguiapplication_platform.h \
-		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtabwidget.h
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QString \
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\collaboration.o ..\..\collaboration.cpp
 
 release/conference.o: ../../conference.cpp ../../conference.h \
@@ -861,6 +788,8 @@ release/main.o: ../../main.cpp ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qguiapplication_platform.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtabwidget.h \
+		../../collaboration.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QString \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/QApplication \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qapplication.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/QSqlDatabase \
@@ -1072,6 +1001,8 @@ release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qlocale.h \
 		C:/Qt/6.7.3/mingw_64/include/QtGui/qguiapplication_platform.h \
 		C:/Qt/6.7.3/mingw_64/include/QtWidgets/qtabwidget.h \
+		../../collaboration.h \
+		C:/Qt/6.7.3/mingw_64/include/QtCore/QString \
 		ui_mainwindow.h \
 		../../conference.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqlquerymodel.h \
@@ -1080,7 +1011,6 @@ release/mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qtsqlexports.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qabstractitemmodel.h \
 		C:/Qt/6.7.3/mingw_64/include/QtSql/qsqldatabase.h \
-		C:/Qt/6.7.3/mingw_64/include/QtCore/QString \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/QDate \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qdatetime.h \
 		C:/Qt/6.7.3/mingw_64/include/QtCore/qcalendar.h \
