@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
     db.setDatabaseName("OraclePeerly");
-    db.setUserName("system");
+    db.setUserName("system"); //Change to your username
     db.setPassword("root");
 
     if (!db.open()){

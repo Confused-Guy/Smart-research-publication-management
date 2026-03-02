@@ -8,13 +8,13 @@
 
 Conference::Conference() {}
 
-Conference::Conference(int id, QString title, int topicId,
+Conference::Conference(int id, QString title, int publicationId,
                        QDate date, QString location,
                        double price)
 {
     this->id       = id;
     this->title    = title;
-    this->topicId  = topicId;
+    this->publicationId  = publicationId;
     this->date     = date;
     this->location = location;
     this->price    = price;
@@ -23,7 +23,7 @@ Conference::Conference(int id, QString title, int topicId,
 //GETTERS
 int     Conference::getId()       const { return id; }
 QString Conference::getTitle()    const { return title; }
-int     Conference::getTopicId()  const { return topicId; }
+int     Conference::getPublicationId()  const { return publicationId; }
 QDate   Conference::getDate()     const { return date; }
 QString Conference::getLocation() const { return location; }
 double  Conference::getPrice()    const { return price; }
@@ -33,11 +33,11 @@ bool Conference::add()
     QSqlQuery query;
     query.prepare(
         "INSERT INTO CONFERENCE "
-        "(ID, TITLE, TOPIC_ID, CONF_DATE, LOCATION, PRICE) "
+        "(ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE) "
         "VALUES (CONF_SEQ.NEXTVAL, ?, ?, ?, ?, ?)"
         );
     query.addBindValue(title);
-    query.addBindValue(topicId);
+    query.addBindValue(publicationId);
     query.addBindValue(QDateTime(date, QTime(0, 0, 0)));
     query.addBindValue(location);
     query.addBindValue(price);
@@ -55,14 +55,14 @@ bool Conference::update()
     query.prepare(
         "UPDATE CONFERENCE SET "
         "TITLE = ?, "
-        "TOPIC_ID = ?, "
+        "PUBLICATIONID = ?, "
         "CONF_DATE = ?, "
         "LOCATION = ?, "
         "PRICE = ? "
         "WHERE ID = ?"
         );
     query.addBindValue(title);
-    query.addBindValue(topicId);
+    query.addBindValue(publicationId);
     query.addBindValue(QDateTime(date, QTime(0, 0, 0)));
     query.addBindValue(location);
     query.addBindValue(price);

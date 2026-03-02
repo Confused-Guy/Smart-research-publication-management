@@ -10,7 +10,7 @@ class Conference
 private:
     int id;
     QString title;
-    int topicId;
+    int publicationId;
     QDate date;
     QString location;
     double price;
@@ -18,14 +18,14 @@ private:
 
 public:
     Conference();
-    Conference(int id, QString title, int topicId,
+    Conference(int id, QString title, int publicationId,
                QDate date, QString location,
                double price);
 
     // Getters
     int getId() const;
     QString getTitle() const;
-    int getTopicId() const;
+    int getPublicationId() const;
     QDate getDate() const;
     QString getLocation() const;
     double getPrice() const;

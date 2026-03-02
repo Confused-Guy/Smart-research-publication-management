@@ -6,6 +6,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++17
 
 SOURCES += \
+    publication.cpp \
     collaboration.cpp \
     conference.cpp \
     main.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
     user.cpp
 
 HEADERS += \
+    publication.h \
     collaboration.h \
     conference.h \
     mainwindow.h \

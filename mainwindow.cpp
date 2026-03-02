@@ -3,47 +3,69 @@
 #include "conference.h"
 #include "collaboration.h"
 #include "publication.h"
+
+// SQL
+#include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QtPrintSupport/QPrinter>
-#include <QtPrintSupport/QPrintDialog>
-#include <QTextDocument>
-#include <QFileDialog>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QPixmap>
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QCalendarWidget>
-#include <QTextCharFormat>
-#include <QScrollArea>
-#include <QMap>
-#include <QPainter>
-#include <QMessageBox>
+#include <QSqlError>
+
+// Printing & PDF
 #include <QPrinter>
+#include <QTextDocument>
+#include <QPageLayout>
+
+// File operations
 #include <QFileDialog>
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
-#include <QDateTime>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
-#include <QtCore/QUrlQuery>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonObject>
 #include <QDesktopServices>
+#include <QUrl>
+
+// Layouts
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+// Widgets
+#include <QLabel>
+#include <QPushButton>
+#include <QDialog>
+#include <QCalendarWidget>
+#include <QScrollArea>
+#include <QMessageBox>
+#include <QLineEdit>
+#include <QDateEdit>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QTextEdit>
+#include <QComboBox>
+#include <QFrame>
+
+// Drawing
+#include <QPainter>
+#include <QPixmap>
+#include <QTextCharFormat>
+#include <QColor>
+
+// Charts (Statistics)
 #include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
 #include <QtCharts/QChart>
 #include <QtCharts/QPieSeries>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSqlQueryModel>
+
+// Network (for geocoding - Conference Map)
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+
+// JSON (for geocoding API response - Conference Map)
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
+// Other
+#include <QMap>
+#include <QDateTime>
+#include <QPalette>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -773,6 +795,7 @@ void MainWindow::loadReviewsReadOnly()
 
 //********************REVIEW END****************************************************************************************************************************************//
 //**********************************************************************************************************************************************************************//
+
 //**********************************************************************************************************************************************************************//
 //********************CONFERENCE START**********************************************************************************************************************************//
 
@@ -898,7 +921,7 @@ void MainWindow::showConferenceDialog(int conferenceId)
     //Create dialog
     QDialog* dialog = new QDialog(this);
     dialog->setWindowTitle(isEditing ? "Edit Conference" : "Add Conference");
-    dialog->setFixedSize(520, 500);
+    dialog->setFixedSize(600, 650);
     dialog->setAttribute(Qt::WA_StyledBackground, true);
 
     //Dark mode
@@ -912,13 +935,13 @@ void MainWindow::showConferenceDialog(int conferenceId)
     dialog->setStyleSheet(QString("QDialog { background-color: %1; }").arg(bgPage));
 
     QVBoxLayout* mainLayout = new QVBoxLayout(dialog);
-    mainLayout->setContentsMargins(24, 24, 24, 24);
-    mainLayout->setSpacing(20);
+    mainLayout->setContentsMargins(28, 28, 28, 28);
+    mainLayout->setSpacing(24);
 
     //Header
     QLabel* titleLabel = new QLabel(isEditing ? "Edit Conference" : "Add New Conference");
     titleLabel->setStyleSheet(QString(
-                                  "font-size: 18pt; font-weight: 700; color: %1; background: transparent;"
+                                  "font-size: 20pt; font-weight: 700; color: %1; background: transparent;"
                                   ).arg(txtPrimary));
     mainLayout->addWidget(titleLabel);
 
@@ -929,27 +952,27 @@ void MainWindow::showConferenceDialog(int conferenceId)
                                 ).arg(bgCard, border));
 
     QVBoxLayout* formLayout = new QVBoxLayout(formCard);
-    formLayout->setSpacing(16);
-    formLayout->setContentsMargins(24, 24, 24, 24);
+    formLayout->setSpacing(20);
+    formLayout->setContentsMargins(28, 28, 28, 28);
 
     //Helper function to create label
     auto makeLabel = [&](const QString& text) -> QLabel* {
         QLabel* lbl = new QLabel(text);
         lbl->setStyleSheet(QString(
-                               "font-size: 10pt; font-weight: 600; color: %1; background: transparent; margin-bottom: 6px;"
+                               "font-size: 11pt; font-weight: 600; color: %1; background: transparent;"
                                ).arg(txtSub));
-        lbl->setFixedHeight(20);
+        lbl->setFixedHeight(22);
         return lbl;
     };
 
     //Helper function to create field group
     auto addField = [&](const QString& labelText, QWidget* widget) {
         QVBoxLayout* fieldGroup = new QVBoxLayout();
-        fieldGroup->setSpacing(6);
+        fieldGroup->setSpacing(8);
         fieldGroup->setContentsMargins(0, 0, 0, 0);
 
         QLabel* label = makeLabel(labelText);
-        widget->setFixedHeight(44);
+        widget->setFixedHeight(48);
 
         fieldGroup->addWidget(label);
         fieldGroup->addWidget(widget);
@@ -963,21 +986,22 @@ void MainWindow::showConferenceDialog(int conferenceId)
     titleEdit->setStyleSheet(QString(
                                  "QLineEdit { "
                                  "   background-color: %1; border: 1.5px solid %2; "
-                                 "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                 "   border-radius: 8px; padding: 14px 16px; color: %3; font-size: 10pt; "
                                  "}"
-                                 "QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 "QLineEdit:focus { border: 2px solid #30b9bf; padding: 13px 15px; }"
                                  ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
 
     QDateEdit* dateEdit = new QDateEdit(QDate::currentDate());
     dateEdit->setCalendarPopup(true);
     dateEdit->setDisplayFormat("dd/MM/yyyy");
+    //dateEdit->setMinimumDate(QDate::currentDate()); This can be placed instead of the validation
     dateEdit->setStyleSheet(QString(
                                 "QDateEdit { "
                                 "   background-color: %1; border: 1.5px solid %2; "
-                                "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                "   border-radius: 8px; padding: 14px 16px; color: %3; font-size: 10pt; "
                                 "}"
-                                "QDateEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
-                                "QDateEdit::drop-down { border: none; width: 20px; }"
+                                "QDateEdit:focus { border: 2px solid #30b9bf; padding: 13px 15px; }"
+                                "QDateEdit::drop-down { border: none; width: 24px; }"
                                 ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
 
     QLineEdit* locationEdit = new QLineEdit();
@@ -985,38 +1009,76 @@ void MainWindow::showConferenceDialog(int conferenceId)
     locationEdit->setStyleSheet(QString(
                                     "QLineEdit { "
                                     "   background-color: %1; border: 1.5px solid %2; "
-                                    "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                    "   border-radius: 8px; padding: 14px 16px; color: %3; font-size: 10pt; "
                                     "}"
-                                    "QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                    "QLineEdit:focus { border: 2px solid #30b9bf; padding: 13px 15px; }"
                                     ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
 
     QDoubleSpinBox* priceSpin = new QDoubleSpinBox();
     priceSpin->setRange(0, 999999);
-    priceSpin->setDecimals(2);
-    priceSpin->setPrefix("$ ");
+    priceSpin->setDecimals(3);
+    priceSpin->setPrefix("TND ");
     priceSpin->setStyleSheet(QString(
                                  "QDoubleSpinBox { "
                                  "   background-color: %1; border: 1.5px solid %2; "
-                                 "   border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt; "
+                                 "   border-radius: 8px; padding: 14px 16px; color: %3; font-size: 10pt; "
                                  "}"
-                                 "QDoubleSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 "QDoubleSpinBox:focus { border: 2px solid #30b9bf; padding: 13px 15px; }"
                                  "QDoubleSpinBox::up-button, QDoubleSpinBox::down-button { "
-                                 "   width: 20px; border: none; background: transparent; "
+                                 "   width: 24px; border: none; background: transparent; "
                                  "}"
                                  ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary));
+
+    QComboBox* publicationCombo = new QComboBox();
+    publicationCombo->setStyleSheet(QString(
+                                        "QComboBox { "
+                                        "   background-color: %1; border: 1.5px solid %2; "
+                                        "   border-radius: 8px; padding: 14px 16px; color: %3; font-size: 10pt; "
+                                        "}"
+                                        "QComboBox:focus { border: 2px solid #30b9bf; padding: 13px 15px; }"
+                                        "QComboBox::drop-down { border: none; width: 30px; }"
+                                        "QComboBox::down-arrow { "
+                                        "    image: none; width: 0; height: 0;"
+                                        "    border-left: 5px solid transparent;"
+                                        "    border-right: 5px solid transparent;"
+                                        "    border-top: 6px solid %4;"
+                                        "}"
+                                        "QComboBox QAbstractItemView { "
+                                        "    background-color: %1; border: 1.5px solid %2;"
+                                        "    border-radius: 8px; padding: 6px;"
+                                        "    selection-background-color: #30b9bf; selection-color: white;"
+                                        "    outline: none;"
+                                        "}"
+                                        ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary, dark ? "#8892a4" : "#64748b"));
 
     //Add all fields
     addField("Title", titleEdit);
     addField("Date", dateEdit);
     addField("Location", locationEdit);
-    addField("Price", priceSpin);
+    addField("Price (TND)", priceSpin);
+    addField("Linked Publication", publicationCombo);
+
+    //Loading the publications
+    QSqlQuery pubQuery;
+    pubQuery.prepare("SELECT PublicationID, DESCRIPTION FROM PUBLICATIONS");
+    pubQuery.exec();
+
+    while (pubQuery.next()) {
+        int pubId = pubQuery.value(0).toInt();
+        QString desc = pubQuery.value(1).toString();
+
+        publicationCombo->addItem(
+            QString("ID %1 - %2").arg(pubId).arg(desc),
+            pubId
+            );
+    }
 
     mainLayout->addWidget(formCard);
 
     //If editing, load existing data
     if (isEditing) {
         QSqlQuery q;
-        q.prepare("SELECT TITLE, CONF_DATE, LOCATION, PRICE FROM CONFERENCE WHERE ID = ?");
+        q.prepare("SELECT TITLE, CONF_DATE, LOCATION, PRICE, PUBLICATIONID FROM CONFERENCE WHERE ID = ?");
         q.addBindValue(conferenceId);
         q.exec();
         if (q.next()) {
@@ -1024,6 +1086,15 @@ void MainWindow::showConferenceDialog(int conferenceId)
             dateEdit->setDate(q.value(1).toDate());
             locationEdit->setText(q.value(2).toString());
             priceSpin->setValue(q.value(3).toDouble());
+
+            int selectedPubId = q.value(4).toInt();
+
+            for (int i = 0; i < publicationCombo->count(); ++i) {
+                if (publicationCombo->itemData(i).toInt() == selectedPubId) {
+                    publicationCombo->setCurrentIndex(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -1031,30 +1102,30 @@ void MainWindow::showConferenceDialog(int conferenceId)
 
     //Button row
     QHBoxLayout* btnLayout = new QHBoxLayout();
-    btnLayout->setSpacing(12);
+    btnLayout->setSpacing(16);
 
     QPushButton* cancelBtn = new QPushButton("Cancel");
-    cancelBtn->setFixedHeight(44);
-    cancelBtn->setMinimumWidth(100);
+    cancelBtn->setFixedHeight(48);
+    cancelBtn->setMinimumWidth(120);
     cancelBtn->setCursor(Qt::PointingHandCursor);
     cancelBtn->setStyleSheet(QString(
                                  "QPushButton { "
                                  "   background-color: %1; color: %2; border: 1px solid %3; "
-                                 "   border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 600; "
+                                 "   border-radius: 10px; padding: 12px 28px; font-size: 11pt; font-weight: 600; "
                                  "}"
                                  "QPushButton:hover { background-color: %4; }"
                                  "QPushButton:pressed { background-color: %5; }"
                                  ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f8fafc", dark ? "#3e4859" : "#e2e8f0"));
 
     QPushButton* saveBtn = new QPushButton(isEditing ? "Update" : "Add Conference");
-    saveBtn->setFixedHeight(44);
-    saveBtn->setMinimumWidth(140);
+    saveBtn->setFixedHeight(48);
+    saveBtn->setMinimumWidth(160);
     saveBtn->setCursor(Qt::PointingHandCursor);
     saveBtn->setStyleSheet(
         "QPushButton { "
         "   background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
         "   stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
-        "   border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; "
+        "   border-radius: 10px; padding: 12px 28px; font-size: 11pt; font-weight: 700; "
         "}"
         "QPushButton:hover { background-color: #22d3dd; }"
         "QPushButton:pressed { background-color: #26a0a6; }"
@@ -1070,13 +1141,51 @@ void MainWindow::showConferenceDialog(int conferenceId)
     connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
 
     connect(saveBtn, &QPushButton::clicked, dialog, [=]() {
-        //Validate
+        //Validation
+
+        // 1. Validate title (not empty)
         if (titleEdit->text().trimmed().isEmpty()) {
-            QMessageBox::warning(dialog, "Validation Error", "Please enter a conference title.");
+            QMessageBox::warning(dialog, "Validation Error",
+                                 "Please enter a conference title.");
+            titleEdit->setFocus();
             return;
         }
+
+        // 2. Validate date (not before today) - only for new conferences
+        if (!isEditing && dateEdit->date() < QDate::currentDate()) {
+            QMessageBox::warning(dialog, "Validation Error",
+                                 "Conference date cannot be in the past.");
+            dateEdit->setFocus();
+            return;
+        }
+
+        // 3. Validate location (not empty)
         if (locationEdit->text().trimmed().isEmpty()) {
-            QMessageBox::warning(dialog, "Validation Error", "Please enter a location.");
+            QMessageBox::warning(dialog, "Validation Error",
+                                 "Please enter a location.");
+            locationEdit->setFocus();
+            return;
+        }
+
+        // 4. Validate price (cannot be negative)
+        if (priceSpin->value() < 0) {
+            QMessageBox::warning(dialog, "Validation Error",
+                                 "Price cannot be negative.");
+            priceSpin->setFocus();
+            return;
+        }
+
+        // 5. Validate publication selection
+        if (publicationCombo->count() == 0) {
+            QMessageBox::critical(dialog, "Error",
+                                  "No publications available. Please create a publication first.");
+            return;
+        }
+
+        if (!publicationCombo->currentData().isValid()) {
+            QMessageBox::critical(dialog, "Error",
+                                  "Please select a valid publication.");
+            publicationCombo->setFocus();
             return;
         }
 
@@ -1084,7 +1193,7 @@ void MainWindow::showConferenceDialog(int conferenceId)
         Conference c(
             conferenceId,
             titleEdit->text().trimmed(),
-            1,
+            publicationCombo->currentData().toInt(),
             dateEdit->date(),
             locationEdit->text().trimmed(),
             priceSpin->value()
@@ -1194,19 +1303,19 @@ void MainWindow::showConferenceStats()
     QSqlQuery priceQuery;
     priceQuery.exec(
         "SELECT "
-        "  SUM(CASE WHEN PRICE < 100  THEN 1 ELSE 0 END), "
-        "  SUM(CASE WHEN PRICE >= 100 AND PRICE < 500  THEN 1 ELSE 0 END), "
-        "  SUM(CASE WHEN PRICE >= 500 AND PRICE < 1000 THEN 1 ELSE 0 END), "
-        "  SUM(CASE WHEN PRICE >= 1000 THEN 1 ELSE 0 END) "
+        "  SUM(CASE WHEN PRICE < 10  THEN 1 ELSE 0 END), "
+        "  SUM(CASE WHEN PRICE >= 10 AND PRICE < 50  THEN 1 ELSE 0 END), "
+        "  SUM(CASE WHEN PRICE >= 50 AND PRICE < 100 THEN 1 ELSE 0 END), "
+        "  SUM(CASE WHEN PRICE >= 100 THEN 1 ELSE 0 END) "
         "FROM CONFERENCE"
         );
     QList<QPair<QString,int>> priceData;
     if (priceQuery.next()) {
         priceData = {
-            {"<$100",     priceQuery.value(0).toInt()},
-            {"$100-500",  priceQuery.value(1).toInt()},
-            {"$500-1000", priceQuery.value(2).toInt()},
-            {">$1000",    priceQuery.value(3).toInt()}
+            {"<10TND",     priceQuery.value(0).toInt()},
+            {"10-50TND",  priceQuery.value(1).toInt()},
+            {"50-100TND", priceQuery.value(2).toInt()},
+            {">100TND",    priceQuery.value(3).toInt()}
         };
     }
 
@@ -1548,9 +1657,9 @@ void MainWindow::showConferenceStats()
     mainLayout->addWidget(makeSection("Pricing Summary"));
     QHBoxLayout* pillRow = new QHBoxLayout();
     pillRow->setSpacing(10);
-    pillRow->addWidget(makePill("Avg Price", "$" + QString::number(avgPrice,'f',0), "#30b9bf"));
-    pillRow->addWidget(makePill("Min Price", "$" + QString::number(minPrice,'f',0), "#16a34a"));
-    pillRow->addWidget(makePill("Max Price", "$" + QString::number(maxPrice,'f',0), "#dc2626"));
+    pillRow->addWidget(makePill("Avg Price", "TND" + QString::number(avgPrice,'f',0), "#30b9bf"));
+    pillRow->addWidget(makePill("Min Price", "TND" + QString::number(minPrice,'f',0), "#16a34a"));
+    pillRow->addWidget(makePill("Max Price", "TND" + QString::number(maxPrice,'f',0), "#dc2626"));
     pillRow->addWidget(makePill("Total",     QString::number(totalConferences),     "#6366f1"));
     mainLayout->addLayout(pillRow);
 
@@ -2229,7 +2338,7 @@ void MainWindow::exportConferencePDF(int id, const QString& title, const QDate& 
                     </tr>
                     <tr>
                         <td class="label">Price</td>
-                        <td class="value">$%6</td>
+                        <td class="value">TND%6</td>
                     </tr>
                 </table>
             </div>
