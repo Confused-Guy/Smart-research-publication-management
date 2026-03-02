@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "conference.h"
 #include "collaboration.h"
+#include "publication.h"
 #include <QSqlQuery>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintDialog>
@@ -2539,7 +2540,493 @@ void MainWindow::on_collaborationCreationCollaborationTitileEdit_textChanged()
 }
 
 //**********Collabs End**********//
+//********************PUBLICATION START**********************************************************************************************************************//
+// loadPublications()
+void MainWindow::loadPublications(const QString &searchFilter)
+{
+    QLayout *oldLayout = ui->publicationListGroup->layout();
+    if (oldLayout) {
+        QLayoutItem *item;
+        while ((item = oldLayout->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+    } else {
+        ui->publicationListGroup->setLayout(new QVBoxLayout());
+    }
+    QVBoxLayout *listLayout = qobject_cast<QVBoxLayout *>(ui->publicationListGroup->layout());
+    QList<Publication> list = searchFilter.trimmed().isEmpty()
+                                  ? pubTmp.read()
+                                  : pubTmp.search(searchFilter.trimmed());
 
+    if (list.isEmpty()) {
+        QLabel *empty = new QLabel("No publications found.");
+        empty->setAlignment(Qt::AlignCenter);
+        listLayout->addWidget(empty);
+        listLayout->addStretch();
+        return;
+    }
+    QList<Publication>::const_iterator it;
+    for (it = list.begin(); it != list.end(); ++it) {
+
+        QFrame *card = new QFrame(ui->publicationListGroup);
+        card->setFrameShape(QFrame::StyledPanel);
+        card->setObjectName("publicationCard");
+        card->setMinimumHeight(110);
+
+        QVBoxLayout *cardLayout = new QVBoxLayout(card);
+        cardLayout->setSpacing(4);
+        QLabel *metaLbl = new QLabel(
+            "<b>ID:</b> "                   + QString::number(it->getPublicationID()) +
+                " &nbsp;|&nbsp; <b>Author:</b> " + QString::number(it->getAuthorID())      +
+                " &nbsp;|&nbsp; <b>Submission:</b> " + QString::number(it->getSubmissionID()) +
+                " &nbsp;|&nbsp; <b>Field:</b> "  + it->getField()                          +
+                " &nbsp;|&nbsp; <b>Date:</b> "   + it->getCreatedDate().toString("dd/MM/yyyy"),
+            card);
+        metaLbl->setWordWrap(true);
+
+        QLabel *descLbl = new QLabel(it->getDescription(), card);
+        descLbl->setWordWrap(true);
+        QHBoxLayout *btnRow = new QHBoxLayout();
+        QPushButton *editBtn    = new QPushButton("✏ Edit");
+        QPushButton *deleteBtn  = new QPushButton("🗑 Delete");
+        QPushButton *pdfBtn     = new QPushButton("📄 Summary PDF");
+        QPushButton *mailBtn    = new QPushButton("✉ Email");
+        btnRow->addWidget(editBtn);
+        btnRow->addWidget(deleteBtn);
+        btnRow->addWidget(pdfBtn);
+        btnRow->addWidget(mailBtn);
+        btnRow->addStretch();
+
+        cardLayout->addWidget(metaLbl);
+        cardLayout->addWidget(descLbl);
+        cardLayout->addLayout(btnRow);
+        listLayout->addWidget(card);
+        const int     pubId   = it->getPublicationID();
+        const int     authId  = it->getAuthorID();
+        const int     subId   = it->getSubmissionID();
+        const QString desc    = it->getDescription();
+        const QDate   cDate   = it->getCreatedDate();
+        const QString fld     = it->getField();
+
+        // ── DELETE
+        connect(deleteBtn, &QPushButton::clicked, this, [=]() {
+            int confirm = QMessageBox::question(
+                this, "Confirm Delete",
+                "Delete publication ID " + QString::number(pubId) + "?",
+                QMessageBox::Yes | QMessageBox::No);
+            if (confirm == QMessageBox::Yes) {
+                pubTmp.setPublicationID(pubId);
+                if (pubTmp.deletePublication()) {
+                    ui->statusLabel_2->setText("✔ Publication " + QString::number(pubId) + " deleted.");
+                    loadPublications(ui->lineEdit_23->text());
+                } else {
+                    QMessageBox::critical(this, "Error", "Failed to delete publication.");
+                }
+            }
+        });
+
+        // ── EDIT
+        connect(editBtn, &QPushButton::clicked, this, [=]() {
+            showPublicationDialog(pubId, authId, subId, desc, cDate, fld);
+        });
+
+        // ── SUMMARY PDF
+        connect(pdfBtn, &QPushButton::clicked, this, [=]() {
+            exportPublicationPDF(pubId, authId, subId, desc, cDate, fld);
+        });
+
+        // ── EMAIL ─
+        connect(mailBtn, &QPushButton::clicked, this, [=]() {
+            const QString subject = "Publication #" + QString::number(pubId) + " – " + fld;
+            const QString body    = "Publication ID: " + QString::number(pubId)
+                                 + "\nField: "       + fld
+                                 + "\nAuthor ID: "   + QString::number(authId)
+                                 + "\nDescription: " + desc
+                                 + "\nCreated: "     + cDate.toString("dd/MM/yyyy");
+            QDesktopServices::openUrl(
+                QUrl("mailto:?subject=" + QUrl::toPercentEncoding(subject)
+                     + "&body="         + QUrl::toPercentEncoding(body)));
+        });
+    }
+
+    listLayout->addStretch();
+}
+
+// showPublicationDialog()
+
+void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
+                                       const QString &desc, const QDate &date,
+                                       const QString &field)
+{
+    bool isEditing = (pubId != -1);
+
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle(isEditing ? "Edit Publication" : "Add Publication");
+    dialog->setFixedSize(520, 500);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
+
+    // ── Theme colours─
+    const bool    dark       = !mode;
+    const QString bgPage     = dark ? "#1a1f2e" : "#f6f8fc";
+    const QString bgCard     = dark ? "#252b3d" : "#ffffff";
+    const QString border     = dark ? "#3e4859" : "#e2e8f0";
+    const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
+    const QString txtSub     = dark ? "#8892a4" : "#64748b";
+    const QString inputBg    = dark ? "#1e2433" : "#ffffff";
+
+    dialog->setStyleSheet(QString("QDialog { background-color: %1; }").arg(bgPage));
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(dialog);
+    mainLayout->setContentsMargins(24, 24, 24, 24);
+    mainLayout->setSpacing(16);
+
+    // Title
+    QLabel *titleLbl = new QLabel(isEditing ? "Edit Publication" : "Add New Publication");
+    titleLbl->setStyleSheet(QString(
+                                "font-size: 18pt; font-weight: 700; color: %1; background: transparent;"
+                                ).arg(txtPrimary));
+    mainLayout->addWidget(titleLbl);
+
+    // Form card
+    QFrame *formCard = new QFrame();
+    formCard->setStyleSheet(QString(
+                                "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 12px; }"
+                                ).arg(bgCard, border));
+    QVBoxLayout *formLayout = new QVBoxLayout(formCard);
+    formLayout->setSpacing(12);
+    formLayout->setContentsMargins(20, 20, 20, 20);
+
+    const QString inputStyle = QString(
+                                   "QLineEdit, QTextEdit, QSpinBox, QComboBox { "
+                                   "  background-color: %1; border: 1.5px solid %2; "
+                                   "  border-radius: 8px; padding: 10px 12px; color: %3; font-size: 10pt; }"
+                                   "QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus "
+                                   "  { border: 2px solid #30b9bf; }"
+                                   ).arg(inputBg, border, txtPrimary);
+
+    auto makeLabel = [&](const QString &text) -> QLabel * {
+        QLabel *lbl = new QLabel(text);
+        lbl->setStyleSheet(QString(
+                               "font-size: 10pt; font-weight: 600; color: %1; background: transparent;"
+                               ).arg(txtSub));
+        return lbl;
+    };
+
+    // Author ID
+    QSpinBox *authSpin = new QSpinBox();
+    authSpin->setRange(1, 999999);
+    authSpin->setValue(isEditing ? authId : 1);
+    authSpin->setStyleSheet(inputStyle);
+    formLayout->addWidget(makeLabel("Author ID"));
+    formLayout->addWidget(authSpin);
+
+    // Submission ID
+    QSpinBox *subSpin = new QSpinBox();
+    subSpin->setRange(1, 999999);
+    subSpin->setValue(isEditing ? subId : 1);
+    subSpin->setStyleSheet(inputStyle);
+    formLayout->addWidget(makeLabel("Submission ID"));
+    formLayout->addWidget(subSpin);
+
+    // Field
+    QComboBox *fieldCombo = new QComboBox();
+    fieldCombo->addItems({"Computer Science", "Mathematics", "Physics",
+                          "Biology", "Chemistry", "Medicine", "Engineering", "Other"});
+    if (isEditing) {
+        int idx = fieldCombo->findText(field);
+        if (idx >= 0) fieldCombo->setCurrentIndex(idx);
+    }
+    fieldCombo->setStyleSheet(inputStyle);
+    formLayout->addWidget(makeLabel("Field / Category"));
+    formLayout->addWidget(fieldCombo);
+
+    // Description
+    QTextEdit *descEdit = new QTextEdit();
+    descEdit->setPlaceholderText("Enter publication description (max 300 characters)…");
+    descEdit->setFixedHeight(90);
+    descEdit->setStyleSheet(inputStyle);
+    if (isEditing) descEdit->setPlainText(desc);
+    formLayout->addWidget(makeLabel("Description"));
+    formLayout->addWidget(descEdit);
+
+    mainLayout->addWidget(formCard);
+    mainLayout->addStretch();
+
+    // ── Button row
+    QHBoxLayout *btnRow = new QHBoxLayout();
+
+    QPushButton *cancelBtn = new QPushButton("Cancel");
+    cancelBtn->setFixedHeight(44);
+    cancelBtn->setStyleSheet(QString(
+                                 "QPushButton { background-color: %1; color: %2; border: 1px solid %3; "
+                                 "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 600; }"
+                                 "QPushButton:hover { background-color: %4; }"
+                                 ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f8fafc"));
+
+    QPushButton *saveBtn = new QPushButton(isEditing ? "Update" : "Add Publication");
+    saveBtn->setFixedHeight(44);
+    saveBtn->setStyleSheet(
+        "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+        "stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
+        "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; }"
+        "QPushButton:hover { background-color: #22d3dd; }"
+        );
+
+    btnRow->addStretch();
+    btnRow->addWidget(cancelBtn);
+    btnRow->addWidget(saveBtn);
+    mainLayout->addLayout(btnRow);
+
+    connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
+
+    connect(saveBtn, &QPushButton::clicked, this, [=]() {
+
+        // ── Input validation
+        if (descEdit->toPlainText().trimmed().isEmpty()) {
+            QMessageBox::warning(dialog, "Validation Error", "Description cannot be empty.");
+            return;
+        }
+        if (descEdit->toPlainText().trimmed().length() > 300) {
+            QMessageBox::warning(dialog, "Validation Error",
+                                 "Description must not exceed 300 characters.");
+            return;
+        }
+
+        if (isEditing) pubTmp.setPublicationID(pubId);
+        pubTmp.setAuthorID    (authSpin->value());
+        pubTmp.setSubmissionID(subSpin->value());
+        pubTmp.setDescription (descEdit->toPlainText().trimmed());
+        pubTmp.setCreatedDate (QDate::currentDate());
+        pubTmp.setField       (fieldCombo->currentText());
+
+        bool ok = isEditing ? pubTmp.update() : pubTmp.create();
+
+        if (ok) {
+            ui->statusLabel_2->setText(
+                isEditing ? "✔ Publication updated successfully."
+                          : "✔ Publication added successfully.");
+            loadPublications(ui->lineEdit_23->text());
+            dialog->accept();
+        } else {
+            QMessageBox::critical(dialog, "Database Error",
+                                  QString("Failed to %1 publication. Check the DB connection.")
+                                      .arg(isEditing ? "update" : "add"));
+        }
+    });
+
+    dialog->exec();
+}
+// exportPublicationPDF()
+void MainWindow::exportPublicationPDF(int pubId, int authId, int subId,
+                                      const QString &desc, const QDate &date,
+                                      const QString &field)
+{
+    QString filePath = QFileDialog::getSaveFileName(
+        this,
+        "Export Publication PDF",
+        QDir::homePath() + "/Publication_" + QString::number(pubId) + ".pdf",
+        "PDF Files (*.pdf)"
+        );
+    if (filePath.isEmpty()) return;
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filePath);
+    printer.setPageLayout(QPageLayout(
+        QPageSize(QPageSize::A4),
+        QPageLayout::Portrait,
+        QMarginsF(15, 15, 15, 15),
+        QPageLayout::Millimeter
+        ));
+
+    const QString generatedDate = QDate::currentDate().toString("MMMM dd, yyyy");
+    const QString createdStr    = date.toString("MMMM dd, yyyy");
+
+    QString html = QString(R"(
+        <html><head><style>
+            body       { font-family: Arial, sans-serif; color: #1a1a2e;
+                         margin: 0; padding: 0; font-size: 48px; }
+            .header    { background-color: #30b9bf; color: white; padding: 60px 80px; }
+            .header h1 { margin: 0 0 16px 0; font-size: 72px; font-weight: bold; }
+            .header p  { margin: 0; font-size: 40px; opacity: 0.9; }
+            .section   { padding: 60px 80px; }
+            .section h2 { color: #30b9bf; font-size: 44px; text-transform: uppercase;
+                          letter-spacing: 4px; border-bottom: 4px solid #30b9bf;
+                          padding-bottom: 16px; margin-bottom: 40px; }
+            .info-grid { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+            .info-grid td        { padding: 28px 32px; font-size: 44px; vertical-align: top; }
+            .info-grid tr:nth-child(odd) td { background-color: #f0f9fa; }
+            .label     { font-weight: bold; color: #555555; width: 30%; }
+            .value     { color: #1a1a2e; }
+            .desc-box  { background-color: #f8fcfc; border-left: 8px solid #30b9bf;
+                         padding: 40px; margin: 40px 0; font-size: 40px;
+                         line-height: 1.6; color: #333; }
+            .footer    { margin-top: 80px; padding: 40px 80px;
+                         border-top: 3px solid #e2e8f0; font-size: 36px;
+                         color: #9ca3af; text-align: center; }
+        </style></head><body>
+            <div class="header">
+                <h1>Publication Report</h1>
+                <p>Publication ID: #%1 &nbsp;&bull;&nbsp; Generated on %2</p>
+            </div>
+            <div class="section">
+                <h2>Publication Details</h2>
+                <table class="info-grid">
+                    <tr><td class="label">Publication ID</td><td class="value">%1</td></tr>
+                    <tr><td class="label">Author ID</td>     <td class="value">%3</td></tr>
+                    <tr><td class="label">Submission ID</td> <td class="value">%4</td></tr>
+                    <tr><td class="label">Field</td>         <td class="value">%5</td></tr>
+                    <tr><td class="label">Created Date</td>  <td class="value">%6</td></tr>
+                </table>
+                <h2>Description</h2>
+                <div class="desc-box">%7</div>
+            </div>
+            <div class="footer">Peerly Research Platform &bull; Exported %2</div>
+        </body></html>
+    )")
+                       .arg(QString::number(pubId),
+                            generatedDate,
+                            QString::number(authId),
+                            QString::number(subId),
+                            field.toHtmlEscaped(),
+                            createdStr,
+                            desc.toHtmlEscaped().replace("\n", "<br>"));
+
+    QTextDocument doc;
+    doc.setHtml(html);
+    doc.setDefaultFont(QFont("Arial", 24));
+    doc.setPageSize(printer.pageLayout().paintRectPixels(printer.resolution()).size());
+    doc.print(&printer);
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+}
+// BUTTON SLOTS
+// ── ADD
+void MainWindow::on_addButton_clicked()
+{
+    // ── Input validation ──────────────────────────────────────────────────
+    if (ui->titleEdit->text().trimmed().isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "Please enter a publication title / description.");
+        return;
+    }
+    if (ui->descriptionEdit->toPlainText().trimmed().isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "Description cannot be empty.");
+        return;
+    }
+    pubTmp.setAuthorID(1);
+    pubTmp.setSubmissionID(1);
+    pubTmp.setDescription(ui->descriptionEdit->toPlainText().trimmed());
+    pubTmp.setCreatedDate(QDate::currentDate());
+    pubTmp.setField(ui->categoryCombo->currentText());
+
+    // ── CREATE
+    if (pubTmp.create()) {
+        ui->statusLabel_2->setText("✔ Publication added successfully.");
+        ui->titleEdit->clear();
+        ui->descriptionEdit->clear();
+        ui->categoryCombo->setCurrentIndex(0);
+        loadPublications(ui->lineEdit_23->text());
+    } else {
+        QMessageBox::critical(this, "Database Error",
+                              "Failed to add publication. Check the DB connection.");
+    }
+}
+
+// ── DELETE
+void MainWindow::on_deleteButton_clicked()
+{
+    bool ok;
+    int id = ui->titleEdit->text().trimmed().toInt(&ok);
+
+    if (!ok || id <= 0) {
+        QMessageBox::warning(this, "Input Error",
+                             "Enter a valid numeric Publication ID in the title field to delete.");
+        return;
+    }
+
+    int confirm = QMessageBox::question(
+        this, "Confirm Delete",
+        "Delete publication with ID " + QString::number(id) + "?",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (confirm == QMessageBox::Yes) {
+        pubTmp.setPublicationID(id);
+        if (pubTmp.deletePublication()) {
+            ui->statusLabel_2->setText("Publication " + QString::number(id) + " deleted.");
+            ui->titleEdit->clear();
+            loadPublications(ui->lineEdit_23->text());
+        } else {
+            QMessageBox::critical(this, "Database Error", "Failed to delete publication.");
+        }
+    }
+}
+
+// ── SEARCH
+void MainWindow::on_searchbt_clicked()
+{
+    loadPublications(ui->lineEdit_23->text());
+}
+
+// ── SUMMARY
+void MainWindow::on_summaryButton_clicked()
+{
+    bool ok;
+    int id = ui->titleEdit->text().trimmed().toInt(&ok);
+    if (!ok || id <= 0) {
+        ui->statusLabel_2->setText("Enter a Publication ID in the title field, then click Summary.");
+        return;
+    }
+
+    QList<Publication> list = pubTmp.read();
+    QList<Publication>::const_iterator it;
+    for (it = list.begin(); it != list.end(); ++it) {
+        if (it->getPublicationID() == id) {
+            exportPublicationPDF(it->getPublicationID(), it->getAuthorID(),
+                                 it->getSubmissionID(),  it->getDescription(),
+                                 it->getCreatedDate(),   it->getField());
+            return;
+        }
+    }
+    ui->statusLabel_2->setText("Publication ID not found.");
+}
+
+// ── EMAIL
+void MainWindow::on_emailButton_clicked()
+{
+    bool ok;
+    int id = ui->titleEdit->text().trimmed().toInt(&ok);
+    if (!ok || id <= 0) {
+        ui->statusLabel_2->setText("Enter a Publication ID in the title field, then click Email.");
+        return;
+    }
+    QList<Publication> list = pubTmp.read();
+    QList<Publication>::const_iterator it;
+    for (it = list.begin(); it != list.end(); ++it) {
+        if (it->getPublicationID() == id) {
+            const QString subject = "Publication #" + QString::number(id) + " – " + it->getField();
+            const QString body    = "Publication ID: " + QString::number(id)
+                                 + "\nField: "       + it->getField()
+                                 + "\nAuthor ID: "   + QString::number(it->getAuthorID())
+                                 + "\nDescription: " + it->getDescription()
+                                 + "\nCreated: "     + it->getCreatedDate().toString("dd/MM/yyyy");
+            QDesktopServices::openUrl(
+                QUrl("mailto:?subject=" + QUrl::toPercentEncoding(subject)
+                     + "&body="         + QUrl::toPercentEncoding(body)));
+            return;
+        }
+    }
+    ui->statusLabel_2->setText("Publication ID not found.");
+}
+
+// ── NAVIGATION
+void MainWindow::on_publication_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(6);
+    loadPublications("");
+}
+
+//********************PUBLICATION END************************************************************************************************************************//
 
 
 void MainWindow::on_Browse_pressed()
@@ -2590,9 +3077,6 @@ void MainWindow::on_userSearchBackBTN_clicked()
     ui->sideBarStack->show();
     ui->stackedWidget->setCurrentIndex(3);
 }
-
-void MainWindow::on_publication_clicked(){ ui->stackedWidget->setCurrentIndex(6);}
-
 void MainWindow::on_Research_clicked(){ ui->stackedWidget->setCurrentIndex(7);}
 
 void MainWindow::on_temp_clicked(){ui->stackedWidget->setCurrentIndex(0);}

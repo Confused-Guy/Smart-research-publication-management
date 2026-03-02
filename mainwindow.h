@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "collaboration.h"
+#include "publication.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -95,8 +96,13 @@ private slots:
     void on_collabsSearchBox_textChanged();
 
     //***********Collabs End*******************//
-
-
+    //************PUBLICATION START***************************//
+    void       on_addButton_clicked();
+    void    on_deleteButton_clicked();
+    void        on_searchbt_clicked();
+    void   on_summaryButton_clicked();
+    void     on_emailButton_clicked();
+    //************PUBLICATION END***************************//
 
 
 private:
@@ -139,5 +145,23 @@ private:
     bool loadCollabs();
     std::vector<Collaboration> collaborations;
     //************collabs end**********//
+    //************PUBLICATION START***************************//
+
+    Publication pubTmp;
+
+    void loadPublications(const QString &searchFilter = "");
+    void showPublicationDialog(int            pubId  = -1,
+                               int           authId  = 0,
+                               int            subId  = 0,
+                               const QString  &desc  = "",
+                               const QDate    &date  = QDate(),
+                               const QString &field  = "");
+    void exportPublicationPDF(int            pubId,
+                              int           authId,
+                              int            subId,
+                              const QString  &desc,
+                              const QDate    &date,
+                              const QString &field);
+    //************PUBLICATION END***************************//
 };
 #endif // MAINWINDOW_H
