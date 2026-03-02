@@ -109,18 +109,8 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setTitle("Research Distribution");
     chart->legend()->setAlignment(Qt::AlignRight);
 
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setMinimumSize(100, 100);
-    chartView->setMaximumSize(250, 250);
-
     QWidget *tabPage = ui->tabWidget->widget(0);
 
-    QVBoxLayout *layout = new QVBoxLayout(tabPage);
-    layout->setContentsMargins(30, 20, 30, 20);
-    layout->setAlignment(Qt::AlignBottom);
-    layout->addWidget(chartView);
-    tabPage->setLayout(layout);
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index) {
         if (ui->tabWidget->widget(index) == ui->ReviewT)
@@ -151,7 +141,6 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
         delete reviewItem->widget();
         delete reviewItem;
     }
-
 
     QString reviewQueryStr = "SELECT IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS FROM REVIEW";
     if (!searchFilter.trimmed().isEmpty())
@@ -193,7 +182,6 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
 
         QVBoxLayout* reviewCardLayout = new QVBoxLayout(reviewCard);
 
-        // Status badge colours
         QString statusColor, statusBg;
         if (status == "Approved") {
             statusColor = "#15803d"; statusBg = "#dcfce7";
@@ -205,7 +193,6 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
             statusColor = "#1d4ed8"; statusBg = "#dbeafe";
         }
 
-        // reviewer name + status badge
         QHBoxLayout* topRowLayout = new QHBoxLayout();
         QLabel* reviewerLabel = new QLabel("<b>" + reviewerName + "</b>");
 
@@ -214,11 +201,7 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
         statusBadge->setFixedHeight(24);
         statusBadge->setContentsMargins(10, 2, 10, 2);
         statusBadge->setStyleSheet(QString(
-                                       "QLabel { "
-                                       "   background-color: %1; color: %2; "
-                                       "   border-radius: 10px; font-size: 9pt; font-weight: 700; "
-                                       "   padding: 2px 10px; "
-                                       "}"
+                                       "QLabel { background-color: %1; color: %2; border-radius: 10px; font-size: 9pt; font-weight: 700; padding: 2px 10px; }"
                                        ).arg(statusBg, statusColor));
 
         topRowLayout->addWidget(reviewerLabel);
@@ -249,7 +232,6 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
 
         reviewLayout->addWidget(reviewCard);
 
-        // Delete
         connect(deleteReviewBtn, &QPushButton::clicked, this, [=]() {
             QSqlQuery deleteReviewQuery;
             deleteReviewQuery.prepare("DELETE FROM REVIEW WHERE IDREVIEW = ?");
@@ -258,12 +240,10 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
             loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
         });
 
-        // Edit
         connect(editReviewBtn, &QPushButton::clicked, this, [=]() {
             showReviewDialog(reviewId);
         });
 
-        // PDF
         connect(pdfReviewBtn, &QPushButton::clicked, this, [=]() {
             exportReviewPDF(reviewId, reviewerName, reviewDate, submissionId, publicationId, comment, status);
         });
@@ -278,16 +258,492 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
     reviewLayout->addStretch();
 }
 
+
+void MainWindow::buildCreateReviewUI()
+{
+    QWidget* page = ui->stackedWidget->widget(1);
+    if (!page) return;
+
+    // Wipe old layout
+    QLayout* old = page->layout();
+    if (old) {
+        QLayoutItem* item;
+        while ((item = old->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+        delete old;
+    }
+
+    // Theme
+    const bool dark          = !mode;
+    const QString bgPage     = dark ? "#1a1f2e" : "#f0f4f8";
+    const QString bgCard     = dark ? "#252b3d" : "#ffffff";
+    const QString border     = dark ? "#3e4859" : "#e2e8f0";
+    const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
+    const QString txtSub     = dark ? "#8892a4" : "#64748b";
+    const QString accent     = "#30b9bf";
+
+    page->setStyleSheet(QString("background-color: %1;").arg(bgPage));
+
+    // top margin small, left space, horizontal split
+    QVBoxLayout* rootLayout = new QVBoxLayout(page);
+    rootLayout->setContentsMargins(36, 17, 24, 24);
+    rootLayout->setSpacing(0);
+
+    // Page title row
+    QLabel* pageTitle = new QLabel("Send Submission to Review");
+    pageTitle->setStyleSheet(QString(
+                                 "font-size: 20pt; font-weight: 700; color: %1; background: transparent;"
+                                 ).arg(txtPrimary));
+    rootLayout->addWidget(pageTitle);
+
+    QLabel* pageSub = new QLabel("Fill in the details below and select a submission to send for peer review.");
+    pageSub->setStyleSheet(QString(
+                               "font-size: 10pt; color: %1; background: transparent; margin-bottom: 6px;"
+                               ).arg(txtSub));
+    rootLayout->addWidget(pageSub);
+    rootLayout->addSpacing(14);
+
+    // Stats Panel
+    QHBoxLayout* hSplit = new QHBoxLayout();
+    hSplit->setSpacing(24);
+    hSplit->setContentsMargins(0, 0, 0, 0);
+
+    //frame for window
+    QFrame* card = new QFrame();
+    card->setMaximumWidth(680);
+    card->setMinimumWidth(420);
+    card->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    card->setStyleSheet(QString(
+                            "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 14px; }"
+                            ).arg(bgCard, border));
+
+    QVBoxLayout* cardLayout = new QVBoxLayout(card);
+    cardLayout->setContentsMargins(32, 28, 32, 28);
+    cardLayout->setSpacing(20);
+
+    QString inputStyle = QString(
+                             "background-color: %1; border: 1.5px solid %2; "
+                             "border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt;"
+                             ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary);
+
+    QString focusStyle = QString("border: 2px solid %1; padding: 11px 13px;").arg(accent);
+
+    auto makeFieldLabel = [&](const QString& text) -> QLabel* {
+        QLabel* lbl = new QLabel(text);
+        lbl->setStyleSheet(QString(
+                               "font-size: 10pt; font-weight: 600; color: %1; background: transparent;"
+                               ).arg(txtSub));
+        return lbl;
+    };
+
+    // Reviewer Name
+    QLineEdit* nameInput = new QLineEdit();
+    nameInput->setPlaceholderText("Enter reviewer name");
+    nameInput->setFixedHeight(44);
+    nameInput->setStyleSheet(QString("QLineEdit { %1 } QLineEdit:focus { %2 }").arg(inputStyle, focusStyle));
+    QVBoxLayout* nameGroup = new QVBoxLayout();
+    nameGroup->setSpacing(6);
+    nameGroup->addWidget(makeFieldLabel("Reviewer Name"));
+    nameGroup->addWidget(nameInput);
+    cardLayout->addLayout(nameGroup);
+
+    // Review Date
+    QDateEdit* dateInput = new QDateEdit(QDate::currentDate());
+    dateInput->setCalendarPopup(true);
+    dateInput->setDisplayFormat("dd/MM/yyyy");
+    dateInput->setFixedHeight(44);
+    dateInput->setStyleSheet(QString(
+                                 "QDateEdit { %1 } QDateEdit:focus { %2 } QDateEdit::drop-down { border: none; width: 30px; }"
+                                 ).arg(inputStyle, focusStyle));
+    QVBoxLayout* dateGroup = new QVBoxLayout();
+    dateGroup->setSpacing(6);
+    dateGroup->addWidget(makeFieldLabel("Review Date"));
+    dateGroup->addWidget(dateInput);
+    cardLayout->addLayout(dateGroup);
+
+    // Submission Picker
+    QComboBox* submissionCombo = new QComboBox();
+    submissionCombo->setFixedHeight(44);
+    submissionCombo->setStyleSheet(QString(
+                                       "QComboBox { %1 }"
+                                       "QComboBox:focus { %2 }"
+                                       "QComboBox::drop-down { border: none; width: 30px; }"
+                                       "QComboBox::down-arrow { width: 12px; height: 12px; }"
+                                       "QComboBox QAbstractItemView { background-color: %3; color: %4; "
+                                       "border: 1.5px solid %5; selection-background-color: %6; selection-color: white; outline: none; }"
+                                       ).arg(inputStyle, focusStyle, dark ? "#252b3d" : "#ffffff", txtPrimary, border, accent));
+
+    QList<QPair<int,int>> submissionData;
+    QSqlQuery subQuery;
+    subQuery.prepare("SELECT SubmissionID, Title, TopicID FROM Submission ORDER BY CreatedAt DESC");
+    if (subQuery.exec()) {
+        while (subQuery.next()) {
+            submissionCombo->addItem(subQuery.value(1).toString());
+            submissionData.append({subQuery.value(0).toInt(), subQuery.value(2).toInt()});
+        }
+    }
+    if (submissionCombo->count() == 0) {
+        submissionCombo->addItem("No submissions found");
+        submissionCombo->setEnabled(false);
+    }
+    QVBoxLayout* subGroup = new QVBoxLayout();
+    subGroup->setSpacing(6);
+    subGroup->addWidget(makeFieldLabel("Select Submission"));
+    subGroup->addWidget(submissionCombo);
+    cardLayout->addLayout(subGroup);
+
+    // Comment
+    QTextEdit* commentInput = new QTextEdit();
+    commentInput->setPlaceholderText("Write your review comments here...");
+    commentInput->setFixedHeight(110);
+    commentInput->setStyleSheet(QString("QTextEdit { %1 } QTextEdit:focus { %2 }").arg(inputStyle, focusStyle));
+    QVBoxLayout* commentGroup = new QVBoxLayout();
+    commentGroup->setSpacing(6);
+    commentGroup->addWidget(makeFieldLabel("Comment"));
+    commentGroup->addWidget(commentInput);
+    cardLayout->addLayout(commentGroup);
+
+    cardLayout->addSpacing(4);
+
+    // Buttons
+    QHBoxLayout* btnRow = new QHBoxLayout();
+    btnRow->setSpacing(12);
+
+    QPushButton* clearBtn = new QPushButton("Clear");
+    clearBtn->setFixedHeight(44);
+    clearBtn->setMinimumWidth(100);
+    clearBtn->setCursor(Qt::PointingHandCursor);
+    clearBtn->setStyleSheet(QString(
+                                "QPushButton { background-color: %1; color: %2; border: 1.5px solid %3; "
+                                "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 600; }"
+                                "QPushButton:hover { background-color: %4; }"
+                                ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f1f5f9"));
+
+    QPushButton* saveReviewBtn = new QPushButton("Send to Review");
+    saveReviewBtn->setFixedHeight(44);
+    saveReviewBtn->setMinimumWidth(160);
+    saveReviewBtn->setCursor(Qt::PointingHandCursor);
+    saveReviewBtn->setStyleSheet(
+        "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+        "stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
+        "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; }"
+        "QPushButton:hover { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+        "stop:0 #5de0e6, stop:1 #3acfd6); }"
+        "QPushButton:pressed { background-color: #27a7ac; }"
+        );
+
+    btnRow->addStretch();
+    btnRow->addWidget(clearBtn);
+    btnRow->addWidget(saveReviewBtn);
+    cardLayout->addLayout(btnRow);
+
+    hSplit->addWidget(card, 0, Qt::AlignTop);
+
+    // Query status counts
+    int cntPending = 0, cntInReview = 0, cntApproved = 0, cntRejected = 0;
+    QSqlQuery statQ;
+    statQ.prepare("SELECT STATUS, COUNT(*) FROM REVIEW GROUP BY STATUS");
+    if (statQ.exec()) {
+        while (statQ.next()) {
+            QString s = statQ.value(0).toString();
+            int     n = statQ.value(1).toInt();
+            if (s == "Approved")  cntApproved  = n;
+            else if (s == "Rejected")  cntRejected  = n;
+            else if (s == "In Review") cntInReview  = n;
+            else                       cntPending   += n; // catches "Pending" and empty
+        }
+    }
+    int totalReviews = cntPending + cntInReview + cntApproved + cntRejected;
+
+    // Also count submissions
+    int totalSubmissions = 0;
+    QSqlQuery subCntQ;
+    subCntQ.prepare("SELECT COUNT(*) FROM Submission");
+    if (subCntQ.exec() && subCntQ.next())
+        totalSubmissions = subCntQ.value(0).toInt();
+
+    QFrame* statsPanel = new QFrame();
+    statsPanel->setFixedWidth(260);
+    statsPanel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    statsPanel->setStyleSheet(QString(
+                                  "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 14px; }"
+                                  ).arg(bgCard, border));
+
+    QVBoxLayout* statsLayout = new QVBoxLayout(statsPanel);
+    statsLayout->setContentsMargins(20, 20, 20, 20);
+    statsLayout->setSpacing(14);
+
+    QLabel* statsTitle = new QLabel("Review Statistics");
+    statsTitle->setStyleSheet(QString(
+                                  "font-size: 11pt; font-weight: 700; color: %1; background: transparent; border: none;"
+                                  ).arg(txtPrimary));
+    statsLayout->addWidget(statsTitle);
+
+    QLabel* statsSub = new QLabel(QString("Total reviews: %1").arg(totalReviews));
+    statsSub->setStyleSheet(QString(
+                                "font-size: 9pt; color: %1; background: transparent; border: none;"
+                                ).arg(txtSub));
+    statsLayout->addWidget(statsSub);
+
+    // ── Donut chart widget ─────────────────────────────────────────────────
+    struct SliceData {
+        int    value;
+        QColor color;
+        QString label;
+    };
+    QVector<SliceData> slices = {
+        { cntPending,  QColor("#3b82f6"), "Pending"   },
+        { cntInReview, QColor("#f59e0b"), "In Review" },
+        { cntApproved, QColor("#22c55e"), "Approved"  },
+        { cntRejected, QColor("#ef4444"), "Rejected"  }
+    };
+
+    QWidget* donutWidget = new QWidget();
+    donutWidget->setFixedSize(220, 180);
+    donutWidget->setStyleSheet("background: transparent;");
+
+    // Capture by value for the paint lambda
+    int capturedTotal = totalReviews;
+    QVector<SliceData> capturedSlices = slices;
+    bool capturedDark = dark;
+    QString capturedTxtPrimary = txtPrimary;
+
+    donutWidget->installEventFilter(this);
+
+    struct DonutPainter : public QObject {
+        QVector<SliceData> slices;
+        int total;
+        bool dark;
+        QString txtPrimary;
+
+        bool eventFilter(QObject* obj, QEvent* ev) override {
+            if (ev->type() == QEvent::Paint) {
+                QWidget* w = qobject_cast<QWidget*>(obj);
+                if (!w) return false;
+                QPainter p(w);
+                p.setRenderHint(QPainter::Antialiasing);
+
+                int cx = w->width() / 2;
+                int cy = w->height() / 2 - 10;
+                int outerR = 72;
+                int innerR = 44;
+
+                QRectF outerRect(cx - outerR, cy - outerR, outerR * 2, outerR * 2);
+                QRectF innerRect(cx - innerR, cy - innerR, innerR * 2, innerR * 2);
+
+                if (total == 0) {
+                    // Empty ring
+                    p.setPen(Qt::NoPen);
+                    p.setBrush(QColor(dark ? "#3e4859" : "#e2e8f0"));
+                    p.drawEllipse(outerRect);
+                    p.setBrush(QColor(dark ? "#252b3d" : "#ffffff"));
+                    p.drawEllipse(innerRect);
+                    p.setPen(QColor(dark ? "#8892a4" : "#94a3b8"));
+                    p.setFont(QFont("Arial", 8));
+                    p.drawText(outerRect, Qt::AlignCenter, "No data");
+                    return true;
+                }
+
+                // Draw slices
+                double startAngle = -90.0;
+                for (auto& sl : slices) {
+                    if (sl.value == 0) continue;
+                    double spanAngle = (sl.value / (double)total) * 360.0;
+                    p.setPen(Qt::NoPen);
+                    p.setBrush(sl.color);
+                    // Draw as pie then punch hole
+                    QPainterPath path;
+                    path.moveTo(cx, cy);
+                    path.arcTo(outerRect, startAngle, spanAngle);
+                    path.closeSubpath();
+                    p.drawPath(path);
+                    startAngle += spanAngle;
+                }
+
+                // Punch the donut hole
+                p.setPen(Qt::NoPen);
+                p.setBrush(QColor(dark ? "#252b3d" : "#ffffff"));
+                p.drawEllipse(innerRect);
+
+                // Centre label: total
+                p.setPen(QColor(txtPrimary));
+                QFont f("Arial", 12, QFont::Bold);
+                p.setFont(f);
+                p.drawText(innerRect, Qt::AlignCenter, QString::number(total));
+
+                return true;
+            }
+            return false;
+        }
+    };
+
+    DonutPainter* dp = new DonutPainter();
+    dp->slices      = capturedSlices;
+    dp->total       = capturedTotal;
+    dp->dark        = dark;
+    dp->txtPrimary  = txtPrimary;
+    donutWidget->installEventFilter(dp);
+    // Keep dp alive as child of donutWidget
+    dp->setParent(donutWidget);
+
+    statsLayout->addWidget(donutWidget, 0, Qt::AlignHCenter);
+
+    // Legend
+    QGridLayout* legend = new QGridLayout();
+    legend->setSpacing(6);
+    legend->setContentsMargins(0, 0, 0, 0);
+
+    struct LegendEntry { QString label; QColor color; int value; };
+    QVector<LegendEntry> legendEntries = {
+                                          { "Pending",   QColor("#3b82f6"), cntPending   },
+                                          { "In Review", QColor("#f59e0b"), cntInReview  },
+                                          { "Approved",  QColor("#22c55e"), cntApproved  },
+                                          { "Rejected",  QColor("#ef4444"), cntRejected  },
+                                          };
+
+    for (int i = 0; i < legendEntries.size(); ++i) {
+        auto& e = legendEntries[i];
+
+        // Colour dot
+        QLabel* dot = new QLabel();
+        dot->setFixedSize(10, 10);
+        dot->setStyleSheet(QString(
+                               "QLabel { background-color: %1; border-radius: 5px; border: none; }"
+                               ).arg(e.color.name()));
+
+        // Label
+        QLabel* lbl = new QLabel(e.label);
+        lbl->setStyleSheet(QString(
+                               "font-size: 9pt; color: %1; background: transparent; border: none;"
+                               ).arg(txtSub));
+
+        // Count
+        QLabel* cnt = new QLabel(QString::number(e.value));
+        cnt->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        cnt->setStyleSheet(QString(
+                               "font-size: 9pt; font-weight: 700; color: %1; background: transparent; border: none;"
+                               ).arg(txtPrimary));
+
+        legend->addWidget(dot, i, 0, Qt::AlignCenter);
+        legend->addWidget(lbl, i, 1);
+        legend->addWidget(cnt, i, 2);
+    }
+    statsLayout->addLayout(legend);
+
+    //Divider
+    QFrame* divider = new QFrame();
+    divider->setFrameShape(QFrame::HLine);
+    divider->setStyleSheet(QString("background-color: %1; border: none; max-height: 1px;").arg(border));
+    statsLayout->addWidget(divider);
+
+    // Submissions count tile
+    QFrame* subTile = new QFrame();
+    subTile->setStyleSheet(QString(
+                               "QFrame { background-color: %1; border-radius: 10px; border: 1px solid %2; }"
+                               ).arg(dark ? "#1e2433" : "#f8fafc", border));
+
+    QHBoxLayout* subTileLayout = new QHBoxLayout(subTile);
+    subTileLayout->setContentsMargins(14, 10, 14, 10);
+
+    QLabel* subIcon = new QLabel("📄");
+    subIcon->setStyleSheet("font-size: 16pt; background: transparent; border: none;");
+    QVBoxLayout* subTextCol = new QVBoxLayout();
+    subTextCol->setSpacing(1);
+
+    QLabel* subCountLabel = new QLabel(QString::number(totalSubmissions));
+    subCountLabel->setStyleSheet(QString(
+                                     "font-size: 14pt; font-weight: 700; color: %1; background: transparent; border: none;"
+                                     ).arg(txtPrimary));
+
+    QLabel* subDescLabel = new QLabel("Submissions");
+    subDescLabel->setStyleSheet(QString(
+                                    "font-size: 8pt; color: %1; background: transparent; border: none;"
+                                    ).arg(txtSub));
+
+    subTextCol->addWidget(subCountLabel);
+    subTextCol->addWidget(subDescLabel);
+    subTileLayout->addWidget(subIcon);
+    subTileLayout->addLayout(subTextCol);
+    subTileLayout->addStretch();
+    statsLayout->addWidget(subTile);
+
+    statsLayout->addStretch();
+
+    hSplit->addWidget(statsPanel, 0, Qt::AlignTop);
+    hSplit->addStretch();   // push both left if window is wide
+
+    rootLayout->addLayout(hSplit);
+    rootLayout->addStretch();
+
+    // Clear
+    connect(clearBtn, &QPushButton::clicked, this, [=]() {
+        nameInput->clear();
+        dateInput->setDate(QDate::currentDate());
+        if (submissionCombo->isEnabled()) submissionCombo->setCurrentIndex(0);
+        commentInput->clear();
+    });
+
+    // Save
+    connect(saveReviewBtn, &QPushButton::clicked, this, [=]() {
+        if (nameInput->text().trimmed().isEmpty()) {
+            QMessageBox::warning(page, "Validation Error", "Please enter a reviewer name.");
+            return;
+        }
+        if (!submissionCombo->isEnabled()) {
+            QMessageBox::warning(page, "Validation Error", "No submissions available to send for review.");
+            return;
+        }
+        if (commentInput->toPlainText().trimmed().isEmpty()) {
+            QMessageBox::warning(page, "Validation Error", "Please enter a comment.");
+            return;
+        }
+
+        int comboIdx = submissionCombo->currentIndex();
+        int sid      = submissionData[comboIdx].first;
+        int pid      = submissionData[comboIdx].second;
+
+        QSqlQuery query;
+        query.prepare(
+            "INSERT INTO REVIEW "
+            "  (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS) "
+            "VALUES "
+            "  (REVIEW_SEQ.NEXTVAL, :name, :date, :sid, :pid, :comment, 'Pending')"
+            );
+        query.bindValue(":name",    nameInput->text().trimmed());
+        query.bindValue(":date",    dateInput->date());
+        query.bindValue(":sid",     sid);
+        query.bindValue(":pid",     pid);
+        query.bindValue(":comment", commentInput->toPlainText().trimmed());
+
+        if (query.exec()) {
+            QMessageBox::information(page, "Success", "Submission sent to review successfully.");
+            nameInput->clear();
+            dateInput->setDate(QDate::currentDate());
+            submissionCombo->setCurrentIndex(0);
+            commentInput->clear();
+            // Rebuild to refresh stats
+            buildCreateReviewUI();
+        } else {
+            QMessageBox::critical(page, "Error",
+                                  "Failed to submit for review:\n" + query.lastError().text());
+        }
+    });
+}
+
+//  showReviewDialog  —  EDIT mode only
+
 void MainWindow::showReviewDialog(int reviewId)
 {
     bool isEditing = (reviewId != -1);
 
     QDialog* dialog = new QDialog(this);
-    dialog->setWindowTitle(isEditing ? "Edit Review" : "Add Review");
-    dialog->setFixedSize(520, 620);
+    dialog->setWindowTitle(isEditing ? "Edit Review" : "Send to Review");
+    dialog->setFixedSize(520, isEditing ? 640 : 660);
     dialog->setAttribute(Qt::WA_StyledBackground, true);
 
-    const bool dark = !mode;
+    const bool dark          = !mode;
     const QString bgPage     = dark ? "#1a1f2e" : "#f6f8fc";
     const QString bgCard     = dark ? "#252b3d" : "#ffffff";
     const QString border     = dark ? "#3e4859" : "#e2e8f0";
@@ -300,7 +756,7 @@ void MainWindow::showReviewDialog(int reviewId)
     mainLayout->setContentsMargins(24, 24, 24, 24);
     mainLayout->setSpacing(19);
 
-    QLabel* titleLabel = new QLabel(isEditing ? "Edit Review" : "Add New Review");
+    QLabel* titleLabel = new QLabel(isEditing ? "Edit Review" : "Send to Review");
     titleLabel->setStyleSheet(QString(
                                   "font-size: 18pt; font-weight: 700; color: %1; background: transparent;"
                                   ).arg(txtPrimary));
@@ -315,6 +771,11 @@ void MainWindow::showReviewDialog(int reviewId)
     formLayout->setSpacing(19);
     formLayout->setContentsMargins(24, 24, 24, 24);
 
+    QString inputStyle = QString(
+                             "background-color: %1; border: 1.5px solid %2; "
+                             "border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt;"
+                             ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary);
+
     auto makeLabel = [&](const QString& text) -> QLabel* {
         QLabel* lbl = new QLabel(text);
         lbl->setStyleSheet(QString(
@@ -328,75 +789,90 @@ void MainWindow::showReviewDialog(int reviewId)
         QVBoxLayout* fieldGroup = new QVBoxLayout();
         fieldGroup->setSpacing(6);
         fieldGroup->setContentsMargins(0, 0, 0, 0);
-        QLabel* label = makeLabel(labelText);
+        fieldGroup->addWidget(makeLabel(labelText));
         widget->setFixedHeight(44);
-        fieldGroup->addWidget(label);
         fieldGroup->addWidget(widget);
         formLayout->addLayout(fieldGroup);
     };
 
-    QString inputStyle = QString(
-                             "background-color: %1; border: 1.5px solid %2; "
-                             "border-radius: 8px; padding: 12px 14px; color: %3; font-size: 10pt;"
-                             ).arg(dark ? "#1e2433" : "#ffffff", border, txtPrimary);
-
     QLineEdit* nameInput = new QLineEdit();
     nameInput->setPlaceholderText("Reviewer Name");
-    nameInput->setStyleSheet(QString("QLineEdit { %1 } QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
+    nameInput->setStyleSheet(QString(
+                                 "QLineEdit { %1 } QLineEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 ).arg(inputStyle));
 
     QDateEdit* dateInput = new QDateEdit(QDate::currentDate());
     dateInput->setCalendarPopup(true);
     dateInput->setDisplayFormat("dd/MM/yyyy");
-    dateInput->setStyleSheet(QString("QDateEdit { %1 } QDateEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
+    dateInput->setStyleSheet(QString(
+                                 "QDateEdit { %1 } QDateEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                 ).arg(inputStyle));
 
-    //QSpinBox* subIdInput = new QSpinBox();
-    //subIdInput->setRange(1, 999999);
-    //subIdInput->setStyleSheet(QString("QSpinBox { %1 } QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
+    addField("Reviewer Name", nameInput);
+    addField("Review Date",   dateInput);
 
-    //QSpinBox* pubIdInput = new QSpinBox();
-    //pubIdInput->setRange(1, 999999);
-    //pubIdInput->setStyleSheet(QString("QSpinBox { %1 } QSpinBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
+    QComboBox* submissionCombo = nullptr;
+    QList<QPair<int,int>> submissionData;
 
-    QComboBox* statusInput = new QComboBox();
-    statusInput->addItems({"Pending", "In Review", "Approved", "Rejected"});
-    statusInput->setStyleSheet(QString(
-                                   "QComboBox { %1 }"
-                                   "QComboBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
-                                   "QComboBox::drop-down { border: none; width: 30px; }"
-                                   "QComboBox QAbstractItemView { background-color: %2; color: %3; border: 1.5px solid %4; selection-background-color: #30b9bf; }"
-                                   ).arg(inputStyle, dark ? "#252b3d" : "#ffffff", txtPrimary, border));
+    if (!isEditing) {
+        submissionCombo = new QComboBox();
+        submissionCombo->setStyleSheet(QString(
+                                           "QComboBox { %1 }"
+                                           "QComboBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                           "QComboBox::drop-down { border: none; width: 30px; }"
+                                           "QComboBox QAbstractItemView { background-color: %2; color: %3; "
+                                           "border: 1.5px solid %4; selection-background-color: #30b9bf; }"
+                                           ).arg(inputStyle, dark ? "#252b3d" : "#ffffff", txtPrimary, border));
+
+        QSqlQuery subQuery;
+        subQuery.prepare("SELECT SubmissionID, Title, TopicID FROM Submission ORDER BY CreatedAt DESC");
+        if (subQuery.exec()) {
+            while (subQuery.next()) {
+                submissionCombo->addItem(subQuery.value(1).toString());
+                submissionData.append({subQuery.value(0).toInt(), subQuery.value(2).toInt()});
+            }
+        }
+        if (submissionCombo->count() == 0) {
+            submissionCombo->addItem("No submissions found");
+            submissionCombo->setEnabled(false);
+        }
+        addField("Select Submission", submissionCombo);
+    }
+
+    QComboBox* statusInput = nullptr;
+    if (isEditing) {
+        statusInput = new QComboBox();
+        statusInput->addItems({"Pending", "In Review", "Approved", "Rejected"});
+        statusInput->setStyleSheet(QString(
+                                       "QComboBox { %1 }"
+                                       "QComboBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                       "QComboBox::drop-down { border: none; width: 30px; }"
+                                       "QComboBox QAbstractItemView { background-color: %2; color: %3; "
+                                       "border: 1.5px solid %4; selection-background-color: #30b9bf; }"
+                                       ).arg(inputStyle, dark ? "#252b3d" : "#ffffff", txtPrimary, border));
+        addField("Status", statusInput);
+    }
 
     QTextEdit* commentInput = new QTextEdit();
     commentInput->setPlaceholderText("Review comments...");
     commentInput->setFixedHeight(100);
-    commentInput->setStyleSheet(QString("QTextEdit { %1 } QTextEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }").arg(inputStyle));
-
-    addField("Reviewer Name",  nameInput);
-    addField("Review Date",    dateInput);
-    //addField("Submission ID",  subIdInput);
-    //addField("Publication ID", pubIdInput);
-    addField("Status",         statusInput);
-
-    QLabel* commentLabel = makeLabel("Comment");
-    formLayout->addWidget(commentLabel);
+    commentInput->setStyleSheet(QString(
+                                    "QTextEdit { %1 } QTextEdit:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
+                                    ).arg(inputStyle));
+    formLayout->addWidget(makeLabel("Comment"));
     formLayout->addWidget(commentInput);
 
     mainLayout->addWidget(formCard);
 
-    // Populate when editing
     if (isEditing) {
         QSqlQuery q;
-        q.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS FROM REVIEW WHERE IDREVIEW = ?");
+        q.prepare("SELECT REVIEWER_NAME, REVIEW_DATE, COMMENTREVIEW, STATUS FROM REVIEW WHERE IDREVIEW = ?");
         q.addBindValue(reviewId);
-        q.exec();
-        if (q.next()) {
+        if (q.exec() && q.next()) {
             nameInput->setText(q.value(0).toString());
             dateInput->setDate(q.value(1).toDate());
-            //subIdInput->setValue(q.value(2).toInt());
-            //pubIdInput->setValue(q.value(3).toInt());
-            commentInput->setPlainText(q.value(4).toString());
-            QString savedStatus = q.value(5).toString();
-            int idx = statusInput->findText(savedStatus);
+            commentInput->setPlainText(q.value(2).toString());
+            int idx = statusInput->findText(q.value(3).toString());
             if (idx >= 0) statusInput->setCurrentIndex(idx);
         }
     }
@@ -416,11 +892,11 @@ void MainWindow::showReviewDialog(int reviewId)
                                  "QPushButton:hover { background-color: %4; }"
                                  ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f8fafc"));
 
-    QPushButton* saveBtn = new QPushButton(isEditing ? "Update" : "Add Review");
-    saveBtn->setFixedHeight(44);
-    saveBtn->setMinimumWidth(140);
-    saveBtn->setCursor(Qt::PointingHandCursor);
-    saveBtn->setStyleSheet(
+    QPushButton* saveReviewBtn = new QPushButton(isEditing ? "Update" : "Send to Review");
+    saveReviewBtn->setFixedHeight(44);
+    saveReviewBtn->setMinimumWidth(150);
+    saveReviewBtn->setCursor(Qt::PointingHandCursor);
+    saveReviewBtn->setStyleSheet(
         "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
         "stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
         "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; }"
@@ -429,12 +905,12 @@ void MainWindow::showReviewDialog(int reviewId)
 
     btnLayout->addStretch();
     btnLayout->addWidget(cancelBtn);
-    btnLayout->addWidget(saveBtn);
+    btnLayout->addWidget(saveReviewBtn);
     mainLayout->addLayout(btnLayout);
 
     connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
 
-    connect(saveBtn, &QPushButton::clicked, this, [=]() {
+    connect(saveReviewBtn, &QPushButton::clicked, this, [=]() {
         if (nameInput->text().trimmed().isEmpty()) {
             QMessageBox::warning(dialog, "Validation Error", "Please enter a reviewer name.");
             return;
@@ -443,32 +919,50 @@ void MainWindow::showReviewDialog(int reviewId)
             QMessageBox::warning(dialog, "Validation Error", "Please enter a comment.");
             return;
         }
-
-        QSqlQuery query;
-        if (isEditing) {
-            query.prepare("UPDATE REVIEW SET REVIEWER_NAME=:name, REVIEW_DATE=:date, "
-                          "SUBMISSION_ID=:sid, PUBLICATION_ID=:pid, COMMENTREVIEW=:comment, "
-                          "STATUS=:status "
-                          "WHERE IDREVIEW=:id");
-            query.bindValue(":id", reviewId);
-        } else {
-            query.prepare("INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, "
-                          "SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS) "
-                          "VALUES (REVIEW_SEQ.NEXTVAL, :name, :date, :sid, :pid, :comment, :status)");
+        if (!isEditing && submissionCombo && !submissionCombo->isEnabled()) {
+            QMessageBox::warning(dialog, "Validation Error", "No submissions available to send for review.");
+            return;
         }
 
-        query.bindValue(":name",    nameInput->text().trimmed());
-        query.bindValue(":date",    dateInput->date());
-        //query.bindValue(":sid",     subIdInput->value());
-        //query.bindValue(":pid",     pubIdInput->value());
-        query.bindValue(":comment", commentInput->toPlainText().trimmed());
-        query.bindValue(":status",  statusInput->currentText());
+        QSqlQuery query;
+
+        if (isEditing) {
+            query.prepare(
+                "UPDATE REVIEW SET "
+                "  REVIEWER_NAME = :name, "
+                "  REVIEW_DATE   = :date, "
+                "  COMMENTREVIEW = :comment, "
+                "  STATUS        = :status "
+                "WHERE IDREVIEW  = :id"
+                );
+            query.bindValue(":name",    nameInput->text().trimmed());
+            query.bindValue(":date",    dateInput->date());
+            query.bindValue(":comment", commentInput->toPlainText().trimmed());
+            query.bindValue(":status",  statusInput->currentText());
+            query.bindValue(":id",      reviewId);
+        } else {
+            int comboIdx = submissionCombo->currentIndex();
+            int sid      = submissionData[comboIdx].first;
+            int pid      = submissionData[comboIdx].second;
+            query.prepare(
+                "INSERT INTO REVIEW "
+                "  (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS) "
+                "VALUES "
+                "  (REVIEW_SEQ.NEXTVAL, :name, :date, :sid, :pid, :comment, 'Pending')"
+                );
+            query.bindValue(":name",    nameInput->text().trimmed());
+            query.bindValue(":date",    dateInput->date());
+            query.bindValue(":sid",     sid);
+            query.bindValue(":pid",     pid);
+            query.bindValue(":comment", commentInput->toPlainText().trimmed());
+        }
 
         if (query.exec()) {
             loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
             dialog->accept();
         } else {
-            QMessageBox::critical(dialog, "Error", "Failed to save review: " + query.lastError().text());
+            QMessageBox::critical(dialog, "Error",
+                                  "Failed to save review:\n" + query.lastError().text());
         }
     });
 
@@ -520,51 +1014,24 @@ void MainWindow::exportReviewPDF(int reviewId, const QString& reviewerName, cons
         <html>
         <head>
             <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    color: #1a1a2e;
-                    margin: 0; padding: 0;
-                    font-size: 48px;
-                }
-                .header {
-                    background-color: #30b9bf;
-                    color: white;
-                    padding: 60px 80px;
-                }
+                body { font-family: Arial, sans-serif; color: #1a1a2e; margin: 0; padding: 0; font-size: 48px; }
+                .header { background-color: #30b9bf; color: white; padding: 60px 80px; }
                 .header h1 { margin: 0 0 16px 0; font-size: 72px; font-weight: bold; }
                 .header p  { margin: 0; font-size: 40px; opacity: 0.9; }
                 .section   { padding: 60px 80px; }
-                .section h2 {
-                    color: #30b9bf; font-size: 44px;
-                    text-transform: uppercase; letter-spacing: 4px;
-                    border-bottom: 4px solid #30b9bf;
-                    padding-bottom: 16px; margin-bottom: 40px;
-                }
+                .section h2 { color: #30b9bf; font-size: 44px; text-transform: uppercase; letter-spacing: 4px;
+                    border-bottom: 4px solid #30b9bf; padding-bottom: 16px; margin-bottom: 40px; }
                 .info-grid { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
                 .info-grid td { padding: 28px 32px; font-size: 44px; vertical-align: top; }
                 .info-grid tr:nth-child(odd) td { background-color: #f0f9fa; }
                 .label { font-weight: bold; color: #555555; width: 30%; }
                 .value { color: #1a1a2e; }
-                .status-badge {
-                    display: inline-block;
-                    background-color: %8;
-                    color: %9;
-                    border-radius: 20px;
-                    padding: 6px 24px;
-                    font-size: 38px;
-                    font-weight: 700;
-                }
-                .comment-box {
-                    background-color: #f8fcfc;
-                    border-left: 8px solid #30b9bf;
-                    padding: 40px; margin: 40px 0;
-                    font-size: 40px; line-height: 1.6; color: #333;
-                }
-                .footer {
-                    margin-top: 80px; padding: 40px 80px;
-                    border-top: 3px solid #e2e8f0;
-                    font-size: 36px; color: #9ca3af; text-align: center;
-                }
+                .status-badge { display: inline-block; background-color: %8; color: %9;
+                    border-radius: 20px; padding: 6px 24px; font-size: 38px; font-weight: 700; }
+                .comment-box { background-color: #f8fcfc; border-left: 8px solid #30b9bf;
+                    padding: 40px; margin: 40px 0; font-size: 40px; line-height: 1.6; color: #333; }
+                .footer { margin-top: 80px; padding: 40px 80px; border-top: 3px solid #e2e8f0;
+                    font-size: 36px; color: #9ca3af; text-align: center; }
             </style>
         </head>
         <body>
@@ -575,57 +1042,34 @@ void MainWindow::exportReviewPDF(int reviewId, const QString& reviewerName, cons
             <div class="section">
                 <h2>Review Details</h2>
                 <table class="info-grid">
-                    <tr>
-                        <td class="label">Reviewer</td>
-                        <td class="value">%3</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Review Date</td>
-                        <td class="value">%4</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Submission ID</td>
-                        <td class="value">%5</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Publication ID</td>
-                        <td class="value">%6</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Status</td>
-                        <td class="value"><span class="status-badge">%7</span></td>
-                    </tr>
+                    <tr><td class="label">Reviewer</td><td class="value">%3</td></tr>
+                    <tr><td class="label">Review Date</td><td class="value">%4</td></tr>
+                    <tr><td class="label">Submission ID</td><td class="value">%5</td></tr>
+                    <tr><td class="label">Publication ID</td><td class="value">%6</td></tr>
+                    <tr><td class="label">Status</td><td class="value"><span class="status-badge">%7</span></td></tr>
                 </table>
                 <h2>Comments</h2>
                 <div class="comment-box">%10</div>
             </div>
-            <div class="footer">
-                Peerly Research Platform &bull; Exported %2
-            </div>
+            <div class="footer">Peerly Research Platform &bull; Exported %2</div>
         </body>
         </html>
     )")
-                       .arg(QString::number(reviewId),
-                            generatedDate,
-                            reviewerName.toHtmlEscaped(),
-                            reviewDateStr,
-                            QString::number(submissionId),
-                            QString::number(publicationId),
+                       .arg(QString::number(reviewId), generatedDate, reviewerName.toHtmlEscaped(), reviewDateStr,
+                            QString::number(submissionId), QString::number(publicationId),
                             status.isEmpty() ? "Pending" : status.toHtmlEscaped(),
-                            statusBg,
-                            statusColor,
+                            statusBg, statusColor,
                             comment.toHtmlEscaped().replace("\n", "<br>"));
 
     QTextDocument doc;
     doc.setHtml(html);
     doc.setDefaultFont(QFont("Arial", 24));
-
     QSizeF paperSize = printer.pageLayout().paintRectPixels(printer.resolution()).size();
     doc.setPageSize(paperSize);
     doc.print(&printer);
-
     QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
 }
+
 void MainWindow::on_sortReviewBtn_clicked()
 {
     reviewSortAscending = !reviewSortAscending;
@@ -639,8 +1083,13 @@ void MainWindow::on_searchReviewBtn_clicked()
 }
 
 //Linking Buttons
-void MainWindow::on_reviewSub_clicked(){ui->stackedWidget->setCurrentIndex(5); loadReviews(true, "");}
-void MainWindow::on_review_clicked(){ ui->stackedWidget->setCurrentIndex(1);}
+void MainWindow::on_reviewSub_clicked(){ ui->stackedWidget->setCurrentIndex(5); loadReviews(true, ""); }
+
+void MainWindow::on_review_clicked()
+{
+    buildCreateReviewUI();
+    ui->stackedWidget->setCurrentIndex(1);
+}
 
 // Review tab
 
@@ -681,7 +1130,6 @@ void MainWindow::loadReviewsReadOnly()
         QString comment      = reviewQuery.value(5).toString();
         QString status       = reviewQuery.value(6).toString();
 
-        // Status badge colours
         QString statusColor, statusBg;
         if (status == "Approved") {
             statusColor = "#15803d"; statusBg = "#dcfce7";
@@ -701,11 +1149,9 @@ void MainWindow::loadReviewsReadOnly()
         cardLayout->setContentsMargins(16, 16, 16, 16);
         cardLayout->setSpacing(16);
 
-        // review info
         QVBoxLayout* infoLayout = new QVBoxLayout();
         infoLayout->setSpacing(6);
 
-        // Top row: name + status badge
         QHBoxLayout* nameRow = new QHBoxLayout();
         QLabel* nameLabel = new QLabel("<b>" + reviewerName + "</b>");
         nameLabel->setStyleSheet("font-size: 11pt;");
@@ -738,26 +1184,20 @@ void MainWindow::loadReviewsReadOnly()
         infoLayout->addWidget(metaLabel);
         infoLayout->addWidget(commentLabel);
 
-        // AI percentage placeholder
         QFrame* aiBox = new QFrame();
         aiBox->setFixedSize(110, 90);
-        aiBox->setStyleSheet(
-            "QFrame { border: 2px dashed #cbd5e1; border-radius: 10px; background-color: #f8fafc; }"
-            );
+        aiBox->setStyleSheet("QFrame { border: 2px dashed #cbd5e1; border-radius: 10px; background-color: #f8fafc; }");
         QVBoxLayout* aiLayout = new QVBoxLayout(aiBox);
         aiLayout->setAlignment(Qt::AlignCenter);
-
         QLabel* aiLabel = new QLabel("AI Score");
         aiLabel->setAlignment(Qt::AlignCenter);
         aiLabel->setStyleSheet("font-size: 8pt; color: #94a3b8; font-weight: 600; border: none;");
         QLabel* aiValue = new QLabel("— %");
         aiValue->setAlignment(Qt::AlignCenter);
         aiValue->setStyleSheet("font-size: 11pt; font-weight: 700; color: #cbd5e1; border: none;");
-
         aiLayout->addWidget(aiLabel);
         aiLayout->addWidget(aiValue);
 
-        // Export PDF button
         QPushButton* pdfBtn = new QPushButton("Export PDF");
         pdfBtn->setFixedSize(100, 36);
         pdfBtn->setCursor(Qt::PointingHandCursor);
@@ -3138,23 +3578,7 @@ void MainWindow::on_publication_clicked()
 //********************PUBLICATION END************************************************************************************************************************//
 
 
-void MainWindow::on_Browse_pressed()
-{
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        "Browse Files",
-        "",  // Starting directory
-        "All Files (*)"  // File filter
-        );
-
-    if (!filePath.isEmpty()) {
-        qDebug() << "Selected file:" << filePath;}
-}
-
-
 void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);}
-
-void MainWindow::on_backHome_clicked(){   ui->stackedWidget->setCurrentIndex(0);}
 
 
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}

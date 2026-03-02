@@ -23,11 +23,7 @@ private slots:
 
     void on_homeButton_clicked();
 
-    void on_backHome_clicked();
-
     void on_collab_clicked();
-
-
 
     void on_profile_clicked();
 
@@ -40,7 +36,6 @@ private slots:
 
 
     void on_Research_clicked();
-
 
     void on_mkUser_clicked();
 
@@ -55,7 +50,6 @@ private slots:
 
     void on_linkFor_linkActivated();
 
-    void on_Browse_pressed();
 
     //************CONFERENCE START***************************//
     void on_addConferenceBtn_clicked();
@@ -138,6 +132,7 @@ private:
     void exportReviewPDF(int reviewId, const QString& reviewerName, const QDate& reviewDate,
                          int submissionId, int publicationId, const QString& comment,
                          const QString& status);
+    void buildCreateReviewUI();
 
     //************REVIEW END***************************//
 
