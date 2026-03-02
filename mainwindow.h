@@ -5,6 +5,8 @@
 #include "collaboration.h"
 #include "publication.h"
 
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -27,28 +29,49 @@ private slots:
 
     void on_profile_clicked();
 
-    void on_login_clicked();
-    void on_cancelBtnFor_clicked();
-    void on_searchUserBTN_clicked();
-    void on_userSearchBackBTN_clicked();
 
     void on_publication_clicked();
 
 
     void on_Research_clicked();
 
-    void on_mkUser_clicked();
+
 
     void toggleDarkMode();
 
     void on_modeSwitch_clicked(){ toggleDarkMode();}
 
     void on_temp_clicked();
-    void on_temp2_clicked();
 
-    void on_cancelBtnReg_clicked();
+
 
     void on_linkFor_linkActivated();
+
+    /*************************************** USER START *************************************************************/
+
+    void on_editUser_2_clicked();
+    void on_deleteUser_2_clicked();
+    void on_addUser_clicked();
+    void on_login_clicked();
+    void on_cancelBtnFor_clicked();
+    void on_searchUserBTN_clicked();
+    void on_userSearchBackBTN_2_clicked();
+    void on_cancelBtnReg_clicked();
+    void on_editUserPage_clicked();
+    void on_cancelEditBTN_2_clicked();
+    void on_backLoginBTN_2_clicked();
+    void on_temp2_clicked();
+    void on_mkUser_clicked();
+    void on_searchString_clicked();
+    void on_Viewer_checkStateChanged(const Qt::CheckState &arg1);
+    void on_Reviewer_checkStateChanged(const Qt::CheckState &state);
+    void on_Researcher_checkStateChanged(const Qt::CheckState &state);
+    void exportTableToPDF(const QString &fileName);
+    void on_exportUserPDF_clicked();
+
+
+
+    /***************************************   USER END   **********************************************************/
 
 
     //************CONFERENCE START***************************//
@@ -88,6 +111,7 @@ private slots:
     void on_collaborationCreationCollaborationTitileEdit_textChanged();
     void on_collabsEditButton_clicked();
     void on_collabsSearchBox_textChanged();
+
 
     //***********Collabs End*******************//
     //************PUBLICATION START***************************//

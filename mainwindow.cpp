@@ -3,6 +3,7 @@
 #include "conference.h"
 #include "collaboration.h"
 #include "publication.h"
+#include "user.h"
 
 // SQL
 #include <QSqlDatabase>
@@ -124,6 +125,285 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
+
+/*********************************************************** USER START ***********************************************************************************/
+
+void MainWindow::on_deleteUser_2_clicked()/*DELETE USER*/{
+    User u;
+    u.readSavedID();
+    if(u.delete_user()){
+
+        qDebug() << "deleted succefully";
+
+        ui->displayUsername_2->setText("Username");
+        ui->displaySpecialty_2->setText("Specialty");
+
+        ui->sideBarStack->setCurrentIndex(0);
+        ui->sideBarStack->show();
+        ui->stackedWidget->setCurrentIndex(3);
+
+
+    }
+    else         qDebug() << "delete unsuccefully";
+
+
+}
+void MainWindow::on_addUser_clicked/* ADD USER*/(){
+
+    QString email = ui->email_reg->text();
+    QString password = ui->password_reg->text();
+    QString role = ui->role_reg->text();
+    QString username = ui->username_reg->text();
+    QString specialty = ui->specialty_reg->text();
+
+    User u(0, email, password, username, role, specialty);
+
+
+    if(u.create_user())
+    {
+        qDebug() << "User Created";
+        ui->sideBarStack->setCurrentIndex(0);
+        ui->sideBarStack->show();
+        ui->stackedWidget->setCurrentIndex(8);
+
+    }
+    else
+    {
+        qDebug() << "User not created ";
+    }
+
+}
+
+void MainWindow::on_login_clicked()
+{
+
+
+    User u;
+
+    QString email = ui->emailLogin_2->text();
+    QString password = ui->passwordLogin_2->text();
+
+    if (u.login(email,password)){
+
+        ui->sideBarStack->setCurrentIndex(0);
+        ui->sideBarStack->show();
+        ui->stackedWidget->setCurrentIndex(3);
+
+        ui->displayUsername_2->setText(u.getUsername());
+        ui->displaySpecialty_2->setText(u.getSpecialty());
+    }
+
+}
+void MainWindow::on_editUser_2_clicked(){
+
+    User u;
+    u.readSavedID();
+    qDebug() << u.getId();
+
+
+
+    QString email = ui->email_edit_2->text();
+    QString password = ui->password_edit_2->text();
+    QString role = ui->role_edit_2->text();
+    QString username = ui->username_edit_2->text();
+    QString specialty = ui->specialty_edit_2->text();
+
+    u.setEmail(email);
+    u.setPassword(password);
+    u.setRole(role);
+    u.setUsername(username);
+    u.setSpecialty(specialty);
+
+    if(u.update_user())
+    {
+        qDebug() <<"user updated";
+
+        ui->displayUsername_2->setText(u.getUsername());
+        ui->displaySpecialty_2->setText(u.getSpecialty());
+
+        ui->sideBarStack->setCurrentIndex(0);
+        ui->sideBarStack->show();
+        ui->stackedWidget->setCurrentIndex(3);
+
+    }
+    else qDebug() <<"user didnt get updated";
+
+}
+
+void MainWindow::on_searchUserBTN_clicked()
+{
+    User u;
+
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(11);
+    ui->userListView_2->setModel(u.display());
+    ui->userListView_3->setModel(u.loadUserStatistics());
+    ui->userListView_3->verticalHeader()->setDefaultSectionSize(30);
+    ui->userListView_3->verticalHeader()->setVisible(true);
+
+
+}
+
+void MainWindow::on_editUserPage_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(13);
+}
+
+
+
+void MainWindow::on_cancelBtnReg_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(0);
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_cancelBtnFor_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(0);
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_userSearchBackBTN_2_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(0);
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);
+}
+void MainWindow::on_cancelEditBTN_2_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(0);
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);
+}
+void MainWindow::on_backLoginBTN_2_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(0);
+    ui->sideBarStack->show();
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+
+void MainWindow::on_temp2_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(8);
+}
+
+void MainWindow::on_mkUser_clicked()
+{
+    ui->sideBarStack->setCurrentIndex(1);
+    ui->sideBarStack->hide();
+    ui->stackedWidget->setCurrentIndex(9);
+}
+
+void MainWindow::on_searchString_clicked(){
+    User u;
+    QString string = ui->enterString->text();
+   ui->userListView_2->setModel(u.search(string));
+}
+void MainWindow::on_Viewer_checkStateChanged(const Qt::CheckState &state)
+{
+    User u;
+
+    if (state == Qt::Checked)
+    {
+
+
+        ui->userListView_2->setModel(u.filter(1));
+
+    }
+    else if (state == Qt::Unchecked)
+    {
+       ui->userListView_2->setModel(u.filter(0));
+
+        }
+}
+void MainWindow::on_Reviewer_checkStateChanged(const Qt::CheckState &state)
+{
+    User u;
+
+
+    if (state == Qt::Checked)
+    {
+
+
+        ui->userListView_2->setModel(u.filter2(1));
+
+    }
+    else if (state == Qt::Unchecked)
+    {
+        ui->userListView_2->setModel(u.filter2(0));
+
+    }
+}
+void MainWindow::on_Researcher_checkStateChanged(const Qt::CheckState &state)
+{
+    User u;
+
+    if (state == Qt::Checked)
+    {
+
+
+        ui->userListView_2->setModel(u.filter3(1));
+
+    }
+    else if (state == Qt::Unchecked)
+    {
+        ui->userListView_2->setModel(u.filter3(0));
+
+    }
+}
+
+
+void MainWindow::exportTableToPDF(const QString &fileName)
+{
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+
+    QTextDocument doc;
+    QString html = "<table border='1'><tr>";
+
+
+    QAbstractItemModel *model = ui->userListView_2->model();
+    for (int col = 0; col < model->columnCount(); ++col)
+        html += "<th>" + model->headerData(col, Qt::Horizontal).toString() + "</th>";
+    html += "</tr>";
+
+
+    for (int row = 0; row < model->rowCount(); ++row) {
+        html += "<tr>";
+        for (int col = 0; col < model->columnCount(); ++col)
+            html += "<td>" + model->data(model->index(row, col)).toString() + "</td>";
+        html += "</tr>";
+    }
+    html += "</table>";
+
+    doc.setHtml(html);
+    doc.print(&printer);
+
+}
+
+
+void MainWindow::on_exportUserPDF_clicked(){
+
+    exportTableToPDF("C:/Users/Mounib/Documents/users.pdf");
+
+}
+
+
+void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
+
+
+/********************************************************** USER END *************************************************************************************/
 
 //********************REVIEW START*********************************************************************************************************************//
 
@@ -3583,58 +3863,17 @@ void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);
 
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
 
-void MainWindow::on_login_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
-    ui->sideBarStack->show();
-    ui->stackedWidget->setCurrentIndex(3);
-}
 
-void MainWindow::on_cancelBtnReg_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
-    ui->sideBarStack->show();
-    ui->stackedWidget->setCurrentIndex(3);
-}
 
-void MainWindow::on_cancelBtnFor_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
-    ui->sideBarStack->show();
-    ui->stackedWidget->setCurrentIndex(3);
-}
 
-void MainWindow::on_userSearchBackBTN_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(0); //sideBar Toggle!!!
-    ui->sideBarStack->show();
-    ui->stackedWidget->setCurrentIndex(3);
-}
+
+
 void MainWindow::on_Research_clicked(){ ui->stackedWidget->setCurrentIndex(7);}
 
 void MainWindow::on_temp_clicked(){ui->stackedWidget->setCurrentIndex(0);}
-void MainWindow::on_temp2_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(1);
-    ui->sideBarStack->hide();
-    ui->stackedWidget->setCurrentIndex(8);
-}
 
-void MainWindow::on_mkUser_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(1);
-    ui->sideBarStack->hide();
-    ui->stackedWidget->setCurrentIndex(9);
-}
 
-void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
 
-void MainWindow::on_searchUserBTN_clicked()
-{
-    ui->sideBarStack->setCurrentIndex(1);
-    ui->sideBarStack->hide();
-    ui->stackedWidget->setCurrentIndex(11);
-}
 
 
 //New StyleSheet
