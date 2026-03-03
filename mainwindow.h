@@ -123,7 +123,7 @@ private slots:
     void on_searchbt_clicked();
     void on_summaryButton_clicked();
     void on_emailButton_clicked();
-    void on_publication_clicked();
+    void on_pubStatsBtn_clicked();
     //************PUBLICATION END***************************//
 
     //************SUBMISSION START***************************//
