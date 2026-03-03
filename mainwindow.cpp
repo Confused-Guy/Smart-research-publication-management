@@ -3734,10 +3734,10 @@ void MainWindow::exportPublicationPDF(int pubId, int authId, int subId,
     QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
 }
 // BUTTON SLOTS
-// ── ADD
+// ADD
 void MainWindow::on_addButton_clicked()
 {
-    // ── Input validation ──────────────────────────────────────────────────
+    //Input validation
     if (ui->titleEdit->text().trimmed().isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please enter a publication title / description.");
         return;
@@ -3752,9 +3752,9 @@ void MainWindow::on_addButton_clicked()
     pubTmp.setCreatedDate(QDate::currentDate());
     pubTmp.setField(ui->categoryCombo->currentText());
 
-    // ── CREATE
+    //CREATE
     if (pubTmp.create()) {
-        ui->statusLabel_2->setText("✔ Publication added successfully.");
+        ui->statusLabel_2->setText("Publication added successfully.");
         ui->titleEdit->clear();
         ui->descriptionEdit->clear();
         ui->categoryCombo->setCurrentIndex(0);
@@ -3765,7 +3765,7 @@ void MainWindow::on_addButton_clicked()
     }
 }
 
-// ── DELETE
+// DELETE
 void MainWindow::on_deleteButton_clicked()
 {
     bool ok;
@@ -3794,13 +3794,13 @@ void MainWindow::on_deleteButton_clicked()
     }
 }
 
-// ── SEARCH
+// SEARCH
 void MainWindow::on_searchbt_clicked()
 {
     loadPublications(ui->lineEdit_23->text());
 }
 
-// ── SUMMARY
+//SUMMARY
 void MainWindow::on_summaryButton_clicked()
 {
     bool ok;
@@ -3823,7 +3823,7 @@ void MainWindow::on_summaryButton_clicked()
     ui->statusLabel_2->setText("Publication ID not found.");
 }
 
-// ── EMAIL
+//EMAIL
 void MainWindow::on_emailButton_clicked()
 {
     bool ok;
@@ -3851,12 +3851,489 @@ void MainWindow::on_emailButton_clicked()
     ui->statusLabel_2->setText("Publication ID not found.");
 }
 
-// ── NAVIGATION
+// NAVIGATION
 void MainWindow::on_publication_clicked()
 {
     ui->stackedWidget->setCurrentIndex(6);
     loadPublications("");
 }
+//STATS BUTTON
+void MainWindow::on_pubStatsBtn_clicked()
+{
+    showPublicationStats();
+}
+
+void MainWindow::showPublicationStats()
+{
+    const bool dark = !mode;
+
+    //Theme 
+    const QString bgPage         = dark ? "#2a3142" : "#f6f8fc";
+    const QString bgCard         = dark ? "#343d52" : "#ffffff";
+    const QString bgScrollbar    = dark ? "#2a3142" : "#f6f8fc";
+    const QString bgScrollHandle = dark ? "#545e73" : "#c0d0e8";
+
+    const QString border         = dark ? "#4a5568" : "#e2e8f0";
+    const QString divColor       = dark ? "#3e4859" : "#e2e8f0";
+
+    const QString txtPrimary     = dark ? "#e0e7f1" : "#1f2937";
+    const QString txtSub         = dark ? "#8892a4" : "#9ca3af";
+    const QString txtSection     = dark ? "#8892a4" : "#9ca3af";
+
+    const QString btnBg          = dark ? "#3e4859" : "#ffffff";
+    const QString btnTxt         = dark ? "#e0e7f1" : "#1f2937";
+    const QString btnHover       = dark ? "#4a5568" : "#f1f5f9";
+    const QString btnPressed     = dark ? "#545e73" : "#e2e8f0";
+
+    // QPainter colours
+    const QColor cWhite  (0xff, 0xff, 0xff);
+    const QColor cTeal   (0x30, 0xb9, 0xbf);
+    const QColor cIndigo (0x63, 0x66, 0xf1);
+    const QColor cAmber  (0xf5, 0x9e, 0x0b);
+    const QColor cRed    (0xdc, 0x26, 0x26);
+    const QColor cGreen  (0x16, 0xa3, 0x4a);
+    const QColor cPink   (0xec, 0x48, 0x99);
+    const QColor cPurple (0x8b, 0x5c, 0xf6);
+    const QColor cShadow (0x00, 0x00, 0x00, 18);
+
+    const QColor cGray     = dark ? QColor(0xa0,0xae,0xc0) : QColor(0x6b,0x72,0x80);
+    const QColor cLightBg  = dark ? QColor(0x3e,0x48,0x59) : QColor(0xf1,0xf5,0xf9);
+    const QColor cText     = dark ? QColor(0xe0,0xe7,0xf1) : QColor(0x1f,0x29,0x37);
+    const QColor cSubText  = dark ? QColor(0x88,0x92,0xa4) : QColor(0x9c,0xa3,0xaf);
+    const QColor cHoleBg   = dark ? QColor(0x34,0x3d,0x52) : QColor(0xff,0xff,0xff);
+    const QColor cValueTxt = dark ? QColor(0xe0,0xe7,0xf1) : QColor(0x1f,0x29,0x37);
+
+    // ── DB Queries ─────
+    //Total count
+    QSqlQuery totalQ;
+    totalQ.exec("SELECT COUNT(*) FROM PUBLICATIONS");
+    int total = 0;
+    if (totalQ.next()) total = totalQ.value(0).toInt();
+
+    //Publications per field (for bar + pie chart)
+    QSqlQuery fieldQ;
+    fieldQ.exec(
+        "SELECT FIELD, COUNT(*) AS cnt "
+        "FROM PUBLICATIONS "
+        "GROUP BY FIELD "
+        "ORDER BY cnt DESC"
+        );
+    QList<QPair<QString,int>> fieldData;
+    while (fieldQ.next())
+        fieldData.append({fieldQ.value(0).toString(), fieldQ.value(1).toInt()});
+
+    //Publications per month – last 6 months
+    QSqlQuery monthQ;
+    monthQ.exec(
+        "SELECT TO_CHAR(CREATEDDATE, 'Mon'), COUNT(*) "
+        "FROM PUBLICATIONS "
+        "WHERE CREATEDDATE >= ADD_MONTHS(SYSDATE, -6) "
+        "GROUP BY TO_CHAR(CREATEDDATE, 'Mon'), TO_CHAR(CREATEDDATE, 'MM') "
+        "ORDER BY TO_CHAR(CREATEDDATE, 'MM')"
+        );
+    QList<QPair<QString,int>> monthData;
+    while (monthQ.next())
+        monthData.append({monthQ.value(0).toString(), monthQ.value(1).toInt()});
+
+    //Top author
+    QSqlQuery topAuthorQ;
+    topAuthorQ.exec(
+        "SELECT AUTHORID, COUNT(*) AS cnt "
+        "FROM PUBLICATIONS "
+        "GROUP BY AUTHORID "
+        "ORDER BY cnt DESC "
+        "FETCH FIRST 1 ROWS ONLY"
+        );
+    QString topAuthor = "N/A";
+    int topAuthorCount = 0;
+    if (topAuthorQ.next()) {
+        topAuthor      = "ID " + topAuthorQ.value(0).toString();
+        topAuthorCount = topAuthorQ.value(1).toInt();
+    }
+
+    //Most recent publication
+    QSqlQuery recentQ;
+    recentQ.exec(
+        "SELECT PUBLICATIONID, FIELD, CREATEDDATE "
+        "FROM PUBLICATIONS "
+        "ORDER BY CREATEDDATE DESC "
+        "FETCH FIRST 1 ROWS ONLY"
+        );
+    QString recentField = "";
+    QString recentDate  = "";
+    int     recentId    = -1;
+    if (recentQ.next()) {
+        recentId    = recentQ.value(0).toInt();
+        recentField = recentQ.value(1).toString();
+        recentDate  = recentQ.value(2).toDate().toString("MMM dd, yyyy");
+    }
+
+    //Dialog + scroll area 
+    QDialog* dialog = new QDialog(this);
+    dialog->setWindowTitle("Publication Statistics");
+    dialog->setFixedSize(600, 640);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
+
+    QWidget* scrollContent = new QWidget();
+    scrollContent->setAttribute(Qt::WA_StyledBackground, true);
+    scrollContent->setStyleSheet(
+        QString("QWidget { background-color: %1; border: none; }").arg(bgPage)
+        );
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(scrollContent);
+    mainLayout->setContentsMargins(24, 20, 24, 16);
+    mainLayout->setSpacing(14);
+
+    QScrollArea* scroll = new QScrollArea(dialog);
+    scroll->setWidget(scrollContent);
+    scroll->setWidgetResizable(true);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setStyleSheet(QString(
+                              "QScrollArea { background-color: %1; border: none; }"
+                              "QScrollBar:vertical { background: %1; width: 6px; border-radius: 3px; }"
+                              "QScrollBar::handle:vertical { background: %2; border-radius: 3px; }"
+                              "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+                              ).arg(bgScrollbar, bgScrollHandle));
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout(dialog);
+    dialogLayout->setContentsMargins(0, 0, 0, 0);
+    dialogLayout->setSpacing(0);
+    dialogLayout->addWidget(scroll);
+
+    // Header
+    QLabel* titleLabel = new QLabel("Publication Statistics");
+    titleLabel->setStyleSheet(QString(
+                                  "font-size: 16px; font-weight: bold; color: %1; background: transparent;"
+                                  ).arg(txtPrimary));
+
+    QLabel* subLabel = new QLabel(
+        QString::number(total) + " total publications  ·  " +
+        QString::number(fieldData.size()) + " fields  ·  Top author: " + topAuthor
+        );
+    subLabel->setStyleSheet(QString(
+                                "font-size: 10px; color: %1; background: transparent;"
+                                ).arg(txtSub));
+
+    mainLayout->addWidget(titleLabel);
+    mainLayout->addWidget(subLabel);
+
+    QFrame* div = new QFrame();
+    div->setFrameShape(QFrame::HLine);
+    div->setFixedHeight(1);
+    div->setStyleSheet(QString("background-color: %1; border: none;").arg(divColor));
+    mainLayout->addWidget(div);
+
+    //Section label helper 
+    auto makeSection = [&](const QString& text) -> QLabel* {
+        QLabel* sec = new QLabel(text.toUpper());
+        sec->setStyleSheet(QString(
+                               "font-size: 9px; font-weight: bold; color: %1;"
+                               "background: transparent; letter-spacing: 1px; border: none;"
+                               ).arg(txtSection));
+        return sec;
+    };
+
+    //Bar chart helper 
+    auto makeBarChart = [&](const QList<QPair<QString,int>>& data,
+                            const QColor& barColor,
+                            int fixedHeight) -> QWidget*
+    {
+        QWidget* chart = new QWidget();
+        chart->setFixedHeight(fixedHeight);
+        chart->setAttribute(Qt::WA_StyledBackground, true);
+        chart->setStyleSheet(QString(
+                                 "QWidget { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
+                                 ).arg(bgCard, border));
+
+        QLabel* canvas = new QLabel(chart);
+        canvas->setGeometry(0, 0, 552, fixedHeight);
+        canvas->setAttribute(Qt::WA_StyledBackground, false);
+        canvas->setStyleSheet("background: transparent; border: none;");
+
+        int maxVal = 1;
+        for (const auto& d : data)
+            if (d.second > maxVal) maxVal = d.second;
+
+        QPixmap pixmap(552, fixedHeight);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        int n        = data.size();
+        int padLeft  = 100;   
+        int padRight = 20;
+        int padTop   = 16;
+        int padBot   = 16;
+        int barAreaW = pixmap.width() - padLeft - padRight;
+        int totalH   = pixmap.height() - padTop - padBot;
+        int barH     = qMax(18, (totalH / qMax(n,1)) - 10);
+        int gap      = qMax(6,  (totalH - barH * n) / (n + 1));
+
+        for (int i = 0; i < n; ++i) {
+            int y    = padTop + gap + i * (barH + gap);
+            int barW = data[i].second == 0 ? 0
+                                           : (int)((double)data[i].second / maxVal * barAreaW);
+
+            painter.setPen(cGray);
+            painter.setFont(QFont("Arial", 9));
+            painter.drawText(QRect(0, y, padLeft - 8, barH),
+                             Qt::AlignRight | Qt::AlignVCenter,
+                             data[i].first);
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(cLightBg);
+            painter.drawRoundedRect(padLeft, y, barAreaW, barH, 5, 5);
+
+            if (barW > 0) {
+                painter.setBrush(barColor);
+                painter.drawRoundedRect(padLeft, y, barW, barH, 5, 5);
+            }
+
+            painter.setPen(barW > 30 ? cWhite : cValueTxt);
+            painter.setFont(QFont("Arial", 9, QFont::Bold));
+            painter.drawText(QRect(padLeft + 6, y, qMax(barW - 4, 40), barH),
+                             Qt::AlignLeft | Qt::AlignVCenter,
+                             QString::number(data[i].second));
+        }
+
+        painter.end();
+        canvas->setPixmap(pixmap);
+        return chart;
+    };
+
+    // ── Donut pie chart helper
+    auto makePieChart = [&](const QList<QPair<QString,int>>& data,
+                            int size) -> QWidget*
+    {
+        QWidget* container = new QWidget();
+        container->setFixedHeight(size + 20);
+        container->setAttribute(Qt::WA_StyledBackground, true);
+        container->setStyleSheet(QString(
+                                     "QWidget { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
+                                     ).arg(bgCard, border));
+
+        QLabel* canvas = new QLabel(container);
+        canvas->setGeometry(0, 0, 552, size + 20);
+        canvas->setAttribute(Qt::WA_StyledBackground, false);
+        canvas->setStyleSheet("background: transparent; border: none;");
+
+        const QList<QColor> colors = {
+            cTeal, cIndigo, cAmber, cRed, cGreen, cPink, cPurple
+        };
+
+        int tot = 0;
+        for (const auto& d : data) tot += d.second;
+
+        QPixmap pixmap(552, size + 20);
+        pixmap.fill(Qt::transparent);
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        if (tot == 0) {
+            painter.setPen(cSubText);
+            painter.setFont(QFont("Arial", 10));
+            painter.drawText(pixmap.rect(), Qt::AlignCenter, "No data available");
+            painter.end();
+            canvas->setPixmap(pixmap);
+            return container;
+        }
+
+        int pieSize = size - 20;
+        int pieX    = 20;
+        int pieY    = 20;
+        QRect pieRect(pieX, pieY, pieSize, pieSize);
+
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(cShadow);
+        painter.drawEllipse(pieRect.adjusted(4, 4, 4, 4));
+
+        double startAngle = 90.0;
+        for (int i = 0; i < data.size(); ++i) {
+            if (data[i].second == 0) continue;
+            double sweepAngle = (double)data[i].second / tot * 360.0;
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(colors[i % colors.size()]);
+            painter.drawPie(pieRect, (int)(startAngle * 16), (int)(sweepAngle * 16));
+
+            painter.setPen(QPen(dark ? QColor(0x34,0x3d,0x52) : cWhite, 2));
+            painter.setBrush(Qt::NoBrush);
+            painter.drawPie(pieRect, (int)(startAngle * 16), (int)(sweepAngle * 16));
+
+            startAngle += sweepAngle;
+        }
+
+        int holeSize = pieSize / 2;
+        int holeX    = pieX + (pieSize - holeSize) / 2;
+        int holeY    = pieY + (pieSize - holeSize) / 2;
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(cHoleBg);
+        painter.drawEllipse(holeX, holeY, holeSize, holeSize);
+
+        painter.setPen(cText);
+        painter.setFont(QFont("Arial", 13, QFont::Bold));
+        painter.drawText(QRect(holeX, holeY, holeSize, holeSize / 2 + 4),
+                         Qt::AlignCenter, QString::number(tot));
+        painter.setPen(cSubText);
+        painter.setFont(QFont("Arial", 8));
+        painter.drawText(QRect(holeX, holeY + holeSize / 2 - 4, holeSize, holeSize / 2),
+                         Qt::AlignCenter, "total");
+
+        int legendX     = pieX + pieSize + 24;
+        int legendY     = pieY + 10;
+        int legendItemH = (pieSize - 10) / qMax(data.size(), 1);
+
+        for (int i = 0; i < data.size(); ++i) {
+            if (data[i].second == 0) continue;
+            int ly = legendY + i * legendItemH;
+
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(colors[i % colors.size()]);
+            painter.drawEllipse(legendX, ly + 4, 11, 11);
+
+            painter.setPen(cGray);
+            painter.setFont(QFont("Arial", 9));
+            painter.drawText(legendX + 18, ly, 180, 20,
+                             Qt::AlignLeft | Qt::AlignVCenter,
+                             data[i].first);
+
+            double pct = (double)data[i].second / tot * 100.0;
+            painter.setPen(cText);
+            painter.setFont(QFont("Arial", 9, QFont::Bold));
+            painter.drawText(legendX + 18, ly + 16, 180, 18,
+                             Qt::AlignLeft | Qt::AlignVCenter,
+                             QString::number(data[i].second) +
+                                 "  (" + QString::number(pct, 'f', 1) + "%)");
+        }
+
+        painter.end();
+        canvas->setPixmap(pixmap);
+        return container;
+    };
+
+    // ── Stat pill helper 
+    auto makePill = [&](const QString& label,
+                        const QString& value,
+                        const QString& accentColor) -> QFrame*
+    {
+        QFrame* pill = new QFrame();
+        pill->setAttribute(Qt::WA_StyledBackground, true);
+        pill->setStyleSheet(QString(
+                                "QFrame { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
+                                ).arg(bgCard, border));
+        pill->setFixedHeight(64);
+
+        QVBoxLayout* pl = new QVBoxLayout(pill);
+        pl->setContentsMargins(14, 8, 14, 8);
+        pl->setSpacing(2);
+
+        QLabel* vl = new QLabel(value);
+        vl->setStyleSheet(QString(
+                              "font-size: 15px; font-weight: bold; color: %1;"
+                              "background: transparent; border: none;"
+                              ).arg(accentColor));
+
+        QLabel* ll = new QLabel(label);
+        ll->setStyleSheet(QString(
+                              "font-size: 9px; color: %1; background: transparent; border: none;"
+                              ).arg(txtSub));
+
+        pl->addWidget(vl);
+        pl->addWidget(ll);
+        return pill;
+    };
+
+    // ── BUILD LAYOUT ──────────────────────────────────────────────────────
+
+    // Overview pills
+    mainLayout->addWidget(makeSection("Overview"));
+    QHBoxLayout* overviewRow = new QHBoxLayout();
+    overviewRow->setSpacing(10);
+    overviewRow->addWidget(makePill("Total Publications", QString::number(total),           "#30b9bf"));
+    overviewRow->addWidget(makePill("Fields Covered",     QString::number(fieldData.size()),"#6366f1"));
+    overviewRow->addWidget(makePill("Top Author",         topAuthor,                        "#f59e0b"));
+    overviewRow->addWidget(makePill("Author's Pubs",      QString::number(topAuthorCount),  "#16a34a"));
+    mainLayout->addLayout(overviewRow);
+
+    // Publications by field 
+    if (!fieldData.isEmpty()) {
+        mainLayout->addWidget(makeSection("Publications by Field"));
+        int barH = qMax(100, fieldData.size() * 38 + 32);
+        mainLayout->addWidget(makeBarChart(fieldData, cTeal, barH));
+    }
+    if (!fieldData.isEmpty()) {
+        mainLayout->addWidget(makeSection("Field Distribution"));
+        mainLayout->addWidget(makePieChart(fieldData, 200));
+    }
+
+    // Monthly activity – last 6 months
+    if (!monthData.isEmpty()) {
+        mainLayout->addWidget(makeSection("Activity — Last 6 Months"));
+        mainLayout->addWidget(makeBarChart(
+            monthData, cIndigo,
+            qMax(90, monthData.size() * 36 + 32)
+            ));
+    }
+
+    // Most recent publication card
+    if (recentId != -1) {
+        mainLayout->addWidget(makeSection("Most Recent Publication"));
+
+        QFrame* recentCard = new QFrame();
+        recentCard->setAttribute(Qt::WA_StyledBackground, true);
+        recentCard->setFixedHeight(56);
+        recentCard->setStyleSheet(QString(
+                                      "QFrame { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
+                                      ).arg(bgCard, border));
+
+        QHBoxLayout* rl = new QHBoxLayout(recentCard);
+        rl->setContentsMargins(16, 0, 16, 0);
+
+        QLabel* rt = new QLabel("📄  #" + QString::number(recentId) + "  —  " + recentField);
+        rt->setStyleSheet(QString(
+                              "font-size: 10pt; font-weight: bold; color: %1;"
+                              "background: transparent; border: none;"
+                              ).arg(txtPrimary));
+
+        QLabel* rd = new QLabel(recentDate);
+        rd->setStyleSheet(
+            "font-size: 10pt; color: #16a34a;"
+            "background: transparent; border: none;"
+            );
+        rd->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+        rl->addWidget(rt);
+        rl->addStretch();
+        rl->addWidget(rd);
+        mainLayout->addWidget(recentCard);
+    }
+
+    mainLayout->addStretch();
+
+    // ── Close button ──────────────────────────────────────────────────────
+    QPushButton* closeBtn = new QPushButton("Close");
+    closeBtn->setFixedWidth(100);
+    closeBtn->setFixedHeight(36);
+    closeBtn->setStyleSheet(QString(
+                                "QPushButton { background-color: %1; color: %2;"
+                                "border: 1px solid %3; border-radius: 8px;"
+                                "font-size: 10pt; padding: 6px 20px; }"
+                                "QPushButton:hover   { background-color: %4; }"
+                                "QPushButton:pressed { background-color: %5; }"
+                                ).arg(btnBg, btnTxt, border, btnHover, btnPressed));
+
+    connect(closeBtn, &QPushButton::clicked, dialog, &QDialog::close,
+            Qt::QueuedConnection);
+
+    QHBoxLayout* footer = new QHBoxLayout();
+    footer->setContentsMargins(16, 8, 16, 8);
+    footer->addStretch();
+    footer->addWidget(closeBtn);
+    dialogLayout->addLayout(footer);
+
+    dialog->exec();
+}
+
 
 //********************PUBLICATION END************************************************************************************************************************//
 

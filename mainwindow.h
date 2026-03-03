@@ -118,11 +118,12 @@ private slots:
 
     //***********Collabs End*******************//
     //************PUBLICATION START***************************//
-    void       on_addButton_clicked();
-    void    on_deleteButton_clicked();
-    void        on_searchbt_clicked();
-    void   on_summaryButton_clicked();
-    void     on_emailButton_clicked();
+    void on_addButton_clicked();
+    void on_deleteButton_clicked();
+    void on_searchbt_clicked();
+    void on_summaryButton_clicked();
+    void on_emailButton_clicked();
+    void on_publication_clicked();
     //************PUBLICATION END***************************//
 
     //************SUBMISSION START***************************//
@@ -192,6 +193,7 @@ private:
                               const QString  &desc,
                               const QDate    &date,
                               const QString &field);
+    void showpublicationstats();
     //************PUBLICATION END***************************//
 
     //************SUBMISSION START***************************//
