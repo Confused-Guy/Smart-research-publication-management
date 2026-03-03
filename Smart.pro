@@ -11,6 +11,7 @@ SOURCES += \
     conference.cpp \
     main.cpp \
     mainwindow.cpp \
+    submission.cpp \
     user.cpp
 
 HEADERS += \
@@ -19,6 +20,7 @@ HEADERS += \
     conference.h \
     mainwindow.h \
     review.h \
+    submission.h \
     user.h
 
 FORMS += \

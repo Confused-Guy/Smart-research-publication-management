@@ -124,6 +124,7 @@ private slots:
     void on_summaryButton_clicked();
     void on_emailButton_clicked();
     void on_pubStatsBtn_clicked();
+    void showPublicationStats();
     //************PUBLICATION END***************************//
 
     //************SUBMISSION START***************************//
