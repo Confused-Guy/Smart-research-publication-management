@@ -3113,9 +3113,14 @@ void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadC
 //***********************************************************************************************************************************************************//
 
 //**********Collabs Start**********//
-int userIdForCollabs = 0; //for testing
+
+int userIdForCollabs = 0;
 bool MainWindow::loadCollabs()
 {
+    User u;
+    u.readSavedID();
+    userIdForCollabs = u.getId();
+
     ui->collabsList->clear();
     ui->collabsDescription->clear();
     ui->collabsDescription->setEnabled(false);
@@ -3139,7 +3144,6 @@ bool MainWindow::loadCollabs()
 
         if (ui->collaborationCreationDescSwitch->checkState() == Qt::CheckState::Checked)
             queryString += " DESC ";
-
     }
 
     query.prepare(queryString);
@@ -3147,7 +3151,7 @@ bool MainWindow::loadCollabs()
     query.addBindValue(userIdForCollabs);
 
     if (!ui->collabsSearchBox->toPlainText().isEmpty())
-        query.addBindValue(ui->collabsSearchBox->toPlainText().trimmed());
+        query.addBindValue("%" + ui->collabsSearchBox->toPlainText() + "%");
 
     if (!query.exec())
         return false;
@@ -3249,6 +3253,19 @@ void MainWindow::on_collaborationCreationNewButton_clicked()
     ui->collaborationCreationCancelButton->setEnabled(true);
 
     ui->stackedWidget->setCurrentIndex(12);
+
+    QSqlQuery pubQuery;
+    pubQuery.prepare("SELECT PublicationID, DESCRIPTION FROM PUBLICATIONS");
+    pubQuery.exec();
+
+    ui->collaboartionCreationPublicationMenu->clear();
+    while (pubQuery.next())
+    {
+        int pubId = pubQuery.value(0).toInt();
+        QString desc = pubQuery.value(1).toString();
+
+        ui->collaboartionCreationPublicationMenu->addItem(QString("ID %1 - %2").arg(pubId).arg(desc),pubId);
+    }
 }
 
 void MainWindow::on_collabsEditButton_clicked()

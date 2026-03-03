@@ -442,7 +442,7 @@ public:
     QTextEdit *collaborationCreationCollaborationDescriptionEdit;
     QLabel *collaborationCreationCollaborationTitleLabel;
     QLabel *collaborationCreationCollaborationDescriptionLabel;
-    QComboBox *collaboartionCreationTopicMenu;
+    QComboBox *collaboartionCreationPublicationMenu;
     QPushButton *collaborationCreationAddContributorsButton;
     QWidget *page_50;
     QFrame *frame_34;
@@ -3853,9 +3853,9 @@ public:
         collaborationCreationCollaborationDescriptionLabel->setObjectName("collaborationCreationCollaborationDescriptionLabel");
         collaborationCreationCollaborationDescriptionLabel->setGeometry(QRect(10, 100, 251, 31));
         collaborationCreationCollaborationDescriptionLabel->setFont(font);
-        collaboartionCreationTopicMenu = new QComboBox(collaborationCreationFrame);
-        collaboartionCreationTopicMenu->setObjectName("collaboartionCreationTopicMenu");
-        collaboartionCreationTopicMenu->setGeometry(QRect(110, 320, 321, 51));
+        collaboartionCreationPublicationMenu = new QComboBox(collaborationCreationFrame);
+        collaboartionCreationPublicationMenu->setObjectName("collaboartionCreationPublicationMenu");
+        collaboartionCreationPublicationMenu->setGeometry(QRect(30, 320, 401, 51));
         collaborationCreationAddContributorsButton = new QPushButton(collaborationCreationFrame);
         collaborationCreationAddContributorsButton->setObjectName("collaborationCreationAddContributorsButton");
         collaborationCreationAddContributorsButton->setGeometry(QRect(490, 320, 351, 51));
@@ -3987,7 +3987,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(7);
+        stackedWidget->setCurrentIndex(12);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);

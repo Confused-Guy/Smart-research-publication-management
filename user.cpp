@@ -154,7 +154,6 @@ void User::readSavedID(){
 
     if(settings.contains("userID"))
     {
-
         this->userID = settings.value("userID").toInt();
 
     }

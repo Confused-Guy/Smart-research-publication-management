@@ -43,7 +43,7 @@ bool Collaboration::create()
     query.addBindValue(m_title);
     query.addBindValue(m_description);
     query.addBindValue(m_authorId);
-    query.addBindValue(m_publicationId);
+    query.addBindValue(1);
 
     if(!query.exec())
         return false;
