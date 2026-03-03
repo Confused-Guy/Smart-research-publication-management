@@ -4,6 +4,7 @@
 #include "collaboration.h"
 #include "publication.h"
 #include "user.h"
+#include "submission.h"
 
 // SQL
 #include <QSqlDatabase>
@@ -41,6 +42,8 @@
 #include <QTextEdit>
 #include <QComboBox>
 #include <QFrame>
+#include <QTableWidget>
+#include <QInputDialog>
 
 // Drawing
 #include <QPainter>
@@ -4575,3 +4578,365 @@ void MainWindow::toggleDarkMode(){
             );
     }
 }
+
+//************SUBMISSION START***************************//
+
+void MainWindow::on_addSubmissionBtn_clicked()
+{
+    editingSubmissionId = -1;
+    showSubmissionDialog();
+}
+
+void MainWindow::on_deleteSubmissionBtn_clicked()
+{
+    if (editingSubmissionId == -1) {
+        QMessageBox::warning(this, "Warning", "Please select a submission to delete");
+        return;
+    }
+
+    int response = QMessageBox::question(this, "Confirm Delete", 
+        "Are you sure you want to delete this submission?",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (response == QMessageBox::Yes) {
+        Submission sub;
+        sub.setSubmissionID(editingSubmissionId);
+        if (sub.deleteSubmission()) {
+            QMessageBox::information(this, "Success", "Submission deleted successfully");
+            editingSubmissionId = -1;
+            loadSubmissions();
+            clearSubmissionForm();
+        } else {
+            QMessageBox::critical(this, "Error", "Failed to delete submission");
+        }
+    }
+}
+
+void MainWindow::on_searchSubmissionBtn_clicked()
+{
+    bool ok;
+    QString searchText = QInputDialog::getText(this, "Search Submissions",
+                                               "Enter submission title to search:",
+                                               QLineEdit::Normal, "", &ok);
+    if (ok && !searchText.isEmpty()) {
+        loadSubmissions(searchText);
+    } else if (ok && searchText.isEmpty()) {
+        loadSubmissions(); // Load all if empty search
+    }
+}
+
+void MainWindow::on_refreshSubmissionBtn_clicked()
+{
+    loadSubmissions();
+    clearSubmissionForm();
+}
+
+void MainWindow::on_editSubmissionBtn_clicked()
+{
+    if (editingSubmissionId == -1) {
+        QMessageBox::warning(this, "Warning", "Please select a submission to edit");
+        return;
+    }
+
+    Submission sub;
+    QList<Submission> subs = sub.read();
+    
+    for (const Submission &s : subs) {
+        if (s.getSubmissionID() == editingSubmissionId) {
+            showSubmissionDialog(
+                s.getSubmissionID(),
+                s.getTitle(),
+                s.getStatus(),
+                s.getSourcesCitation(),
+                s.getAuthorID(),
+                s.getTopicID(),
+                s.getManuscript()
+            );
+            break;
+        }
+    }
+}
+
+void MainWindow::on_submissionStatusChanged(const QString &newStatus)
+{
+    if (editingSubmissionId != -1) {
+        Submission sub;
+        QList<Submission> subs = sub.read();
+        
+        for (Submission &s : subs) {
+            if (s.getSubmissionID() == editingSubmissionId) {
+                s.setStatus(newStatus);
+                if (s.update()) {
+                    QMessageBox::information(this, "Success", "Submission status updated");
+                    loadSubmissions();
+                } else {
+                    QMessageBox::critical(this, "Error", "Failed to update status");
+                }
+                break;
+            }
+        }
+    }
+}
+
+void MainWindow::loadSubmissions(const QString &searchFilter)
+{
+    // Get the table widget from UI
+    if (!submissionTableWidget) {
+        submissionTableWidget = findChild<QTableWidget *>("submissionTableWidget");
+        if (!submissionTableWidget) {
+            qDebug() << "ERROR: submissionTableWidget not found in UI!";
+            return;
+        }
+        
+        // Setup table columns
+        submissionTableWidget->setColumnCount(5);
+        QStringList headers = {"ID", "Title", "Status", "Author ID", "Created Date"};
+        submissionTableWidget->setHorizontalHeaderLabels(headers);
+        submissionTableWidget->horizontalHeader()->setStretchLastSection(true);
+        submissionTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+        submissionTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+        
+        // Connect table selection to populate form (only once)
+        connect(submissionTableWidget, &QTableWidget::itemSelectionChanged, this, [this]() {
+            if (submissionTableWidget->selectedItems().count() > 0) {
+                int selectedRow = submissionTableWidget->currentRow();
+                if (selectedRow >= 0) {
+                    QString idStr = submissionTableWidget->item(selectedRow, 0)->text();
+                    editingSubmissionId = idStr.toInt();
+                    qDebug() << "Selected submission ID:" << editingSubmissionId;
+                }
+            }
+        });
+    }
+
+    // Clear existing rows
+    submissionTableWidget->setRowCount(0);
+
+    // Load submissions from database
+    Submission sub;
+    QList<Submission> submissions;
+    
+    if (!searchFilter.isEmpty()) {
+        submissions = sub.searchByTitle(searchFilter);
+    } else {
+        submissions = sub.read();
+    }
+
+    // Populate table
+    int row = 0;
+    for (const Submission &s : submissions) {
+        submissionTableWidget->insertRow(row);
+        
+        // ID
+        QTableWidgetItem *idItem = new QTableWidgetItem(QString::number(s.getSubmissionID()));
+        idItem->setFlags(idItem->flags() & ~Qt::ItemIsEditable);
+        submissionTableWidget->setItem(row, 0, idItem);
+        
+        // Title
+        QTableWidgetItem *titleItem = new QTableWidgetItem(s.getTitle());
+        titleItem->setFlags(titleItem->flags() & ~Qt::ItemIsEditable);
+        submissionTableWidget->setItem(row, 1, titleItem);
+        
+        // Status
+        QTableWidgetItem *statusItem = new QTableWidgetItem(s.getStatus());
+        statusItem->setFlags(statusItem->flags() & ~Qt::ItemIsEditable);
+        submissionTableWidget->setItem(row, 2, statusItem);
+        
+        // Author ID
+        QTableWidgetItem *authorItem = new QTableWidgetItem(QString::number(s.getAuthorID()));
+        authorItem->setFlags(authorItem->flags() & ~Qt::ItemIsEditable);
+        submissionTableWidget->setItem(row, 3, authorItem);
+        
+        // Created Date
+        QTableWidgetItem *dateItem = new QTableWidgetItem(s.getCreatedAt().toString("yyyy-MM-dd"));
+        dateItem->setFlags(dateItem->flags() & ~Qt::ItemIsEditable);
+        submissionTableWidget->setItem(row, 4, dateItem);
+        
+        row++;
+    }
+
+    qDebug() << "Loaded" << submissions.count() << "submissions into table";
+}
+
+void MainWindow::showSubmissionDialog(int submissionId,
+                                       const QString &title,
+                                       const QString &status,
+                                       const QString &citation,
+                                       int authorID,
+                                       int topicID,
+                                       const QString &manuscript)
+{
+    editingSubmissionId = submissionId;
+
+    QDialog dialog(this);
+    dialog.setWindowTitle(submissionId == -1 ? "New Submission" : "Edit Submission");
+    dialog.setGeometry(100, 100, 600, 600);
+
+    QVBoxLayout *layout = new QVBoxLayout(&dialog);
+
+    // Title
+    QHBoxLayout *titleLayout = new QHBoxLayout();
+    QLabel *titleLabel = new QLabel("Title:");
+    QLineEdit *titleEdit = new QLineEdit();
+    titleEdit->setText(title);
+    titleEdit->setPlaceholderText("Enter submission title");
+    titleLayout->addWidget(titleLabel);
+    titleLayout->addWidget(titleEdit);
+    layout->addLayout(titleLayout);
+
+    // Status
+    QHBoxLayout *statusLayout = new QHBoxLayout();
+    QLabel *statusLabel = new QLabel("Status:");
+    QComboBox *statusCombo = new QComboBox();
+    statusCombo->addItems({"Draft", "Submitted", "Under Review", "Revision Required", "Accepted", "Rejected"});
+    statusCombo->setCurrentText(status.isEmpty() ? "Draft" : status);
+    statusLayout->addWidget(statusLabel);
+    statusLayout->addWidget(statusCombo);
+    layout->addLayout(statusLayout);
+
+    // Author ID
+    QHBoxLayout *authorLayout = new QHBoxLayout();
+    QLabel *authorLabel = new QLabel("Author ID:");
+    QSpinBox *authorSpinBox = new QSpinBox();
+    authorSpinBox->setValue(authorID);
+    authorSpinBox->setMinimum(1);
+    authorLayout->addWidget(authorLabel);
+    authorLayout->addWidget(authorSpinBox);
+    layout->addLayout(authorLayout);
+
+    // Topic ID
+    QHBoxLayout *topicLayout = new QHBoxLayout();
+    QLabel *topicLabel = new QLabel("Topic ID:");
+    QSpinBox *topicSpinBox = new QSpinBox();
+    topicSpinBox->setValue(topicID);
+    topicSpinBox->setMinimum(1);
+    topicLayout->addWidget(topicLabel);
+    topicLayout->addWidget(topicSpinBox);
+    layout->addLayout(topicLayout);
+
+    // Citation File Dialog
+    QHBoxLayout *citationLayout = new QHBoxLayout();
+    QLabel *citationLabel = new QLabel("Sources Citation:");
+    QLineEdit *citationEdit = new QLineEdit();
+    citationEdit->setText(citation);
+    citationEdit->setPlaceholderText("No file selected");
+    citationEdit->setReadOnly(true);
+    QPushButton *citationBtn = new QPushButton("Browse...");
+    citationLayout->addWidget(citationLabel);
+    citationLayout->addWidget(citationEdit);
+    citationLayout->addWidget(citationBtn);
+    layout->addLayout(citationLayout);
+
+    // File path storage
+    selectedCitationPath = citation;
+    selectedManuscriptPath = manuscript;
+
+    connect(citationBtn, &QPushButton::clicked, [this, &dialog, citationEdit]() {
+        QString fileName = QFileDialog::getOpenFileName(&dialog, "Select Citation File", "", 
+                                                         "Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)");
+        if (!fileName.isEmpty()) {
+            selectedCitationPath = fileName;
+            citationEdit->setText(fileName.split('/').last());
+        }
+    });
+
+    // Manuscript File Dialog
+    QHBoxLayout *manuscriptLayout = new QHBoxLayout();
+    QLabel *manuscriptLabel = new QLabel("Manuscript:");
+    QLineEdit *manuscriptEdit = new QLineEdit();
+    manuscriptEdit->setText(manuscript);
+    manuscriptEdit->setPlaceholderText("No file selected");
+    manuscriptEdit->setReadOnly(true);
+    QPushButton *manuscriptBtn = new QPushButton("Browse...");
+    manuscriptLayout->addWidget(manuscriptLabel);
+    manuscriptLayout->addWidget(manuscriptEdit);
+    manuscriptLayout->addWidget(manuscriptBtn);
+    layout->addLayout(manuscriptLayout);
+
+    connect(manuscriptBtn, &QPushButton::clicked, [this, &dialog, manuscriptEdit]() {
+        QString fileName = QFileDialog::getOpenFileName(&dialog, "Select Manuscript File", "", 
+                                                         "Text Files (*.txt);;PDF Files (*.pdf);;Word Files (*.docx);;All Files (*)");
+        if (!fileName.isEmpty()) {
+            selectedManuscriptPath = fileName;
+            manuscriptEdit->setText(fileName.split('/').last());
+        }
+    });
+
+    // Buttons
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    QPushButton *saveBtn = new QPushButton("Save");
+    QPushButton *cancelBtn = new QPushButton("Cancel");
+    buttonLayout->addWidget(saveBtn);
+    buttonLayout->addWidget(cancelBtn);
+    layout->addLayout(buttonLayout);
+
+    connect(saveBtn, &QPushButton::clicked, [this, &dialog, submissionId, titleEdit, statusCombo, 
+                                              authorSpinBox, topicSpinBox]() {
+        // Validation
+        if (titleEdit->text().isEmpty()) {
+            QMessageBox::warning(&dialog, "Validation Error", "Please enter a submission title");
+            return;
+        }
+        if (authorSpinBox->value() <= 0) {
+            QMessageBox::warning(&dialog, "Validation Error", "Please enter a valid Author ID");
+            return;
+        }
+        if (topicSpinBox->value() <= 0) {
+            QMessageBox::warning(&dialog, "Validation Error", "Please enter a valid Topic ID");
+            return;
+        }
+
+        Submission sub;
+        sub.setTitle(titleEdit->text());
+        sub.setStatus(statusCombo->currentText());
+        sub.setAuthorID(authorSpinBox->value());
+        sub.setTopicID(topicSpinBox->value());
+        sub.setSourcesCitation(selectedCitationPath);
+        sub.setManuscript(selectedManuscriptPath);
+
+        bool success = false;
+        QString errorMsg;
+
+        if (submissionId == -1) {
+            // Create new submission
+            success = sub.create();
+            if (!success) {
+                errorMsg = "Failed to create submission. Please ensure Author ID and Topic ID are valid.";
+            }
+        } else {
+            // Update existing submission
+            sub.setSubmissionID(submissionId);
+            success = sub.update();
+            if (!success) {
+                errorMsg = "Failed to update submission.";
+            }
+        }
+
+        if (success) {
+            QMessageBox::information(&dialog, "Success", 
+                submissionId == -1 ? "Submission created successfully" : "Submission updated successfully");
+            loadSubmissions();
+            clearSubmissionForm();
+            dialog.accept();
+        } else {
+            QMessageBox::critical(&dialog, "Error", errorMsg);
+        }
+    });
+
+    connect(cancelBtn, &QPushButton::clicked, &dialog, &QDialog::reject);
+
+    dialog.exec();
+}
+
+void MainWindow::refreshSubmissionTable()
+{
+    loadSubmissions();
+}
+
+void MainWindow::clearSubmissionForm()
+{
+    editingSubmissionId = -1;
+}
+
+//************SUBMISSION END***************************//
+

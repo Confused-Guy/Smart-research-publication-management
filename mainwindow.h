@@ -2,8 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableWidget>
+#include <QFileDialog>
 #include "collaboration.h"
 #include "publication.h"
+#include "submission.h"
 
 
 
@@ -122,6 +125,14 @@ private slots:
     void     on_emailButton_clicked();
     //************PUBLICATION END***************************//
 
+    //************SUBMISSION START***************************//
+    void on_addSubmissionBtn_clicked();
+    void on_deleteSubmissionBtn_clicked();
+    void on_searchSubmissionBtn_clicked();
+    void on_refreshSubmissionBtn_clicked();
+    void on_editSubmissionBtn_clicked();
+    void on_submissionStatusChanged(const QString &newStatus);
+    //************SUBMISSION END***************************//
 
 private:
     Ui::MainWindow *ui;
@@ -182,5 +193,24 @@ private:
                               const QDate    &date,
                               const QString &field);
     //************PUBLICATION END***************************//
+
+    //************SUBMISSION START***************************//
+    Submission submissionTmp;
+    int editingSubmissionId = -1;
+    QTableWidget *submissionTableWidget = nullptr;
+    QString selectedManuscriptPath;
+    QString selectedCitationPath;
+
+    void loadSubmissions(const QString &searchFilter = "");
+    void showSubmissionDialog(int submissionId = -1,
+                              const QString &title = "",
+                              const QString &status = "Draft",
+                              const QString &citation = "",
+                              int authorID = 0,
+                              int topicID = 0,
+                              const QString &manuscript = "");
+    void refreshSubmissionTable();
+    void clearSubmissionForm();
+    //************SUBMISSION END***************************//
 };
 #endif // MAINWINDOW_H
