@@ -204,16 +204,18 @@ private:
     QString selectedManuscriptPath;
     QString selectedCitationPath;
 
-    void loadSubmissions(const QString &searchFilter = "");
-    void showSubmissionDialog(int submissionId = -1,
-                              const QString &title = "",
-                              const QString &status = "Draft",
-                              const QString &citation = "",
-                              int authorID = 0,
-                              int topicID = 0,
-                              const QString &manuscript = "");
+    void extracted(QList<Submission> &submissions, int &row);
+    void loadSubmissions(const QString &searchFilter = QString());
+    void showSubmissionDialog(int            submissionId = -1,
+                              const QString &title        = QString(),
+                              const QString &status       = QString(),
+                              const QString &citation     = QString(),
+                              int            authorID     = 0,
+                              const QString &topic        = QString(),
+                              const QString &manuscript   = QString());
     void refreshSubmissionTable();
     void clearSubmissionForm();
+    void setupAndFillSubmissionTable(QTableWidget *table, const QList<Submission> &submissions);
     //************SUBMISSION END***************************//
 };
 #endif // MAINWINDOW_H

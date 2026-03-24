@@ -11,7 +11,7 @@ Submission::Submission()
     sourcesCitation(""),
     createdAt(QDate::currentDate()),
     authorID(0),
-    topicID(0),
+    topic(""),                              // CHANGED: QString instead of int
     manuscript("")
 {}
 
@@ -21,7 +21,7 @@ Submission::Submission(int submissionID,
                        const QString &sourcesCitation,
                        const QDate &createdAt,
                        int authorID,
-                       int topicID,
+                       const QString &topic,            // CHANGED: const QString& instead of int
                        const QString &manuscript)
     : submissionID(submissionID),
     title(title),
@@ -29,7 +29,7 @@ Submission::Submission(int submissionID,
     sourcesCitation(sourcesCitation),
     createdAt(createdAt),
     authorID(authorID),
-    topicID(topicID),
+    topic(topic),                           // CHANGED
     manuscript(manuscript)
 {}
 
@@ -40,48 +40,46 @@ Submission::Submission(const Submission &other)
     sourcesCitation(other.sourcesCitation),
     createdAt(other.createdAt),
     authorID(other.authorID),
-    topicID(other.topicID),
+    topic(other.topic),                     // CHANGED
     manuscript(other.manuscript)
 {}
 
 Submission &Submission::operator=(const Submission &other)
 {
     if (this != &other) {
-        submissionID = other.submissionID;
-        title = other.title;
-        status = other.status;
+        submissionID    = other.submissionID;
+        title           = other.title;
+        status          = other.status;
         sourcesCitation = other.sourcesCitation;
-        createdAt = other.createdAt;
-        authorID = other.authorID;
-        topicID = other.topicID;
-        manuscript = other.manuscript;
+        createdAt       = other.createdAt;
+        authorID        = other.authorID;
+        topic           = other.topic;      // CHANGED
+        manuscript      = other.manuscript;
     }
     return *this;
 }
 
-Submission::~Submission()
-{
-}
+Submission::~Submission() {}
 
 // Getters
-int     Submission::getSubmissionID() const { return submissionID;     }
-QString Submission::getTitle() const        { return title;             }
-QString Submission::getStatus() const       { return status;            }
-QString Submission::getSourcesCitation() const { return sourcesCitation; }
-QDate   Submission::getCreatedAt() const    { return createdAt;         }
-int     Submission::getAuthorID() const     { return authorID;          }
-int     Submission::getTopicID() const      { return topicID;           }
-QString Submission::getManuscript() const   { return manuscript;        }
+int     Submission::getSubmissionID()    const { return submissionID;    }
+QString Submission::getTitle()           const { return title;            }
+QString Submission::getStatus()          const { return status;           }
+QString Submission::getSourcesCitation() const { return sourcesCitation;  }
+QDate   Submission::getCreatedAt()       const { return createdAt;        }
+int     Submission::getAuthorID()        const { return authorID;         }
+QString Submission::getTopic()           const { return topic;            } // CHANGED
+QString Submission::getManuscript()      const { return manuscript;       }
 
 // Setters
-void Submission::setSubmissionID(int id)            { submissionID = id;         }
-void Submission::setTitle(const QString &t)         { title = t;                 }
-void Submission::setStatus(const QString &s)        { status = s;                }
+void Submission::setSubmissionID(int id)                     { submissionID    = id;      }
+void Submission::setTitle(const QString &t)                  { title           = t;       }
+void Submission::setStatus(const QString &s)                 { status          = s;       }
 void Submission::setSourcesCitation(const QString &citation) { sourcesCitation = citation; }
-void Submission::setCreatedAt(const QDate &date)    { createdAt = date;          }
-void Submission::setAuthorID(int id)                { authorID = id;             }
-void Submission::setTopicID(int id)                 { topicID = id;              }
-void Submission::setManuscript(const QString &m)    { manuscript = m;            }
+void Submission::setCreatedAt(const QDate &date)             { createdAt       = date;    }
+void Submission::setAuthorID(int id)                         { authorID        = id;      }
+void Submission::setTopic(const QString &t)                  { topic           = t;       } // CHANGED
+void Submission::setManuscript(const QString &m)             { manuscript      = m;       }
 
 // CRUD Operations
 bool Submission::create()
@@ -90,18 +88,18 @@ bool Submission::create()
 
     query.prepare(
         "INSERT INTO Submission "
-        "    (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPICID, MANUSCRIPT) "
+        "    (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT) "
         "VALUES "
-        "    (submission_seq.NEXTVAL, :title, :status, :sourcesCitation, :createdAt, :authorID, :topicID, :manuscript)"
+        "    (submission_seq.NEXTVAL, :title, :status, :sourcesCitation, :createdAt, :authorID, :topic, :manuscript)"
         );
 
-    query.bindValue(":title", title);
-    query.bindValue(":status", status);
+    query.bindValue(":title",           title);
+    query.bindValue(":status",          status);
     query.bindValue(":sourcesCitation", sourcesCitation);
-    query.bindValue(":createdAt", createdAt);
-    query.bindValue(":authorID", authorID);
-    query.bindValue(":topicID", topicID);
-    query.bindValue(":manuscript", manuscript);
+    query.bindValue(":createdAt",       createdAt);
+    query.bindValue(":authorID",        authorID);
+    query.bindValue(":topic",           topic);         // CHANGED: was :topicID bound to int
+    query.bindValue(":manuscript",      manuscript);
 
     if (!query.exec()) {
         qDebug() << "[Submission::create] Error:" << query.lastError().text();
@@ -116,7 +114,7 @@ QList<Submission> Submission::read()
     QSqlQuery query;
 
     query.prepare(
-        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPICID, MANUSCRIPT "
+        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT "
         "FROM   Submission "
         "ORDER BY CREATEDAT DESC"
         );
@@ -134,7 +132,7 @@ QList<Submission> Submission::read()
             query.value("SOURCESCITATION").toString(),
             query.value("CREATEDAT").toDate(),
             query.value("AUTHORID").toInt(),
-            query.value("TOPICID").toInt(),
+            query.value("TOPIC").toString(),    // CHANGED: toString() instead of toInt()
             query.value("MANUSCRIPT").toString()
             );
         list.push_back(s);
@@ -149,22 +147,22 @@ bool Submission::update()
 
     query.prepare(
         "UPDATE Submission "
-        "SET    TITLE           = :title,        "
-        "       STATUS          = :status,       "
+        "SET    TITLE           = :title,           "
+        "       STATUS          = :status,          "
         "       SOURCESCITATION = :sourcesCitation, "
-        "       AUTHORID        = :authorID,     "
-        "       TOPICID         = :topicID,      "
-        "       MANUSCRIPT      = :manuscript    "
-        "WHERE  SUBMISSIONID    = :submissionID  "
+        "       AUTHORID        = :authorID,        "
+        "       TOPIC           = :topic,           "  // CHANGED: TOPIC instead of TOPICID
+        "       MANUSCRIPT      = :manuscript       "
+        "WHERE  SUBMISSIONID    = :submissionID     "
         );
 
-    query.bindValue(":title", title);
-    query.bindValue(":status", status);
+    query.bindValue(":title",           title);
+    query.bindValue(":status",          status);
     query.bindValue(":sourcesCitation", sourcesCitation);
-    query.bindValue(":authorID", authorID);
-    query.bindValue(":topicID", topicID);
-    query.bindValue(":manuscript", manuscript);
-    query.bindValue(":submissionID", submissionID);
+    query.bindValue(":authorID",        authorID);
+    query.bindValue(":topic",           topic);         // CHANGED
+    query.bindValue(":manuscript",      manuscript);
+    query.bindValue(":submissionID",    submissionID);
 
     if (!query.exec()) {
         qDebug() << "[Submission::update] Error:" << query.lastError().text();
@@ -189,14 +187,14 @@ bool Submission::deleteSubmission()
     return true;
 }
 
-// Helper methods
+// Search helpers
 QList<Submission> Submission::searchByTitle(const QString &keyword)
 {
     QList<Submission> list;
     QSqlQuery query;
 
     query.prepare(
-        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPICID, MANUSCRIPT "
+        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT "
         "FROM   Submission "
         "WHERE  UPPER(TITLE) LIKE UPPER(:keyword) "
         "ORDER BY CREATEDAT DESC"
@@ -217,7 +215,7 @@ QList<Submission> Submission::searchByTitle(const QString &keyword)
             query.value("SOURCESCITATION").toString(),
             query.value("CREATEDAT").toDate(),
             query.value("AUTHORID").toInt(),
-            query.value("TOPICID").toInt(),
+            query.value("TOPIC").toString(),    // CHANGED
             query.value("MANUSCRIPT").toString()
             );
         list.push_back(s);
@@ -232,7 +230,7 @@ QList<Submission> Submission::searchByAuthorID(int authorID)
     QSqlQuery query;
 
     query.prepare(
-        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPICID, MANUSCRIPT "
+        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT "
         "FROM   Submission "
         "WHERE  AUTHORID = :authorID "
         "ORDER BY CREATEDAT DESC"
@@ -253,7 +251,7 @@ QList<Submission> Submission::searchByAuthorID(int authorID)
             query.value("SOURCESCITATION").toString(),
             query.value("CREATEDAT").toDate(),
             query.value("AUTHORID").toInt(),
-            query.value("TOPICID").toInt(),
+            query.value("TOPIC").toString(),    // CHANGED
             query.value("MANUSCRIPT").toString()
             );
         list.push_back(s);
@@ -268,7 +266,7 @@ QList<Submission> Submission::searchByStatus(const QString &status)
     QSqlQuery query;
 
     query.prepare(
-        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPICID, MANUSCRIPT "
+        "SELECT SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT "
         "FROM   Submission "
         "WHERE  UPPER(STATUS) = UPPER(:status) "
         "ORDER BY CREATEDAT DESC"
@@ -289,7 +287,7 @@ QList<Submission> Submission::searchByStatus(const QString &status)
             query.value("SOURCESCITATION").toString(),
             query.value("CREATEDAT").toDate(),
             query.value("AUTHORID").toInt(),
-            query.value("TOPICID").toInt(),
+            query.value("TOPIC").toString(),    // CHANGED
             query.value("MANUSCRIPT").toString()
             );
         list.push_back(s);

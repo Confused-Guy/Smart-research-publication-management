@@ -384,8 +384,6 @@ public:
     QLineEdit *lineEdit_23;
     QPushButton *searchbt;
     QWidget *page_7;
-    QPushButton *backHome2;
-    QPushButton *pushButton_2;
     QGroupBox *groupBox_3;
     QLabel *dropPlace;
     QPushButton *deleteSubmissionBtn;
@@ -3496,110 +3494,69 @@ public:
         stackedWidget->addWidget(page_6);
         page_7 = new QWidget();
         page_7->setObjectName("page_7");
-        backHome2 = new QPushButton(page_7);
-        backHome2->setObjectName("backHome2");
-        backHome2->setGeometry(QRect(690, 630, 91, 41));
-        backHome2->setIconSize(QSize(25, 25));
-        pushButton_2 = new QPushButton(page_7);
-        pushButton_2->setObjectName("pushButton_2");
-        pushButton_2->setGeometry(QRect(270, 630, 161, 41));
-        QPalette palette14;
-        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush3);
-        palette14.setBrush(QPalette::Active, QPalette::Button, brush4);
-        palette14.setBrush(QPalette::Active, QPalette::Text, brush3);
-        palette14.setBrush(QPalette::Active, QPalette::ButtonText, brush3);
-        palette14.setBrush(QPalette::Active, QPalette::Base, brush4);
-        palette14.setBrush(QPalette::Active, QPalette::Window, brush4);
-        palette14.setBrush(QPalette::Active, QPalette::Highlight, brush5);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette14.setBrush(QPalette::Active, QPalette::PlaceholderText, brush6);
-#endif
-        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush3);
-        palette14.setBrush(QPalette::Inactive, QPalette::Button, brush4);
-        palette14.setBrush(QPalette::Inactive, QPalette::Text, brush3);
-        palette14.setBrush(QPalette::Inactive, QPalette::ButtonText, brush3);
-        palette14.setBrush(QPalette::Inactive, QPalette::Base, brush4);
-        palette14.setBrush(QPalette::Inactive, QPalette::Window, brush4);
-        palette14.setBrush(QPalette::Inactive, QPalette::Highlight, brush5);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette14.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush6);
-#endif
-        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush3);
-        palette14.setBrush(QPalette::Disabled, QPalette::Button, brush4);
-        palette14.setBrush(QPalette::Disabled, QPalette::Text, brush3);
-        palette14.setBrush(QPalette::Disabled, QPalette::ButtonText, brush3);
-        palette14.setBrush(QPalette::Disabled, QPalette::Base, brush4);
-        palette14.setBrush(QPalette::Disabled, QPalette::Window, brush4);
-        palette14.setBrush(QPalette::Disabled, QPalette::Highlight, brush5);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette14.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush6);
-#endif
-        pushButton_2->setPalette(palette14);
-        pushButton_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        pushButton_2->setIcon(icon23);
         groupBox_3 = new QGroupBox(page_7);
         groupBox_3->setObjectName("groupBox_3");
         groupBox_3->setGeometry(QRect(90, 60, 901, 551));
-        QPalette palette15;
-        palette15.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette15.setBrush(QPalette::Active, QPalette::Button, brush8);
-        palette15.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette15.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette15.setBrush(QPalette::Active, QPalette::Window, brush9);
+        QPalette palette14;
+        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette14.setBrush(QPalette::Active, QPalette::Button, brush8);
+        palette14.setBrush(QPalette::Active, QPalette::Text, brush7);
+        palette14.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
+        palette14.setBrush(QPalette::Active, QPalette::Window, brush9);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette15.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette14.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
 #endif
-        palette15.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette15.setBrush(QPalette::Inactive, QPalette::Button, brush8);
-        palette15.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette15.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette15.setBrush(QPalette::Inactive, QPalette::Window, brush9);
+        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette14.setBrush(QPalette::Inactive, QPalette::Button, brush8);
+        palette14.setBrush(QPalette::Inactive, QPalette::Text, brush7);
+        palette14.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
+        palette14.setBrush(QPalette::Inactive, QPalette::Window, brush9);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette15.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette14.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
 #endif
-        palette15.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette15.setBrush(QPalette::Disabled, QPalette::Button, brush8);
-        palette15.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette15.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette15.setBrush(QPalette::Disabled, QPalette::Base, brush9);
-        palette15.setBrush(QPalette::Disabled, QPalette::Window, brush9);
+        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
+        palette14.setBrush(QPalette::Disabled, QPalette::Button, brush8);
+        palette14.setBrush(QPalette::Disabled, QPalette::Text, brush7);
+        palette14.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
+        palette14.setBrush(QPalette::Disabled, QPalette::Base, brush9);
+        palette14.setBrush(QPalette::Disabled, QPalette::Window, brush9);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette15.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette14.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
 #endif
-        groupBox_3->setPalette(palette15);
+        groupBox_3->setPalette(palette14);
         groupBox_3->setStyleSheet(QString::fromUtf8(""));
         dropPlace = new QLabel(groupBox_3);
         dropPlace->setObjectName("dropPlace");
         dropPlace->setGeometry(QRect(290, 400, 531, 101));
-        QPalette palette16;
-        palette16.setBrush(QPalette::Active, QPalette::WindowText, brush7);
-        palette16.setBrush(QPalette::Active, QPalette::Button, brush11);
-        palette16.setBrush(QPalette::Active, QPalette::Text, brush7);
-        palette16.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
-        palette16.setBrush(QPalette::Active, QPalette::Base, brush11);
-        palette16.setBrush(QPalette::Active, QPalette::Window, brush11);
+        QPalette palette15;
+        palette15.setBrush(QPalette::Active, QPalette::WindowText, brush7);
+        palette15.setBrush(QPalette::Active, QPalette::Button, brush11);
+        palette15.setBrush(QPalette::Active, QPalette::Text, brush7);
+        palette15.setBrush(QPalette::Active, QPalette::ButtonText, brush7);
+        palette15.setBrush(QPalette::Active, QPalette::Base, brush11);
+        palette15.setBrush(QPalette::Active, QPalette::Window, brush11);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette16.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
+        palette15.setBrush(QPalette::Active, QPalette::PlaceholderText, brush10);
 #endif
-        palette16.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
-        palette16.setBrush(QPalette::Inactive, QPalette::Button, brush11);
-        palette16.setBrush(QPalette::Inactive, QPalette::Text, brush7);
-        palette16.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
-        palette16.setBrush(QPalette::Inactive, QPalette::Base, brush11);
-        palette16.setBrush(QPalette::Inactive, QPalette::Window, brush11);
+        palette15.setBrush(QPalette::Inactive, QPalette::WindowText, brush7);
+        palette15.setBrush(QPalette::Inactive, QPalette::Button, brush11);
+        palette15.setBrush(QPalette::Inactive, QPalette::Text, brush7);
+        palette15.setBrush(QPalette::Inactive, QPalette::ButtonText, brush7);
+        palette15.setBrush(QPalette::Inactive, QPalette::Base, brush11);
+        palette15.setBrush(QPalette::Inactive, QPalette::Window, brush11);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette16.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
+        palette15.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush10);
 #endif
-        palette16.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette16.setBrush(QPalette::Disabled, QPalette::Button, brush11);
-        palette16.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette16.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette16.setBrush(QPalette::Disabled, QPalette::Base, brush11);
-        palette16.setBrush(QPalette::Disabled, QPalette::Window, brush11);
+        palette15.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
+        palette15.setBrush(QPalette::Disabled, QPalette::Button, brush11);
+        palette15.setBrush(QPalette::Disabled, QPalette::Text, brush7);
+        palette15.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
+        palette15.setBrush(QPalette::Disabled, QPalette::Base, brush11);
+        palette15.setBrush(QPalette::Disabled, QPalette::Window, brush11);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette16.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
+        palette15.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush10);
 #endif
-        dropPlace->setPalette(palette16);
+        dropPlace->setPalette(palette15);
         dropPlace->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/drop.png")));
         dropPlace->setScaledContents(false);
         deleteSubmissionBtn = new QPushButton(groupBox_3);
@@ -3987,7 +3944,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(12);
+        stackedWidget->setCurrentIndex(7);
         tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -4435,11 +4392,6 @@ public:
         emailButton->setText(QCoreApplication::translate("MainWindow", "Send Email Notification", nullptr));
         lineEdit_23->setPlaceholderText(QCoreApplication::translate("MainWindow", "search ", nullptr));
         searchbt->setText(QCoreApplication::translate("MainWindow", "search", nullptr));
-#if QT_CONFIG(tooltip)
-        backHome2->setToolTip(QCoreApplication::translate("MainWindow", "Quit", nullptr));
-#endif // QT_CONFIG(tooltip)
-        backHome2->setText(QCoreApplication::translate("MainWindow", "Go back", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Add Research", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("MainWindow", "Research Information", nullptr));
         dropPlace->setText(QString());
         deleteSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Delete submission", nullptr));

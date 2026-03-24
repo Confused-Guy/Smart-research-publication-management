@@ -16,7 +16,7 @@ public:
                const QString &sourcesCitation,
                const QDate &createdAt,
                int authorID,
-               int topicID,
+               const QString &topic,
                const QString &manuscript);
     Submission(const Submission &other);
     Submission &operator=(const Submission &other);
@@ -40,7 +40,7 @@ public:
     QString getSourcesCitation() const;
     QDate   getCreatedAt()       const;
     int     getAuthorID()        const;
-    int     getTopicID()         const;
+    QString getTopic()           const;
     QString getManuscript()      const;
 
     // Setters
@@ -50,7 +50,7 @@ public:
     void setSourcesCitation(const QString &citation);
     void setCreatedAt(const QDate &date);
     void setAuthorID(int id);
-    void setTopicID(int id);
+    void setTopic(const QString &topic);
     void setManuscript(const QString &m);
 
 private:
@@ -60,7 +60,7 @@ private:
     QString sourcesCitation;
     QDate   createdAt;
     int     authorID;
-    int     topicID;
+    QString topic;
     QString manuscript;
 };
 
