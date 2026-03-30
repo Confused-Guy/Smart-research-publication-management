@@ -33,6 +33,17 @@ public:
     QList<Submission> searchByAuthorID(int authorID);
     QList<Submission> searchByStatus(const QString &status);
 
+    // Validation methods
+    QString validateTitle(const QString &t);
+    QString validateStatus(const QString &s);
+    QString validateTopic(const QString &top);
+    QString validateAuthorID(int id);
+    bool    isValidStatus(const QString &s) const;
+
+    // Review tracking for advanced feature
+    QList<int> getUnresolvedReviewIssues() const;
+    bool       canResubmit() const;
+
     // Getters
     int     getSubmissionID()    const;
     QString getTitle()           const;

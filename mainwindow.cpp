@@ -4425,6 +4425,29 @@ void MainWindow::on_submissionStatusChanged(const QString &newStatus)
     QList<Submission> subs = Submission().read();
     for (Submission &s : subs) {
         if (s.getSubmissionID() == editingSubmissionId) {
+            // Check if trying to resubmit with unresolved review issues
+            if (s.getStatus() == "Revision Required" && newStatus == "Submitted") {
+                QList<int> unresolvedIssues = s.getUnresolvedReviewIssues();
+                if (!unresolvedIssues.isEmpty()) {
+                    QString issueList = "";
+                    for (int issueId : unresolvedIssues) {
+                        issueList += QString("\n  - Review Issue ID: %1").arg(issueId);
+                    }
+
+                    int response = QMessageBox::warning(this, "Unresolved Review Issues",
+                        QString("This submission has %1 unresolved review issue(s):%2\n\n"
+                                "Please address all review comments before resubmitting.\n\n"
+                                "Do you want to mark these issues as resolved anyway?")
+                            .arg(unresolvedIssues.count())
+                            .arg(issueList),
+                        QMessageBox::Yes | QMessageBox::No);
+
+                    if (response == QMessageBox::No) {
+                        return;
+                    }
+                }
+            }
+
             s.setStatus(newStatus);
             if (s.update()) {
                 QMessageBox::information(this, "Success", "Submission status updated");
@@ -4787,23 +4810,65 @@ void MainWindow::showSubmissionDialog(int submissionId,
     saveBtn->setCursor(Qt::PointingHandCursor);
     saveBtn->setStyleSheet(saveStyle);
 
+    // View Reviews button (only for existing submissions)
+    QPushButton *viewReviewsBtn = nullptr;
+    if (submissionId != -1) {
+        viewReviewsBtn = new QPushButton("View Reviews");
+        viewReviewsBtn->setFixedHeight(44);
+        viewReviewsBtn->setMinimumWidth(120);
+        viewReviewsBtn->setCursor(Qt::PointingHandCursor);
+        viewReviewsBtn->setStyleSheet(browseStyle);
+    }
+
     buttonLayout->addStretch();
+    if (viewReviewsBtn) {
+        buttonLayout->addWidget(viewReviewsBtn);
+    }
     buttonLayout->addWidget(cancelBtn);
     buttonLayout->addWidget(saveBtn);
     mainLayout->addLayout(buttonLayout);
+
+    // View Reviews button logic
+    if (viewReviewsBtn) {
+        connect(viewReviewsBtn, &QPushButton::clicked, this, [this, submissionId]() {
+            showReviewTrackerDialog(submissionId);
+        });
+    }
 
     // Save logic
     connect(saveBtn, &QPushButton::clicked,
             [this, &dialog, submissionId, titleEdit, statusCombo, authorSpinBox, topicEdit]()
     {
-        if (titleEdit->text().trimmed().isEmpty()) {
-            QMessageBox::warning(&dialog, "Validation Error", "Please enter a submission title");
+        // Validate title
+        Submission validator;
+        QString titleError = validator.validateTitle(titleEdit->text());
+        if (!titleError.isEmpty()) {
+            QMessageBox::warning(&dialog, "Validation Error", titleError);
             titleEdit->setFocus();
             return;
         }
-        if (topicEdit->text().trimmed().isEmpty()) {
-            QMessageBox::warning(&dialog, "Validation Error", "Please enter a topic");
+
+        // Validate status
+        QString statusError = validator.validateStatus(statusCombo->currentText());
+        if (!statusError.isEmpty()) {
+            QMessageBox::warning(&dialog, "Validation Error", statusError);
+            statusCombo->setFocus();
+            return;
+        }
+
+        // Validate topic
+        QString topicError = validator.validateTopic(topicEdit->text());
+        if (!topicError.isEmpty()) {
+            QMessageBox::warning(&dialog, "Validation Error", topicError);
             topicEdit->setFocus();
+            return;
+        }
+
+        // Validate author ID
+        QString authorError = validator.validateAuthorID(authorSpinBox->value());
+        if (!authorError.isEmpty()) {
+            QMessageBox::warning(&dialog, "Validation Error", authorError);
+            authorSpinBox->setFocus();
             return;
         }
 
@@ -4847,6 +4912,161 @@ void MainWindow::showSubmissionDialog(int submissionId,
 void MainWindow::refreshSubmissionTable()
 {
     loadSubmissions();
+}
+
+void MainWindow::showReviewTrackerDialog(int submissionId)
+{
+    QList<Review> reviews = Review::getBySubmissionId(submissionId);
+
+    if (reviews.isEmpty()) {
+        QMessageBox::information(this, "Review Tracker", "No reviews found for this submission.");
+        return;
+    }
+
+    const bool dark      = !mode;
+    const QString bgPage     = dark ? "#1a1f2e" : "#f6f8fc";
+    const QString bgCard     = dark ? "#252b3d" : "#ffffff";
+    const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
+    const QString txtSub     = dark ? "#8892a4" : "#64748b";
+    const QString border     = dark ? "#3e4859" : "#e2e8f0";
+
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Review Response Tracker");
+    dialog->setFixedSize(700, 600);
+    dialog->setAttribute(Qt::WA_StyledBackground, true);
+    dialog->setStyleSheet(QString("QDialog { background-color: %1; }").arg(bgPage));
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(dialog);
+    mainLayout->setContentsMargins(20, 20, 20, 20);
+    mainLayout->setSpacing(16);
+
+    // Header
+    QLabel *headerLabel = new QLabel("Review Issues & Resolution Status");
+    headerLabel->setStyleSheet(QString(
+        "font-size: 14pt; font-weight: 700; color: %1; background: transparent;"
+    ).arg(txtPrimary));
+    mainLayout->addWidget(headerLabel);
+
+    // Scroll area for reviews
+    QScrollArea *scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setStyleSheet(QString(
+        "QScrollArea { background-color: %1; border: 1px solid %2; border-radius: 8px; }"
+    ).arg(bgCard, border));
+
+    QWidget *scrollWidget = new QWidget();
+    QVBoxLayout *scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout->setSpacing(12);
+    scrollLayout->setContentsMargins(12, 12, 12, 12);
+
+    for (const Review &review : reviews) {
+        QFrame *reviewCard = new QFrame();
+        reviewCard->setStyleSheet(QString(
+            "QFrame { background-color: %1; border: 1px solid %2; border-radius: 8px; padding: 12px; }"
+        ).arg(bgPage, border));
+
+        QVBoxLayout *reviewLayout = new QVBoxLayout(reviewCard);
+        reviewLayout->setSpacing(8);
+        reviewLayout->setContentsMargins(0, 0, 0, 0);
+
+        // Review header with status
+        QHBoxLayout *reviewHeaderLayout = new QHBoxLayout();
+
+        QLabel *reviewerLabel = new QLabel(QString("Reviewer: %1").arg(review.getReviewerName()));
+        reviewerLabel->setStyleSheet(QString("font-weight: 600; color: %1;").arg(txtPrimary));
+        reviewHeaderLayout->addWidget(reviewerLabel);
+
+        QLabel *statusLabel = new QLabel(review.getStatus());
+        QColor statusColor = review.getStatus() == "Resolved" ? QColor("#22c55e") : QColor("#ef4444");
+        statusLabel->setStyleSheet(QString(
+            "font-weight: 600; color: %1; background-color: %2; padding: 4px 8px; border-radius: 4px;"
+        ).arg(statusColor.name(), statusColor.name() + "33"));
+        reviewHeaderLayout->addWidget(statusLabel);
+
+        reviewHeaderLayout->addStretch();
+
+        QLabel *dateLabel = new QLabel(review.getReviewDate().toString("yyyy-MM-dd"));
+        dateLabel->setStyleSheet(QString("color: %1; font-size: 9pt;").arg(txtSub));
+        reviewHeaderLayout->addWidget(dateLabel);
+
+        reviewLayout->addLayout(reviewHeaderLayout);
+
+        // Review comment
+        QLabel *commentLabel = new QLabel("Issue:");
+        commentLabel->setStyleSheet(QString("font-weight: 500; color: %1;").arg(txtSub));
+        reviewLayout->addWidget(commentLabel);
+
+        QTextEdit *commentEdit = new QTextEdit();
+        commentEdit->setText(review.getComment());
+        commentEdit->setReadOnly(true);
+        commentEdit->setMaximumHeight(80);
+        commentEdit->setStyleSheet(QString(
+            "QTextEdit { background-color: %1; border: 1px solid %2; border-radius: 4px; padding: 8px; color: %3; }"
+        ).arg(bgCard, border, txtPrimary));
+        reviewLayout->addWidget(commentEdit);
+
+        // Resolve button
+        if (review.getStatus() != "Resolved") {
+            QPushButton *resolveBtn = new QPushButton("Mark as Resolved");
+            resolveBtn->setFixedHeight(36);
+            resolveBtn->setCursor(Qt::PointingHandCursor);
+            resolveBtn->setStyleSheet(
+                "QPushButton {"
+                "  background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+                "    stop:0 #3dd4db, stop:1 #30b9bf);"
+                "  color: white;"
+                "  border: none;"
+                "  border-radius: 6px;"
+                "  font-weight: 600;"
+                "}"
+                "QPushButton:hover { background-color: #22d3dd; }"
+            );
+
+            connect(resolveBtn, &QPushButton::clicked, this, [this, review, submissionId, dialog]() {
+                Review rev = review;
+                if (rev.markAsResolved("Addressed by author")) {
+                    QMessageBox::information(dialog, "Success", "Review marked as resolved");
+                    dialog->close();
+                    // Refresh the display
+                    loadSubmissions();
+                } else {
+                    QMessageBox::critical(dialog, "Error", "Failed to mark review as resolved");
+                }
+            });
+
+            reviewLayout->addWidget(resolveBtn);
+        } else {
+            QLabel *resolvedLabel = new QLabel("✓ This issue has been resolved");
+            resolvedLabel->setStyleSheet(QString("color: #22c55e; font-weight: 600;"));
+            reviewLayout->addWidget(resolvedLabel);
+        }
+
+        scrollLayout->addWidget(reviewCard);
+    }
+
+    scrollLayout->addStretch();
+    scrollArea->setWidget(scrollWidget);
+    mainLayout->addWidget(scrollArea);
+
+    // Close button
+    QPushButton *closeBtn = new QPushButton("Close");
+    closeBtn->setFixedHeight(40);
+    closeBtn->setCursor(Qt::PointingHandCursor);
+    closeBtn->setStyleSheet(
+        "QPushButton {"
+        "  background-color: #ef4444;"
+        "  color: white;"
+        "  border: none;"
+        "  border-radius: 6px;"
+        "  font-weight: 600;"
+        "}"
+        "QPushButton:hover { background-color: #dc2626; }"
+    );
+    connect(closeBtn, &QPushButton::clicked, dialog, &QDialog::accept);
+    mainLayout->addWidget(closeBtn);
+
+    dialog->exec();
+    delete dialog;
 }
 
 void MainWindow::clearSubmissionForm()

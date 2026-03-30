@@ -98,6 +98,70 @@ QSqlQueryModel* Review::display()
     return model;
 }
 
+// Get all reviews for a submission
+QList<Review> Review::getBySubmissionId(int submissionId)
+{
+    QList<Review> reviews;
+    QSqlQuery query;
+
+    query.prepare(
+        "SELECT IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, "
+        "       PUBLICATION_ID, COMMENTREVIEW, STATUS "
+        "FROM REVIEW "
+        "WHERE SUBMISSION_ID = ? "
+        "ORDER BY REVIEW_DATE DESC"
+    );
+    query.addBindValue(submissionId);
+
+    if (!query.exec()) {
+        qDebug() << "Error fetching reviews for submission:" << query.lastError().text();
+        return reviews;
+    }
+
+    while (query.next()) {
+        Review r(
+            query.value(0).toInt(),           // IDREVIEW
+            query.value(1).toString(),        // REVIEWER_NAME
+            query.value(2).toDate(),          // REVIEW_DATE
+            query.value(3).toInt(),           // SUBMISSION_ID
+            query.value(4).toInt(),           // PUBLICATION_ID
+            query.value(5).toString(),        // COMMENTREVIEW
+            query.value(6).toString()         // STATUS
+        );
+        reviews.append(r);
+    }
+
+    return reviews;
+}
+
+// Mark a review as resolved
+bool Review::markAsResolved(const QString &resolutionComment)
+{
+    QSqlQuery query;
+    query.prepare(
+        "UPDATE REVIEW SET "
+        "  STATUS = 'Resolved', "
+        "  COMMENTREVIEW = ? "
+        "WHERE IDREVIEW = ?"
+    );
+
+    QString finalComment = comment;
+    if (!resolutionComment.isEmpty()) {
+        finalComment = comment + "\n[RESOLVED: " + resolutionComment + "]";
+    }
+
+    query.addBindValue(finalComment);
+    query.addBindValue(id);
+
+    if (!query.exec()) {
+        qDebug() << "Error marking review as resolved:" << query.lastError().text();
+        return false;
+    }
+
+    status = "Resolved";  // Update local state
+    return true;
+}
+
 Review Review::getById(int id, bool* ok)
 {
     QSqlQuery q;

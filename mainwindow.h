@@ -216,6 +216,8 @@ private:
     void refreshSubmissionTable();
     void clearSubmissionForm();
     void setupAndFillSubmissionTable(QTableWidget *table, const QList<Submission> &submissions);
+    void showReviewTrackerDialog(int submissionId);
+    void markReviewAsResolved(int reviewId);
     //************SUBMISSION END***************************//
 };
 #endif // MAINWINDOW_H

@@ -38,6 +38,12 @@ public:
 
     // Load a single review by id (for the edit dialog)
     static Review getById(int id, bool* ok = nullptr);
+
+    // Get all reviews for a submission
+    static QList<Review> getBySubmissionId(int submissionId);
+
+    // Mark a review as resolved
+    bool markAsResolved(const QString &resolutionComment = "");
 };
 
 #endif // REVIEW_H

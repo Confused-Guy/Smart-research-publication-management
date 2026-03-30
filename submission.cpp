@@ -295,3 +295,121 @@ QList<Submission> Submission::searchByStatus(const QString &status)
 
     return list;
 }
+
+// ==================== VALIDATION METHODS ====================
+
+QString Submission::validateTitle(const QString &t)
+{
+    QString trimmed = t.trimmed();
+    if (trimmed.isEmpty()) {
+        return "Title cannot be empty";
+    }
+    if (trimmed.length() < 3) {
+        return "Title must be at least 3 characters long";
+    }
+    if (trimmed.length() > 255) {
+        return "Title must not exceed 255 characters";
+    }
+    return ""; // Empty string means valid
+}
+
+QString Submission::validateStatus(const QString &s)
+{
+    if (!isValidStatus(s)) {
+        return "Invalid status. Must be one of: Draft, Submitted, Under Review, Revision Required, Accepted, Rejected";
+    }
+    return "";
+}
+
+QString Submission::validateTopic(const QString &top)
+{
+    QString trimmed = top.trimmed();
+    if (trimmed.isEmpty()) {
+        return "Topic cannot be empty";
+    }
+    if (trimmed.length() < 2) {
+        return "Topic must be at least 2 characters long";
+    }
+    if (trimmed.length() > 255) {
+        return "Topic must not exceed 255 characters";
+    }
+    return "";
+}
+
+QString Submission::validateAuthorID(int id)
+{
+    if (id <= 0) {
+        return "Author ID must be greater than 0";
+    }
+
+    // Check if author exists in database
+    QSqlQuery query;
+    query.prepare("SELECT USERID FROM USERS WHERE USERID = :id");
+    query.bindValue(":id", id);
+
+    if (!query.exec()) {
+        qDebug() << "[Submission::validateAuthorID] Query error:" << query.lastError().text();
+        return "Database error while validating author";
+    }
+
+    if (!query.next()) {
+        return QString("Author with ID %1 does not exist in the database").arg(id);
+    }
+
+    return "";
+}
+
+bool Submission::isValidStatus(const QString &s) const
+{
+    static const QStringList validStatuses = {
+        "Draft",
+        "Submitted",
+        "Under Review",
+        "Revision Required",
+        "Accepted",
+        "Rejected"
+    };
+    return validStatuses.contains(s);
+}
+
+// ==================== REVIEW RESPONSE TRACKER ====================
+
+QList<int> Submission::getUnresolvedReviewIssues() const
+{
+    QList<int> unresolvedIssues;
+
+    if (submissionID <= 0) {
+        return unresolvedIssues;
+    }
+
+    QSqlQuery query;
+    query.prepare(
+        "SELECT IDREVIEW FROM REVIEW "
+        "WHERE SUBMISSION_ID = :submissionID AND STATUS != 'Resolved' "
+        "ORDER BY REVIEW_DATE DESC"
+    );
+    query.bindValue(":submissionID", submissionID);
+
+    if (!query.exec()) {
+        qDebug() << "[Submission::getUnresolvedReviewIssues] Error:" << query.lastError().text();
+        return unresolvedIssues;
+    }
+
+    while (query.next()) {
+        unresolvedIssues.append(query.value("IDREVIEW").toInt());
+    }
+
+    return unresolvedIssues;
+}
+
+bool Submission::canResubmit() const
+{
+    // If status is not "Revision Required", then resubmission is allowed based on review
+    if (status != "Revision Required") {
+        return true;
+    }
+
+    // If status is "Revision Required", check for unresolved reviews
+    QList<int> unresolvedIssues = getUnresolvedReviewIssues();
+    return unresolvedIssues.isEmpty();
+}
