@@ -11,6 +11,7 @@ SOURCES += \
     conference.cpp \
     main.cpp \
     mainwindow.cpp \
+    review.cpp \
     submission.cpp \
     user.cpp
 

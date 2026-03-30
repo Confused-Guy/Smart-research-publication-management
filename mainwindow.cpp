@@ -100,21 +100,6 @@ MainWindow::MainWindow(QWidget *parent)
     QPixmap drop("drop.png");
     ui->dropPlace->setPixmap(drop);
 
-
-    //actual charts for review
-    QPieSeries *series = new QPieSeries();
-    series->append("Review A", 40);
-    series->append("Review B", 30);
-    series->append("Review C", 20);
-    series->append("Review D", 10);
-
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->setTitle("Research Distribution");
-    chart->legend()->setAlignment(Qt::AlignRight);
-
-    QWidget *tabPage = ui->tabWidget->widget(0);
-
     loadSubmissions();
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index) {
@@ -129,7 +114,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 
 /*********************************************************** USER START ***********************************************************************************/
@@ -399,7 +383,7 @@ void MainWindow::exportTableToPDF(const QString &fileName)
 
 void MainWindow::on_exportUserPDF_clicked(){
 
-    exportTableToPDF("C:/Users/Mounib/Documents/users.pdf");
+    exportTableToPDF("/");
 
 }
 
@@ -410,7 +394,6 @@ void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(1
 /********************************************************** USER END *************************************************************************************/
 
 //********************REVIEW START*********************************************************************************************************************//
-
 
 void MainWindow::loadReviews(bool ascending, QString searchFilter)
 {
@@ -453,12 +436,9 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
         reviewsFound = true;
 
         int reviewId         = reviewQuery.value(0).toInt();
-        QString reviewerName = reviewQuery.value(1).toString();
-        QDate reviewDate     = reviewQuery.value(2).toDate();
-        int submissionId     = reviewQuery.value(3).toInt();
-        int publicationId    = reviewQuery.value(4).toInt();
-        QString comment      = reviewQuery.value(5).toString();
-        QString status       = reviewQuery.value(6).toString();
+        QString reviewerName = reviewQuery.value(1).toString();QDate reviewDate     = reviewQuery.value(2).toDate();
+        int submissionId     = reviewQuery.value(3).toInt();int publicationId    = reviewQuery.value(4).toInt();
+        QString comment      = reviewQuery.value(5).toString();QString status       = reviewQuery.value(6).toString();
 
         QFrame* reviewCard = new QFrame();
         reviewCard->setFrameShape(QFrame::StyledPanel);
@@ -500,19 +480,11 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
         QLabel* commentLabel = new QLabel("Comment: " + comment);
         commentLabel->setWordWrap(true);
 
-        QHBoxLayout* reviewBtnLayout = new QHBoxLayout();
-        QPushButton* editReviewBtn   = new QPushButton("Edit");
-        QPushButton* deleteReviewBtn = new QPushButton("Delete");
-        QPushButton* pdfReviewBtn    = new QPushButton("Export PDF");
+        QHBoxLayout* reviewBtnLayout = new QHBoxLayout();QPushButton* editReviewBtn   = new QPushButton("Edit");QPushButton* deleteReviewBtn = new QPushButton("Delete"); QPushButton* pdfReviewBtn    = new QPushButton("Export PDF");
 
-        reviewBtnLayout->addWidget(editReviewBtn);
-        reviewBtnLayout->addWidget(deleteReviewBtn);
-        reviewBtnLayout->addWidget(pdfReviewBtn);
+        reviewBtnLayout->addWidget(editReviewBtn);reviewBtnLayout->addWidget(deleteReviewBtn);reviewBtnLayout->addWidget(pdfReviewBtn);
 
-        reviewCardLayout->addLayout(topRowLayout);
-        reviewCardLayout->addWidget(reviewInfoLabel);
-        reviewCardLayout->addWidget(commentLabel);
-        reviewCardLayout->addLayout(reviewBtnLayout);
+        reviewCardLayout->addLayout(topRowLayout);reviewCardLayout->addWidget(reviewInfoLabel);reviewCardLayout->addWidget(commentLabel);reviewCardLayout->addLayout(reviewBtnLayout);
 
         reviewLayout->addWidget(reviewCard);
 
@@ -542,7 +514,18 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
     reviewLayout->addStretch();
 }
 
+// Helper function to get a default Publication ID
+int getDefaultPublicationId()
+{
+    QSqlQuery query;
+    query.prepare("SELECT PublicationID FROM Publication WHERE ROWNUM = 1");
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt();
+    }
+    return 1; // Fallback to 1 if no publications exist
+}
 
+// create and stats
 void MainWindow::buildCreateReviewUI()
 {
     QWidget* page = ui->stackedWidget->widget(1);
@@ -661,7 +644,7 @@ void MainWindow::buildCreateReviewUI()
 
     QList<QPair<int,int>> submissionData;
     QSqlQuery subQuery;
-    subQuery.prepare("SELECT SubmissionID, Title, TopicID FROM Submission ORDER BY CreatedAt DESC");
+    subQuery.prepare("SELECT SubmissionID, Title, Topic FROM Submission ORDER BY CreatedAt DESC");
     if (subQuery.exec()) {
         while (subQuery.next()) {
             submissionCombo->addItem(subQuery.value(1).toString());
@@ -706,8 +689,7 @@ void MainWindow::buildCreateReviewUI()
                                 ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f1f5f9"));
 
     QPushButton* saveReviewBtn = new QPushButton("Send to Review");
-    saveReviewBtn->setFixedHeight(44);
-    saveReviewBtn->setMinimumWidth(160);
+    saveReviewBtn->setFixedHeight(44);saveReviewBtn->setMinimumWidth(160);
     saveReviewBtn->setCursor(Qt::PointingHandCursor);
     saveReviewBtn->setStyleSheet(
         "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
@@ -718,10 +700,7 @@ void MainWindow::buildCreateReviewUI()
         "QPushButton:pressed { background-color: #27a7ac; }"
         );
 
-    btnRow->addStretch();
-    btnRow->addWidget(clearBtn);
-    btnRow->addWidget(saveReviewBtn);
-    cardLayout->addLayout(btnRow);
+    btnRow->addStretch();btnRow->addWidget(clearBtn);btnRow->addWidget(saveReviewBtn);cardLayout->addLayout(btnRow);
 
     hSplit->addWidget(card, 0, Qt::AlignTop);
 
@@ -741,7 +720,7 @@ void MainWindow::buildCreateReviewUI()
     }
     int totalReviews = cntPending + cntInReview + cntApproved + cntRejected;
 
-    // Also count submissions
+    // count submissions
     int totalSubmissions = 0;
     QSqlQuery subCntQ;
     subCntQ.prepare("SELECT COUNT(*) FROM Submission");
@@ -771,17 +750,17 @@ void MainWindow::buildCreateReviewUI()
                                 ).arg(txtSub));
     statsLayout->addWidget(statsSub);
 
-    // ── Donut chart widget ─────────────────────────────────────────────────
+    // ── Donut chart widget
     struct SliceData {
         int    value;
         QColor color;
         QString label;
     };
     QVector<SliceData> slices = {
-        { cntPending,  QColor("#3b82f6"), "Pending"   },
-        { cntInReview, QColor("#f59e0b"), "In Review" },
-        { cntApproved, QColor("#22c55e"), "Approved"  },
-        { cntRejected, QColor("#ef4444"), "Rejected"  }
+        { cntPending,  QColor(59, 130, 246),     "Pending"   },
+        { cntInReview, QColor(245, 158, 11),     "In Review" },
+        { cntApproved, QColor(34, 197, 94),      "Approved"  },
+        { cntRejected, QColor(239, 68, 68),      "Rejected"  }
     };
 
     QWidget* donutWidget = new QWidget();
@@ -791,7 +770,6 @@ void MainWindow::buildCreateReviewUI()
     // Capture by value for the paint lambda
     int capturedTotal = totalReviews;
     QVector<SliceData> capturedSlices = slices;
-    bool capturedDark = dark;
     QString capturedTxtPrimary = txtPrimary;
 
     donutWidget->installEventFilter(this);
@@ -881,11 +859,12 @@ void MainWindow::buildCreateReviewUI()
 
     struct LegendEntry { QString label; QColor color; int value; };
     QVector<LegendEntry> legendEntries = {
-                                          { "Pending",   QColor("#3b82f6"), cntPending   },
-                                          { "In Review", QColor("#f59e0b"), cntInReview  },
-                                          { "Approved",  QColor("#22c55e"), cntApproved  },
-                                          { "Rejected",  QColor("#ef4444"), cntRejected  },
-                                          };
+        { "Pending",   QColor(59, 130, 246),  cntPending   },
+        { "In Review", QColor(245, 158, 11),  cntInReview  },
+        { "Approved",  QColor(34, 197, 94),   cntApproved  },
+        { "Rejected",  QColor(239, 68, 68),   cntRejected  },
+    };
+
 
     for (int i = 0; i < legendEntries.size(); ++i) {
         auto& e = legendEntries[i];
@@ -969,7 +948,7 @@ void MainWindow::buildCreateReviewUI()
         commentInput->clear();
     });
 
-    // Save
+    // Save - FIXED: Use a default Publication ID from the Publication table
     connect(saveReviewBtn, &QPushButton::clicked, this, [=]() {
         if (nameInput->text().trimmed().isEmpty()) {
             QMessageBox::warning(page, "Validation Error", "Please enter a reviewer name.");
@@ -986,7 +965,9 @@ void MainWindow::buildCreateReviewUI()
 
         int comboIdx = submissionCombo->currentIndex();
         int sid      = submissionData[comboIdx].first;
-        int pid      = submissionData[comboIdx].second;
+
+        // Get a default Publication ID from the database
+        int defaultPubId = getDefaultPublicationId();
 
         QSqlQuery query;
         query.prepare(
@@ -998,7 +979,7 @@ void MainWindow::buildCreateReviewUI()
         query.bindValue(":name",    nameInput->text().trimmed());
         query.bindValue(":date",    dateInput->date());
         query.bindValue(":sid",     sid);
-        query.bindValue(":pid",     pid);
+        query.bindValue(":pid",     defaultPubId);
         query.bindValue(":comment", commentInput->toPlainText().trimmed());
 
         if (query.exec()) {
@@ -1109,7 +1090,7 @@ void MainWindow::showReviewDialog(int reviewId)
                                            ).arg(inputStyle, dark ? "#252b3d" : "#ffffff", txtPrimary, border));
 
         QSqlQuery subQuery;
-        subQuery.prepare("SELECT SubmissionID, Title, TopicID FROM Submission ORDER BY CreatedAt DESC");
+        subQuery.prepare("SELECT SubmissionID, Title, Topic FROM Submission ORDER BY CreatedAt DESC");
         if (subQuery.exec()) {
             while (subQuery.next()) {
                 submissionCombo->addItem(subQuery.value(1).toString());
@@ -1227,7 +1208,10 @@ void MainWindow::showReviewDialog(int reviewId)
         } else {
             int comboIdx = submissionCombo->currentIndex();
             int sid      = submissionData[comboIdx].first;
-            int pid      = submissionData[comboIdx].second;
+
+            // Get a default Publication ID from the database
+            int defaultPubId = getDefaultPublicationId();
+
             query.prepare(
                 "INSERT INTO REVIEW "
                 "  (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS) "
@@ -1237,7 +1221,7 @@ void MainWindow::showReviewDialog(int reviewId)
             query.bindValue(":name",    nameInput->text().trimmed());
             query.bindValue(":date",    dateInput->date());
             query.bindValue(":sid",     sid);
-            query.bindValue(":pid",     pid);
+            query.bindValue(":pid",     defaultPubId);
             query.bindValue(":comment", commentInput->toPlainText().trimmed());
         }
 
@@ -1326,11 +1310,11 @@ void MainWindow::exportReviewPDF(int reviewId, const QString& reviewerName, cons
             <div class="section">
                 <h2>Review Details</h2>
                 <table class="info-grid">
-                    <tr><td class="label">Reviewer</td><td class="value">%3</td></tr>
-                    <tr><td class="label">Review Date</td><td class="value">%4</td></tr>
-                    <tr><td class="label">Submission ID</td><td class="value">%5</td></tr>
-                    <tr><td class="label">Publication ID</td><td class="value">%6</td></tr>
-                    <tr><td class="label">Status</td><td class="value"><span class="status-badge">%7</span></td></tr>
+                    <tr><td class="label">Reviewer</td><td class="value">%3</td>
+                    <tr><td class="label">Review Date</td><td class="value">%4</td>
+                    <tr><td class="label">Submission ID</td><td class="value">%5</td>
+                    <tr><td class="label">Publication ID</td><td class="value">%6</td>
+                    <tr><td class="label">Status</td><td class="value"><span class="status-badge">%7</span></td>
                 </table>
                 <h2>Comments</h2>
                 <div class="comment-box">%10</div>
