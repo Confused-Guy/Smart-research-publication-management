@@ -5,6 +5,7 @@
 #include "publication.h"
 #include "user.h"
 #include "submission.h"
+#include "review.h"
 
 // SQL
 #include <QSqlDatabase>
@@ -4959,7 +4960,9 @@ void MainWindow::showReviewTrackerDialog(int submissionId)
     scrollLayout->setSpacing(12);
     scrollLayout->setContentsMargins(12, 12, 12, 12);
 
-    for (const Review &review : reviews) {
+    for (int i = 0; i < reviews.count(); ++i) {
+        const Review &review = reviews.at(i);
+        
         QFrame *reviewCard = new QFrame();
         reviewCard->setStyleSheet(QString(
             "QFrame { background-color: %1; border: 1px solid %2; border-radius: 8px; padding: 12px; }"
@@ -5022,12 +5025,15 @@ void MainWindow::showReviewTrackerDialog(int submissionId)
                 "QPushButton:hover { background-color: #22d3dd; }"
             );
 
-            connect(resolveBtn, &QPushButton::clicked, this, [this, review, submissionId, dialog]() {
-                Review rev = review;
-                if (rev.markAsResolved("Addressed by author")) {
+            int reviewId = review.getId();
+            connect(resolveBtn, &QPushButton::clicked, this, [this, reviewId, dialog]() {
+                Review rev = Review();
+                // Load the review to get current state
+                bool ok = false;
+                rev = Review::getById(reviewId, &ok);
+                if (ok && rev.markAsResolved("Addressed by author")) {
                     QMessageBox::information(dialog, "Success", "Review marked as resolved");
                     dialog->close();
-                    // Refresh the display
                     loadSubmissions();
                 } else {
                     QMessageBox::critical(dialog, "Error", "Failed to mark review as resolved");
