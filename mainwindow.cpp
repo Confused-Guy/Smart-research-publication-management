@@ -3376,9 +3376,10 @@ void MainWindow::on_collaborationCreationCollaborationTitileEdit_textChanged()
 
 //**********Collabs End**********//
 //********************PUBLICATION START**********************************************************************************************************************//
-// loadPublications()
+// ── loadPublications() ──────────────────────────────────────────────────────
 void MainWindow::loadPublications(const QString &searchFilter)
 {
+    // ── Clear old widgets ────────────────────────────────────────────────────
     QLayout *oldLayout = ui->publicationListGroup->layout();
     if (oldLayout) {
         QLayoutItem *item;
@@ -3389,7 +3390,18 @@ void MainWindow::loadPublications(const QString &searchFilter)
     } else {
         ui->publicationListGroup->setLayout(new QVBoxLayout());
     }
-    QVBoxLayout *listLayout = qobject_cast<QVBoxLayout *>(ui->publicationListGroup->layout());
+    QVBoxLayout *listLayout =
+        qobject_cast<QVBoxLayout *>(ui->publicationListGroup->layout());
+
+    // ── Theme ────────────────────────────────────────────────────────────────
+    const bool    dark       = !mode;
+    const QString bgCard     = dark ? "#252b3d" : "#ffffff";
+    const QString bgHover    = dark ? "#2a3142" : "#f8fafc";
+    const QString border     = dark ? "#3e4859" : "#e2e8f0";
+    const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
+    const QString txtSub     = dark ? "#8892a4" : "#64748b";
+
+    // ── Query ─────────────────────────────────────────────────────────────────
     QList<Publication> list = searchFilter.trimmed().isEmpty()
                                   ? pubTmp.read()
                                   : pubTmp.search(searchFilter.trimmed());
@@ -3397,54 +3409,150 @@ void MainWindow::loadPublications(const QString &searchFilter)
     if (list.isEmpty()) {
         QLabel *empty = new QLabel("No publications found.");
         empty->setAlignment(Qt::AlignCenter);
+        empty->setStyleSheet(QString("color: %1; font-size: 10pt;").arg(txtSub));
         listLayout->addWidget(empty);
         listLayout->addStretch();
         return;
     }
-    QList<Publication>::const_iterator it;
-    for (it = list.begin(); it != list.end(); ++it) {
 
+    // ── Build one card per publication ───────────────────────────────────────
+    for (const Publication &pub : list) {
+
+        const int     pubId  = pub.getPublicationID();
+        const int     authId = pub.getAuthorID();
+        const int     subId  = pub.getSubmissionID();
+        const QString desc   = pub.getDescription();
+        const QDate   cDate  = pub.getCreatedDate();
+        const QString fld    = pub.getField();
+
+        // ── Card frame ───────────────────────────────────────────────────────
         QFrame *card = new QFrame(ui->publicationListGroup);
         card->setFrameShape(QFrame::StyledPanel);
         card->setObjectName("publicationCard");
-        card->setMinimumHeight(110);
+        card->setMinimumHeight(120);
+        card->setStyleSheet(QString(
+            "QFrame#publicationCard {"
+            "  background-color: %1; border: 1px solid %2; border-radius: 12px;"
+            "}"
+            "QFrame#publicationCard:hover {"
+            "  border: 1px solid #30b9bf; background-color: %3;"
+            "}"
+        ).arg(bgCard, border, bgHover));
 
-        QVBoxLayout *cardLayout = new QVBoxLayout(card);
-        cardLayout->setSpacing(4);
-        QLabel *metaLbl = new QLabel(
-            "<b>ID:</b> "                   + QString::number(it->getPublicationID()) +
-                " &nbsp;|&nbsp; <b>Author:</b> " + QString::number(it->getAuthorID())      +
-                " &nbsp;|&nbsp; <b>Submission:</b> " + QString::number(it->getSubmissionID()) +
-                " &nbsp;|&nbsp; <b>Field:</b> "  + it->getField()                          +
-                " &nbsp;|&nbsp; <b>Date:</b> "   + it->getCreatedDate().toString("dd/MM/yyyy"),
-            card);
-        metaLbl->setWordWrap(true);
+        // ── Outer layout: info (left) | buttons (right) ──────────────────────
+        QHBoxLayout *cardLayout = new QHBoxLayout(card);
+        cardLayout->setContentsMargins(18, 14, 18, 14);
+        cardLayout->setSpacing(16);
 
-        QLabel *descLbl = new QLabel(it->getDescription(), card);
-        descLbl->setWordWrap(true);
-        QHBoxLayout *btnRow = new QHBoxLayout();
-        QPushButton *editBtn    = new QPushButton("✏ Edit");
-        QPushButton *deleteBtn  = new QPushButton("🗑 Delete");
-        QPushButton *pdfBtn     = new QPushButton("📄 Summary PDF");
-        QPushButton *mailBtn    = new QPushButton("✉ Email");
-        btnRow->addWidget(editBtn);
-        btnRow->addWidget(deleteBtn);
-        btnRow->addWidget(pdfBtn);
-        btnRow->addWidget(mailBtn);
-        btnRow->addStretch();
+        // ── LEFT: info column ─────────────────────────────────────────────────
+        QVBoxLayout *infoLayout = new QVBoxLayout();
+        infoLayout->setSpacing(6);
 
-        cardLayout->addWidget(metaLbl);
-        cardLayout->addWidget(descLbl);
-        cardLayout->addLayout(btnRow);
+        // Title row: publication ID + field badge
+        QHBoxLayout *titleRow = new QHBoxLayout();
+        titleRow->setSpacing(10);
+
+        QLabel *idLabel = new QLabel(
+            "<b>Publication #" + QString::number(pubId) + "</b>");
+        idLabel->setStyleSheet(
+            QString("color: %1; font-size: 11pt; border: none; background: transparent;")
+            .arg(txtPrimary));
+
+        QLabel *fieldBadge = new QLabel(fld);
+        fieldBadge->setAlignment(Qt::AlignCenter);
+        fieldBadge->setFixedHeight(22);
+        fieldBadge->setContentsMargins(10, 2, 10, 2);
+        fieldBadge->setStyleSheet(
+            "QLabel { background-color: #0e4d5c; color: #30b9bf;"
+            "  border-radius: 10px; font-size: 9pt; font-weight: 700;"
+            "  padding: 2px 10px; border: none; }"
+        );
+
+        titleRow->addWidget(idLabel);
+        titleRow->addWidget(fieldBadge);
+        titleRow->addStretch();
+
+        // Meta row
+        QLabel *metaLabel = new QLabel(
+            "Author ID: <b>" + QString::number(authId) + "</b>"
+            "&nbsp;&nbsp;·&nbsp;&nbsp;"
+            "Submission ID: <b>" + QString::number(subId) + "</b>"
+            "&nbsp;&nbsp;·&nbsp;&nbsp;"
+            "Created: <b>" + cDate.toString("dd/MM/yyyy") + "</b>"
+        );
+        metaLabel->setStyleSheet(QString(
+            "color: %1; font-size: 9pt; border: none; background: transparent;")
+            .arg(txtSub));
+
+        // Description
+        QLabel *descLabel = new QLabel(desc);
+        descLabel->setWordWrap(true);
+        descLabel->setStyleSheet(QString(
+            "color: %1; font-size: 9pt; border: none; background: transparent;")
+            .arg(txtSub));
+
+        infoLayout->addLayout(titleRow);
+        infoLayout->addWidget(metaLabel);
+        infoLayout->addWidget(descLabel);
+
+        // ── RIGHT: button column ──────────────────────────────────────────────
+        QVBoxLayout *btnCol = new QVBoxLayout();
+        btnCol->setSpacing(8);
+        btnCol->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+
+        auto makeSecondaryBtn = [&](const QString &label) -> QPushButton * {
+            QPushButton *btn = new QPushButton(label);
+            btn->setFixedSize(120, 34);
+            btn->setCursor(Qt::PointingHandCursor);
+            btn->setStyleSheet(QString(
+                "QPushButton {"
+                "  background-color: %1; color: %2;"
+                "  border: 1px solid %3; border-radius: 8px;"
+                "  font-size: 9pt; font-weight: 600;"
+                "}"
+                "QPushButton:hover   { background-color: %4; }"
+                "QPushButton:pressed { background-color: %5; }"
+            ).arg(bgCard, txtPrimary, border,
+                  dark ? "#343d52" : "#f1f5f9",
+                  dark ? "#3e4859" : "#e2e8f0"));
+            return btn;
+        };
+
+        auto makePrimaryBtn = [](const QString &label) -> QPushButton * {
+            QPushButton *btn = new QPushButton(label);
+            btn->setFixedSize(120, 34);
+            btn->setCursor(Qt::PointingHandCursor);
+            btn->setStyleSheet(
+                "QPushButton {"
+                "  background: qlineargradient(x1:0,y1:0,x2:0,y2:1,"
+                "    stop:0 #3dd4db, stop:1 #30b9bf);"
+                "  color: white; border: none; border-radius: 8px;"
+                "  font-size: 9pt; font-weight: 700;"
+                "}"
+                "QPushButton:hover   { background-color: #22d3dd; }"
+                "QPushButton:pressed { background-color: #26a0a6; }"
+            );
+            return btn;
+        };
+
+        QPushButton *editBtn   = makeSecondaryBtn("✏  Edit");
+        QPushButton *deleteBtn = makeSecondaryBtn("🗑  Delete");
+        QPushButton *pdfBtn    = makePrimaryBtn  ("📄  Export PDF");
+        QPushButton *mailBtn   = makeSecondaryBtn("✉  Email");
+
+        btnCol->addWidget(editBtn);
+        btnCol->addWidget(deleteBtn);
+        btnCol->addWidget(pdfBtn);
+        btnCol->addWidget(mailBtn);
+
+        // ── Assemble ──────────────────────────────────────────────────────────
+        cardLayout->addLayout(infoLayout, 1);
+        cardLayout->addLayout(btnCol);
         listLayout->addWidget(card);
-        const int     pubId   = it->getPublicationID();
-        const int     authId  = it->getAuthorID();
-        const int     subId   = it->getSubmissionID();
-        const QString desc    = it->getDescription();
-        const QDate   cDate   = it->getCreatedDate();
-        const QString fld     = it->getField();
 
-        // ── DELETE
+        // ── Connections ───────────────────────────────────────────────────────
+
+        // DELETE
         connect(deleteBtn, &QPushButton::clicked, this, [=]() {
             int confirm = QMessageBox::question(
                 this, "Confirm Delete",
@@ -3453,7 +3561,8 @@ void MainWindow::loadPublications(const QString &searchFilter)
             if (confirm == QMessageBox::Yes) {
                 pubTmp.setPublicationID(pubId);
                 if (pubTmp.deletePublication()) {
-                    ui->statusLabel_2->setText("✔ Publication " + QString::number(pubId) + " deleted.");
+                    ui->statusLabel_2->setText(
+                        "✔ Publication " + QString::number(pubId) + " deleted.");
                     loadPublications(ui->lineEdit_23->text());
                 } else {
                     QMessageBox::critical(this, "Error", "Failed to delete publication.");
@@ -3461,24 +3570,26 @@ void MainWindow::loadPublications(const QString &searchFilter)
             }
         });
 
-        // ── EDIT
+        // EDIT
         connect(editBtn, &QPushButton::clicked, this, [=]() {
             showPublicationDialog(pubId, authId, subId, desc, cDate, fld);
         });
 
-        // ── SUMMARY PDF
+        // EXPORT PDF
         connect(pdfBtn, &QPushButton::clicked, this, [=]() {
             exportPublicationPDF(pubId, authId, subId, desc, cDate, fld);
         });
 
-        // ── EMAIL ─
+        // EMAIL
         connect(mailBtn, &QPushButton::clicked, this, [=]() {
-            const QString subject = "Publication #" + QString::number(pubId) + " – " + fld;
-            const QString body    = "Publication ID: " + QString::number(pubId)
-                                 + "\nField: "       + fld
-                                 + "\nAuthor ID: "   + QString::number(authId)
-                                 + "\nDescription: " + desc
-                                 + "\nCreated: "     + cDate.toString("dd/MM/yyyy");
+            const QString subject =
+                "Publication #" + QString::number(pubId) + " – " + fld;
+            const QString body =
+                "Publication ID: " + QString::number(pubId)
+                + "\nField: "       + fld
+                + "\nAuthor ID: "   + QString::number(authId)
+                + "\nDescription: " + desc
+                + "\nCreated: "     + cDate.toString("dd/MM/yyyy");
             QDesktopServices::openUrl(
                 QUrl("mailto:?subject=" + QUrl::toPercentEncoding(subject)
                      + "&body="         + QUrl::toPercentEncoding(body)));
@@ -3488,8 +3599,8 @@ void MainWindow::loadPublications(const QString &searchFilter)
     listLayout->addStretch();
 }
 
-// showPublicationDialog()
 
+// ── showPublicationDialog() ──────────────────────────────────────────────────
 void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
                                        const QString &desc, const QDate &date,
                                        const QString &field)
@@ -3498,10 +3609,10 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
 
     QDialog *dialog = new QDialog(this);
     dialog->setWindowTitle(isEditing ? "Edit Publication" : "Add Publication");
-    dialog->setFixedSize(520, 500);
+    dialog->setFixedSize(600, 600);
     dialog->setAttribute(Qt::WA_StyledBackground, true);
 
-    // ── Theme colours─
+    // ── Theme ─────────────────────────────────────────────────────────────────
     const bool    dark       = !mode;
     const QString bgPage     = dark ? "#1a1f2e" : "#f6f8fc";
     const QString bgCard     = dark ? "#252b3d" : "#ffffff";
@@ -3510,121 +3621,170 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
     const QString txtSub     = dark ? "#8892a4" : "#64748b";
     const QString inputBg    = dark ? "#1e2433" : "#ffffff";
 
-    dialog->setStyleSheet(QString("QDialog { background-color: %1; }").arg(bgPage));
+    dialog->setStyleSheet(
+        QString("QDialog { background-color: %1; }").arg(bgPage));
 
     QVBoxLayout *mainLayout = new QVBoxLayout(dialog);
-    mainLayout->setContentsMargins(24, 24, 24, 24);
-    mainLayout->setSpacing(16);
+    mainLayout->setContentsMargins(28, 28, 28, 28);
+    mainLayout->setSpacing(24);
 
-    // Title
-    QLabel *titleLbl = new QLabel(isEditing ? "Edit Publication" : "Add New Publication");
+    // ── Header ───────────────────────────────────────────────────────────────
+    QLabel *titleLbl =
+        new QLabel(isEditing ? "Edit Publication" : "Add New Publication");
     titleLbl->setStyleSheet(QString(
-                                "font-size: 18pt; font-weight: 700; color: %1; background: transparent;"
-                                ).arg(txtPrimary));
+        "font-size: 20pt; font-weight: 700; color: %1; background: transparent;")
+        .arg(txtPrimary));
     mainLayout->addWidget(titleLbl);
 
-    // Form card
+    // ── Form card ─────────────────────────────────────────────────────────────
     QFrame *formCard = new QFrame();
     formCard->setStyleSheet(QString(
-                                "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 12px; }"
-                                ).arg(bgCard, border));
+        "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 12px; }")
+        .arg(bgCard, border));
+
     QVBoxLayout *formLayout = new QVBoxLayout(formCard);
-    formLayout->setSpacing(12);
-    formLayout->setContentsMargins(20, 20, 20, 20);
+    formLayout->setSpacing(20);
+    formLayout->setContentsMargins(28, 28, 28, 28);
 
+    // ── Input stylesheet ──────────────────────────────────────────────────────
     const QString inputStyle = QString(
-                                   "QLineEdit, QTextEdit, QSpinBox, QComboBox { "
-                                   "  background-color: %1; border: 1.5px solid %2; "
-                                   "  border-radius: 8px; padding: 10px 12px; color: %3; font-size: 10pt; }"
-                                   "QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus "
-                                   "  { border: 2px solid #30b9bf; }"
-                                   ).arg(inputBg, border, txtPrimary);
+        "QLineEdit, QTextEdit, QSpinBox, QComboBox {"
+        "  background-color: %1; border: 1.5px solid %2;"
+        "  border-radius: 8px; padding: 14px 16px; color: %3; font-size: 10pt;"
+        "}"
+        "QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus {"
+        "  border: 2px solid #30b9bf; padding: 13px 15px;"
+        "}"
+        "QComboBox::drop-down { border: none; width: 24px; }"
+        "QComboBox::down-arrow {"
+        "  image: none; width: 0; height: 0;"
+        "  border-left: 5px solid transparent;"
+        "  border-right: 5px solid transparent;"
+        "  border-top: 6px solid %4;"
+        "}"
+        "QComboBox QAbstractItemView {"
+        "  background-color: %1; border: 1.5px solid %2;"
+        "  border-radius: 8px; padding: 6px;"
+        "  selection-background-color: #30b9bf; selection-color: white;"
+        "  outline: none;"
+        "}"
+    ).arg(inputBg, border, txtPrimary, dark ? "#8892a4" : "#64748b");
 
+    // ── Field helpers (match showConferenceDialog pattern) ────────────────────
     auto makeLabel = [&](const QString &text) -> QLabel * {
         QLabel *lbl = new QLabel(text);
         lbl->setStyleSheet(QString(
-                               "font-size: 10pt; font-weight: 600; color: %1; background: transparent;"
-                               ).arg(txtSub));
+            "font-size: 11pt; font-weight: 600; color: %1; background: transparent;")
+            .arg(txtSub));
+        lbl->setFixedHeight(22);
         return lbl;
     };
 
-    // Author ID
+    auto addField = [&](const QString &labelText, QWidget *widget) {
+        QVBoxLayout *grp = new QVBoxLayout();
+        grp->setSpacing(8);
+        grp->setContentsMargins(0, 0, 0, 0);
+        grp->addWidget(makeLabel(labelText));
+        widget->setFixedHeight(48);
+        grp->addWidget(widget);
+        formLayout->addLayout(grp);
+    };
+
+    // ── Widgets ───────────────────────────────────────────────────────────────
+
     QSpinBox *authSpin = new QSpinBox();
     authSpin->setRange(1, 999999);
     authSpin->setValue(isEditing ? authId : 1);
     authSpin->setStyleSheet(inputStyle);
-    formLayout->addWidget(makeLabel("Author ID"));
-    formLayout->addWidget(authSpin);
+    addField("Author ID", authSpin);
 
-    // Submission ID
     QSpinBox *subSpin = new QSpinBox();
     subSpin->setRange(1, 999999);
     subSpin->setValue(isEditing ? subId : 1);
     subSpin->setStyleSheet(inputStyle);
-    formLayout->addWidget(makeLabel("Submission ID"));
-    formLayout->addWidget(subSpin);
+    addField("Submission ID", subSpin);
 
-    // Field
     QComboBox *fieldCombo = new QComboBox();
     fieldCombo->addItems({"Computer Science", "Mathematics", "Physics",
-                          "Biology", "Chemistry", "Medicine", "Engineering", "Other"});
+                          "Biology", "Chemistry", "Medicine",
+                          "Engineering", "Other"});
     if (isEditing) {
         int idx = fieldCombo->findText(field);
         if (idx >= 0) fieldCombo->setCurrentIndex(idx);
     }
     fieldCombo->setStyleSheet(inputStyle);
-    formLayout->addWidget(makeLabel("Field / Category"));
-    formLayout->addWidget(fieldCombo);
+    addField("Field / Category", fieldCombo);
 
-    // Description
+    // Description — taller, added manually (not through addField)
+    QVBoxLayout *descGrp = new QVBoxLayout();
+    descGrp->setSpacing(8);
+    descGrp->setContentsMargins(0, 0, 0, 0);
+    descGrp->addWidget(makeLabel("Description"));
     QTextEdit *descEdit = new QTextEdit();
     descEdit->setPlaceholderText("Enter publication description (max 300 characters)…");
-    descEdit->setFixedHeight(90);
+    descEdit->setFixedHeight(100);
     descEdit->setStyleSheet(inputStyle);
     if (isEditing) descEdit->setPlainText(desc);
-    formLayout->addWidget(makeLabel("Description"));
-    formLayout->addWidget(descEdit);
+    descGrp->addWidget(descEdit);
+    formLayout->addLayout(descGrp);
 
     mainLayout->addWidget(formCard);
     mainLayout->addStretch();
 
-    // ── Button row
-    QHBoxLayout *btnRow = new QHBoxLayout();
+    // ── Button row ────────────────────────────────────────────────────────────
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->setSpacing(16);
 
     QPushButton *cancelBtn = new QPushButton("Cancel");
-    cancelBtn->setFixedHeight(44);
+    cancelBtn->setFixedHeight(48);
+    cancelBtn->setMinimumWidth(120);
+    cancelBtn->setCursor(Qt::PointingHandCursor);
     cancelBtn->setStyleSheet(QString(
-                                 "QPushButton { background-color: %1; color: %2; border: 1px solid %3; "
-                                 "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 600; }"
-                                 "QPushButton:hover { background-color: %4; }"
-                                 ).arg(bgCard, txtPrimary, border, dark ? "#343d52" : "#f8fafc"));
+        "QPushButton {"
+        "  background-color: %1; color: %2; border: 1px solid %3;"
+        "  border-radius: 10px; padding: 12px 28px;"
+        "  font-size: 11pt; font-weight: 600;"
+        "}"
+        "QPushButton:hover   { background-color: %4; }"
+        "QPushButton:pressed { background-color: %5; }"
+    ).arg(bgCard, txtPrimary, border,
+          dark ? "#343d52" : "#f8fafc",
+          dark ? "#3e4859" : "#e2e8f0"));
 
-    QPushButton *saveBtn = new QPushButton(isEditing ? "Update" : "Add Publication");
-    saveBtn->setFixedHeight(44);
+    QPushButton *saveBtn =
+        new QPushButton(isEditing ? "Update" : "Add Publication");
+    saveBtn->setFixedHeight(48);
+    saveBtn->setMinimumWidth(180);
+    saveBtn->setCursor(Qt::PointingHandCursor);
     saveBtn->setStyleSheet(
-        "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
-        "stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
-        "border-radius: 10px; padding: 10px 24px; font-size: 10pt; font-weight: 700; }"
-        "QPushButton:hover { background-color: #22d3dd; }"
-        );
+        "QPushButton {"
+        "  background: qlineargradient(x1:0,y1:0,x2:0,y2:1,"
+        "    stop:0 #3dd4db, stop:1 #30b9bf);"
+        "  color: white; border: none; border-radius: 10px;"
+        "  padding: 12px 28px; font-size: 11pt; font-weight: 700;"
+        "}"
+        "QPushButton:hover   { background-color: #22d3dd; }"
+        "QPushButton:pressed { background-color: #26a0a6; }"
+    );
 
-    btnRow->addStretch();
-    btnRow->addWidget(cancelBtn);
-    btnRow->addWidget(saveBtn);
-    mainLayout->addLayout(btnRow);
+    btnLayout->addStretch();
+    btnLayout->addWidget(cancelBtn);
+    btnLayout->addWidget(saveBtn);
+    mainLayout->addLayout(btnLayout);
 
     connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
 
     connect(saveBtn, &QPushButton::clicked, this, [=]() {
-
-        // ── Input validation
         if (descEdit->toPlainText().trimmed().isEmpty()) {
-            QMessageBox::warning(dialog, "Validation Error", "Description cannot be empty.");
+            QMessageBox::warning(dialog, "Validation Error",
+                                 "Description cannot be empty.");
+            descEdit->setFocus();
             return;
         }
         if (descEdit->toPlainText().trimmed().length() > 300) {
             QMessageBox::warning(dialog, "Validation Error",
                                  "Description must not exceed 300 characters.");
+            descEdit->setFocus();
             return;
         }
 
@@ -3644,15 +3804,18 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
             loadPublications(ui->lineEdit_23->text());
             dialog->accept();
         } else {
-            QMessageBox::critical(dialog, "Database Error",
-                                  QString("Failed to %1 publication. Check the DB connection.")
-                                      .arg(isEditing ? "update" : "add"));
+            QMessageBox::critical(
+                dialog, "Database Error",
+                QString("Failed to %1 publication. Check the DB connection.")
+                    .arg(isEditing ? "update" : "add"));
         }
     });
 
     dialog->exec();
 }
-// exportPublicationPDF()
+
+
+// ── exportPublicationPDF() ───────────────────────────────────────────────────
 void MainWindow::exportPublicationPDF(int pubId, int authId, int subId,
                                       const QString &desc, const QDate &date,
                                       const QString &field)
@@ -3736,65 +3899,20 @@ void MainWindow::exportPublicationPDF(int pubId, int authId, int subId,
 
     QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
 }
-// BUTTON SLOTS
-// ADD
+
+
+// ── BUTTON SLOTS ─────────────────────────────────────────────────────────────
+
+// ADD — opens the dialog instead of the old inline form
 void MainWindow::on_addButton_clicked()
 {
-    //Input validation
-    if (ui->titleEdit->text().trimmed().isEmpty()) {
-        QMessageBox::warning(this, "Input Error", "Please enter a publication title / description.");
-        return;
-    }
-    if (ui->descriptionEdit->toPlainText().trimmed().isEmpty()) {
-        QMessageBox::warning(this, "Input Error", "Description cannot be empty.");
-        return;
-    }
-    pubTmp.setAuthorID(1);
-    pubTmp.setSubmissionID(1);
-    pubTmp.setDescription(ui->descriptionEdit->toPlainText().trimmed());
-    pubTmp.setCreatedDate(QDate::currentDate());
-    pubTmp.setField(ui->categoryCombo->currentText());
-
-    //CREATE
-    if (pubTmp.create()) {
-        ui->statusLabel_2->setText("Publication added successfully.");
-        ui->titleEdit->clear();
-        ui->descriptionEdit->clear();
-        ui->categoryCombo->setCurrentIndex(0);
-        loadPublications(ui->lineEdit_23->text());
-    } else {
-        QMessageBox::critical(this, "Database Error",
-                              "Failed to add publication. Check the DB connection.");
-    }
+    showPublicationDialog(-1, 1, 1, "", QDate::currentDate(), "Computer Science");
 }
 
-// DELETE
+// DELETE — no-op: deletion is handled per-card inside loadPublications()
 void MainWindow::on_deleteButton_clicked()
 {
-    bool ok;
-    int id = ui->titleEdit->text().trimmed().toInt(&ok);
-
-    if (!ok || id <= 0) {
-        QMessageBox::warning(this, "Input Error",
-                             "Enter a valid numeric Publication ID in the title field to delete.");
-        return;
-    }
-
-    int confirm = QMessageBox::question(
-        this, "Confirm Delete",
-        "Delete publication with ID " + QString::number(id) + "?",
-        QMessageBox::Yes | QMessageBox::No);
-
-    if (confirm == QMessageBox::Yes) {
-        pubTmp.setPublicationID(id);
-        if (pubTmp.deletePublication()) {
-            ui->statusLabel_2->setText("Publication " + QString::number(id) + " deleted.");
-            ui->titleEdit->clear();
-            loadPublications(ui->lineEdit_23->text());
-        } else {
-            QMessageBox::critical(this, "Database Error", "Failed to delete publication.");
-        }
-    }
+    // Deletion is handled by the per-card Delete button in loadPublications().
 }
 
 // SEARCH
@@ -3803,55 +3921,16 @@ void MainWindow::on_searchbt_clicked()
     loadPublications(ui->lineEdit_23->text());
 }
 
-//SUMMARY
+// SUMMARY PDF — no-op: PDF export is handled per-card inside loadPublications()
 void MainWindow::on_summaryButton_clicked()
 {
-    bool ok;
-    int id = ui->titleEdit->text().trimmed().toInt(&ok);
-    if (!ok || id <= 0) {
-        ui->statusLabel_2->setText("Enter a Publication ID in the title field, then click Summary.");
-        return;
-    }
-
-    QList<Publication> list = pubTmp.read();
-    QList<Publication>::const_iterator it;
-    for (it = list.begin(); it != list.end(); ++it) {
-        if (it->getPublicationID() == id) {
-            exportPublicationPDF(it->getPublicationID(), it->getAuthorID(),
-                                 it->getSubmissionID(),  it->getDescription(),
-                                 it->getCreatedDate(),   it->getField());
-            return;
-        }
-    }
-    ui->statusLabel_2->setText("Publication ID not found.");
+    // PDF export is handled by the per-card Export PDF button in loadPublications().
 }
 
-//EMAIL
+// EMAIL — no-op: email is handled per-card inside loadPublications()
 void MainWindow::on_emailButton_clicked()
 {
-    bool ok;
-    int id = ui->titleEdit->text().trimmed().toInt(&ok);
-    if (!ok || id <= 0) {
-        ui->statusLabel_2->setText("Enter a Publication ID in the title field, then click Email.");
-        return;
-    }
-    QList<Publication> list = pubTmp.read();
-    QList<Publication>::const_iterator it;
-    for (it = list.begin(); it != list.end(); ++it) {
-        if (it->getPublicationID() == id) {
-            const QString subject = "Publication #" + QString::number(id) + " – " + it->getField();
-            const QString body    = "Publication ID: " + QString::number(id)
-                                 + "\nField: "       + it->getField()
-                                 + "\nAuthor ID: "   + QString::number(it->getAuthorID())
-                                 + "\nDescription: " + it->getDescription()
-                                 + "\nCreated: "     + it->getCreatedDate().toString("dd/MM/yyyy");
-            QDesktopServices::openUrl(
-                QUrl("mailto:?subject=" + QUrl::toPercentEncoding(subject)
-                     + "&body="         + QUrl::toPercentEncoding(body)));
-            return;
-        }
-    }
-    ui->statusLabel_2->setText("Publication ID not found.");
+    // Email is handled by the per-card Email button in loadPublications().
 }
 
 // NAVIGATION
@@ -3860,17 +3939,20 @@ void MainWindow::on_publication_clicked()
     ui->stackedWidget->setCurrentIndex(6);
     loadPublications("");
 }
-//STATS BUTTON
+
+// STATS BUTTON
 void MainWindow::on_pubStatsBtn_clicked()
 {
     showPublicationStats();
 }
 
+
+// ── showPublicationStats() ───────────────────────────────────────────────────
 void MainWindow::showPublicationStats()
 {
     const bool dark = !mode;
 
-    //Theme 
+    // ── Theme ─────────────────────────────────────────────────────────────────
     const QString bgPage         = dark ? "#2a3142" : "#f6f8fc";
     const QString bgCard         = dark ? "#343d52" : "#ffffff";
     const QString bgScrollbar    = dark ? "#2a3142" : "#f6f8fc";
@@ -3906,14 +3988,12 @@ void MainWindow::showPublicationStats()
     const QColor cHoleBg   = dark ? QColor(0x34,0x3d,0x52) : QColor(0xff,0xff,0xff);
     const QColor cValueTxt = dark ? QColor(0xe0,0xe7,0xf1) : QColor(0x1f,0x29,0x37);
 
-    // ── DB Queries ─────
-    //Total count
+    // ── DB Queries ────────────────────────────────────────────────────────────
     QSqlQuery totalQ;
     totalQ.exec("SELECT COUNT(*) FROM PUBLICATIONS");
     int total = 0;
     if (totalQ.next()) total = totalQ.value(0).toInt();
 
-    //Publications per field (for bar + pie chart)
     QSqlQuery fieldQ;
     fieldQ.exec(
         "SELECT FIELD, COUNT(*) AS cnt "
@@ -3925,7 +4005,6 @@ void MainWindow::showPublicationStats()
     while (fieldQ.next())
         fieldData.append({fieldQ.value(0).toString(), fieldQ.value(1).toInt()});
 
-    //Publications per month – last 6 months
     QSqlQuery monthQ;
     monthQ.exec(
         "SELECT TO_CHAR(CREATEDDATE, 'Mon'), COUNT(*) "
@@ -3938,7 +4017,6 @@ void MainWindow::showPublicationStats()
     while (monthQ.next())
         monthData.append({monthQ.value(0).toString(), monthQ.value(1).toInt()});
 
-    //Top author
     QSqlQuery topAuthorQ;
     topAuthorQ.exec(
         "SELECT AUTHORID, COUNT(*) AS cnt "
@@ -3954,7 +4032,6 @@ void MainWindow::showPublicationStats()
         topAuthorCount = topAuthorQ.value(1).toInt();
     }
 
-    //Most recent publication
     QSqlQuery recentQ;
     recentQ.exec(
         "SELECT PUBLICATIONID, FIELD, CREATEDDATE "
@@ -3971,7 +4048,7 @@ void MainWindow::showPublicationStats()
         recentDate  = recentQ.value(2).toDate().toString("MMM dd, yyyy");
     }
 
-    //Dialog + scroll area 
+    // ── Dialog + scroll area ──────────────────────────────────────────────────
     QDialog* dialog = new QDialog(this);
     dialog->setWindowTitle("Publication Statistics");
     dialog->setFixedSize(600, 640);
@@ -3980,8 +4057,7 @@ void MainWindow::showPublicationStats()
     QWidget* scrollContent = new QWidget();
     scrollContent->setAttribute(Qt::WA_StyledBackground, true);
     scrollContent->setStyleSheet(
-        QString("QWidget { background-color: %1; border: none; }").arg(bgPage)
-        );
+        QString("QWidget { background-color: %1; border: none; }").arg(bgPage));
 
     QVBoxLayout* mainLayout = new QVBoxLayout(scrollContent);
     mainLayout->setContentsMargins(24, 20, 24, 16);
@@ -3992,30 +4068,29 @@ void MainWindow::showPublicationStats()
     scroll->setWidgetResizable(true);
     scroll->setFrameShape(QFrame::NoFrame);
     scroll->setStyleSheet(QString(
-                              "QScrollArea { background-color: %1; border: none; }"
-                              "QScrollBar:vertical { background: %1; width: 6px; border-radius: 3px; }"
-                              "QScrollBar::handle:vertical { background: %2; border-radius: 3px; }"
-                              "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
-                              ).arg(bgScrollbar, bgScrollHandle));
+        "QScrollArea { background-color: %1; border: none; }"
+        "QScrollBar:vertical { background: %1; width: 6px; border-radius: 3px; }"
+        "QScrollBar::handle:vertical { background: %2; border-radius: 3px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+        ).arg(bgScrollbar, bgScrollHandle));
 
     QVBoxLayout* dialogLayout = new QVBoxLayout(dialog);
     dialogLayout->setContentsMargins(0, 0, 0, 0);
     dialogLayout->setSpacing(0);
     dialogLayout->addWidget(scroll);
 
-    // Header
+    // ── Header ────────────────────────────────────────────────────────────────
     QLabel* titleLabel = new QLabel("Publication Statistics");
     titleLabel->setStyleSheet(QString(
-                                  "font-size: 16px; font-weight: bold; color: %1; background: transparent;"
-                                  ).arg(txtPrimary));
+        "font-size: 16px; font-weight: bold; color: %1; background: transparent;")
+        .arg(txtPrimary));
 
     QLabel* subLabel = new QLabel(
         QString::number(total) + " total publications  ·  " +
         QString::number(fieldData.size()) + " fields  ·  Top author: " + topAuthor
         );
     subLabel->setStyleSheet(QString(
-                                "font-size: 10px; color: %1; background: transparent;"
-                                ).arg(txtSub));
+        "font-size: 10px; color: %1; background: transparent;").arg(txtSub));
 
     mainLayout->addWidget(titleLabel);
     mainLayout->addWidget(subLabel);
@@ -4026,17 +4101,17 @@ void MainWindow::showPublicationStats()
     div->setStyleSheet(QString("background-color: %1; border: none;").arg(divColor));
     mainLayout->addWidget(div);
 
-    //Section label helper 
+    // ── Section label helper ──────────────────────────────────────────────────
     auto makeSection = [&](const QString& text) -> QLabel* {
         QLabel* sec = new QLabel(text.toUpper());
         sec->setStyleSheet(QString(
-                               "font-size: 9px; font-weight: bold; color: %1;"
-                               "background: transparent; letter-spacing: 1px; border: none;"
-                               ).arg(txtSection));
+            "font-size: 9px; font-weight: bold; color: %1;"
+            "background: transparent; letter-spacing: 1px; border: none;")
+            .arg(txtSection));
         return sec;
     };
 
-    //Bar chart helper 
+    // ── Bar chart helper ──────────────────────────────────────────────────────
     auto makeBarChart = [&](const QList<QPair<QString,int>>& data,
                             const QColor& barColor,
                             int fixedHeight) -> QWidget*
@@ -4045,8 +4120,8 @@ void MainWindow::showPublicationStats()
         chart->setFixedHeight(fixedHeight);
         chart->setAttribute(Qt::WA_StyledBackground, true);
         chart->setStyleSheet(QString(
-                                 "QWidget { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
-                                 ).arg(bgCard, border));
+            "QWidget { background-color: %1; border: 1px solid %2; border-radius: 10px; }")
+            .arg(bgCard, border));
 
         QLabel* canvas = new QLabel(chart);
         canvas->setGeometry(0, 0, 552, fixedHeight);
@@ -4063,7 +4138,7 @@ void MainWindow::showPublicationStats()
         painter.setRenderHint(QPainter::Antialiasing);
 
         int n        = data.size();
-        int padLeft  = 100;   
+        int padLeft  = 100;
         int padRight = 20;
         int padTop   = 16;
         int padBot   = 16;
@@ -4075,7 +4150,7 @@ void MainWindow::showPublicationStats()
         for (int i = 0; i < n; ++i) {
             int y    = padTop + gap + i * (barH + gap);
             int barW = data[i].second == 0 ? 0
-                                           : (int)((double)data[i].second / maxVal * barAreaW);
+                       : (int)((double)data[i].second / maxVal * barAreaW);
 
             painter.setPen(cGray);
             painter.setFont(QFont("Arial", 9));
@@ -4104,7 +4179,7 @@ void MainWindow::showPublicationStats()
         return chart;
     };
 
-    // ── Donut pie chart helper
+    // ── Donut pie chart helper ────────────────────────────────────────────────
     auto makePieChart = [&](const QList<QPair<QString,int>>& data,
                             int size) -> QWidget*
     {
@@ -4112,8 +4187,8 @@ void MainWindow::showPublicationStats()
         container->setFixedHeight(size + 20);
         container->setAttribute(Qt::WA_StyledBackground, true);
         container->setStyleSheet(QString(
-                                     "QWidget { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
-                                     ).arg(bgCard, border));
+            "QWidget { background-color: %1; border: 1px solid %2; border-radius: 10px; }")
+            .arg(bgCard, border));
 
         QLabel* canvas = new QLabel(container);
         canvas->setGeometry(0, 0, 552, size + 20);
@@ -4214,7 +4289,7 @@ void MainWindow::showPublicationStats()
         return container;
     };
 
-    // ── Stat pill helper 
+    // ── Stat pill helper ──────────────────────────────────────────────────────
     auto makePill = [&](const QString& label,
                         const QString& value,
                         const QString& accentColor) -> QFrame*
@@ -4222,8 +4297,8 @@ void MainWindow::showPublicationStats()
         QFrame* pill = new QFrame();
         pill->setAttribute(Qt::WA_StyledBackground, true);
         pill->setStyleSheet(QString(
-                                "QFrame { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
-                                ).arg(bgCard, border));
+            "QFrame { background-color: %1; border: 1px solid %2; border-radius: 10px; }")
+            .arg(bgCard, border));
         pill->setFixedHeight(64);
 
         QVBoxLayout* pl = new QVBoxLayout(pill);
@@ -4232,53 +4307,49 @@ void MainWindow::showPublicationStats()
 
         QLabel* vl = new QLabel(value);
         vl->setStyleSheet(QString(
-                              "font-size: 15px; font-weight: bold; color: %1;"
-                              "background: transparent; border: none;"
-                              ).arg(accentColor));
+            "font-size: 15px; font-weight: bold; color: %1;"
+            "background: transparent; border: none;")
+            .arg(accentColor));
 
         QLabel* ll = new QLabel(label);
         ll->setStyleSheet(QString(
-                              "font-size: 9px; color: %1; background: transparent; border: none;"
-                              ).arg(txtSub));
+            "font-size: 9px; color: %1; background: transparent; border: none;")
+            .arg(txtSub));
 
         pl->addWidget(vl);
         pl->addWidget(ll);
         return pill;
     };
 
-    // ── BUILD LAYOUT ──────────────────────────────────────────────────────
+    // ── BUILD LAYOUT ──────────────────────────────────────────────────────────
 
-    // Overview pills
     mainLayout->addWidget(makeSection("Overview"));
     QHBoxLayout* overviewRow = new QHBoxLayout();
     overviewRow->setSpacing(10);
-    overviewRow->addWidget(makePill("Total Publications", QString::number(total),           "#30b9bf"));
-    overviewRow->addWidget(makePill("Fields Covered",     QString::number(fieldData.size()),"#6366f1"));
-    overviewRow->addWidget(makePill("Top Author",         topAuthor,                        "#f59e0b"));
-    overviewRow->addWidget(makePill("Author's Pubs",      QString::number(topAuthorCount),  "#16a34a"));
+    overviewRow->addWidget(makePill("Total Publications", QString::number(total),            "#30b9bf"));
+    overviewRow->addWidget(makePill("Fields Covered",     QString::number(fieldData.size()), "#6366f1"));
+    overviewRow->addWidget(makePill("Top Author",         topAuthor,                         "#f59e0b"));
+    overviewRow->addWidget(makePill("Author's Pubs",      QString::number(topAuthorCount),   "#16a34a"));
     mainLayout->addLayout(overviewRow);
 
-    // Publications by field 
     if (!fieldData.isEmpty()) {
         mainLayout->addWidget(makeSection("Publications by Field"));
         int barH = qMax(100, fieldData.size() * 38 + 32);
         mainLayout->addWidget(makeBarChart(fieldData, cTeal, barH));
     }
+
     if (!fieldData.isEmpty()) {
         mainLayout->addWidget(makeSection("Field Distribution"));
         mainLayout->addWidget(makePieChart(fieldData, 200));
     }
 
-    // Monthly activity – last 6 months
     if (!monthData.isEmpty()) {
         mainLayout->addWidget(makeSection("Activity — Last 6 Months"));
         mainLayout->addWidget(makeBarChart(
             monthData, cIndigo,
-            qMax(90, monthData.size() * 36 + 32)
-            ));
+            qMax(90, monthData.size() * 36 + 32)));
     }
 
-    // Most recent publication card
     if (recentId != -1) {
         mainLayout->addWidget(makeSection("Most Recent Publication"));
 
@@ -4286,23 +4357,21 @@ void MainWindow::showPublicationStats()
         recentCard->setAttribute(Qt::WA_StyledBackground, true);
         recentCard->setFixedHeight(56);
         recentCard->setStyleSheet(QString(
-                                      "QFrame { background-color: %1; border: 1px solid %2; border-radius: 10px; }"
-                                      ).arg(bgCard, border));
+            "QFrame { background-color: %1; border: 1px solid %2; border-radius: 10px; }")
+            .arg(bgCard, border));
 
         QHBoxLayout* rl = new QHBoxLayout(recentCard);
         rl->setContentsMargins(16, 0, 16, 0);
 
         QLabel* rt = new QLabel("📄  #" + QString::number(recentId) + "  —  " + recentField);
         rt->setStyleSheet(QString(
-                              "font-size: 10pt; font-weight: bold; color: %1;"
-                              "background: transparent; border: none;"
-                              ).arg(txtPrimary));
+            "font-size: 10pt; font-weight: bold; color: %1;"
+            "background: transparent; border: none;")
+            .arg(txtPrimary));
 
         QLabel* rd = new QLabel(recentDate);
         rd->setStyleSheet(
-            "font-size: 10pt; color: #16a34a;"
-            "background: transparent; border: none;"
-            );
+            "font-size: 10pt; color: #16a34a; background: transparent; border: none;");
         rd->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
         rl->addWidget(rt);
@@ -4313,17 +4382,18 @@ void MainWindow::showPublicationStats()
 
     mainLayout->addStretch();
 
-    // ── Close button ──────────────────────────────────────────────────────
+    // ── Close button ──────────────────────────────────────────────────────────
     QPushButton* closeBtn = new QPushButton("Close");
     closeBtn->setFixedWidth(100);
     closeBtn->setFixedHeight(36);
+    closeBtn->setCursor(Qt::PointingHandCursor);
     closeBtn->setStyleSheet(QString(
-                                "QPushButton { background-color: %1; color: %2;"
-                                "border: 1px solid %3; border-radius: 8px;"
-                                "font-size: 10pt; padding: 6px 20px; }"
-                                "QPushButton:hover   { background-color: %4; }"
-                                "QPushButton:pressed { background-color: %5; }"
-                                ).arg(btnBg, btnTxt, border, btnHover, btnPressed));
+        "QPushButton { background-color: %1; color: %2;"
+        "  border: 1px solid %3; border-radius: 8px;"
+        "  font-size: 10pt; padding: 6px 20px; }"
+        "QPushButton:hover   { background-color: %4; }"
+        "QPushButton:pressed { background-color: %5; }"
+        ).arg(btnBg, btnTxt, border, btnHover, btnPressed));
 
     connect(closeBtn, &QPushButton::clicked, dialog, &QDialog::close,
             Qt::QueuedConnection);
@@ -4336,7 +4406,6 @@ void MainWindow::showPublicationStats()
 
     dialog->exec();
 }
-
 
 //********************PUBLICATION END************************************************************************************************************************//
 
