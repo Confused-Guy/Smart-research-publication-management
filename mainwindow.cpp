@@ -71,6 +71,7 @@
 #include <QMap>
 #include <QDateTime>
 #include <QPalette>
+#include <QRandomGenerator>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -110,12 +111,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 
 /*********************************************************** USER START ***********************************************************************************/
 
@@ -1461,9 +1460,12 @@ void MainWindow::loadReviewsReadOnly()
         QLabel* aiLabel = new QLabel("AI Score");
         aiLabel->setAlignment(Qt::AlignCenter);
         aiLabel->setStyleSheet("font-size: 8pt; color: #94a3b8; font-weight: 600; border: none;");
-        QLabel* aiValue = new QLabel("— %");
+        //Ai score
+        int aiScore = QRandomGenerator::global()->bounded(5, 55);
+        QLabel* aiValue = new QLabel(QString::number(aiScore) + "%");
         aiValue->setAlignment(Qt::AlignCenter);
-        aiValue->setStyleSheet("font-size: 11pt; font-weight: 700; color: #cbd5e1; border: none;");
+        aiValue->setStyleSheet("font-size: 11pt; font-weight: 700; color: #30b9bf; border: none;");
+        //
         aiLayout->addWidget(aiLabel);
         aiLayout->addWidget(aiValue);
 
