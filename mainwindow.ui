@@ -8699,6 +8699,23 @@ QTabBar::tab:hover {
          <normaloff>icons/edit-3.svg</normaloff>icons/edit-3.svg</iconset>
        </property>
       </widget>
+      <widget class="QPushButton" name="previewSubmissionBtn">
+       <property name="geometry">
+        <rect>
+         <x>760</x>
+         <y>50</y>
+         <width>91</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Preview</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>icons/eye.svg</normaloff>icons/eye.svg</iconset>
+       </property>
+      </widget>
       <widget class="QTableWidget" name="submissionTableWidget_2">
        <property name="geometry">
         <rect>

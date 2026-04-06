@@ -1,0 +1,13 @@
+release/publication.o
+release/collaboration.o
+release/conference.o
+release/main.o
+release/mainwindow.o
+release/review.o
+release/submission.o
+release/user.o
+release/filepreviewdialog.o
+release/ollamaintegration.o
+release/moc_mainwindow.o
+release/moc_filepreviewdialog.o
+release/moc_ollamaintegration.o

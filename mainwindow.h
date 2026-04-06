@@ -7,6 +7,8 @@
 #include "collaboration.h"
 #include "publication.h"
 #include "submission.h"
+#include "filepreviewdialog.h"
+#include "ollamaintegration.h"
 
 
 
@@ -134,6 +136,8 @@ private slots:
     void on_refreshSubmissionBtn_clicked();
     void on_editSubmissionBtn_clicked();
     void on_submissionStatusChanged(const QString &newStatus);
+    void on_previewSubmissionBtn_clicked();
+    void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
     //************SUBMISSION END***************************//
 
 private:
@@ -218,6 +222,9 @@ private:
     void setupAndFillSubmissionTable(QTableWidget *table, const QList<Submission> &submissions);
     void showReviewTrackerDialog(int submissionId);
     void markReviewAsResolved(int reviewId);
+    OllamaIntegration *ollamaIntegration;
+    QLabel *aiStatusLabel = nullptr;  // Status messages for AI Checker
+    QTextEdit *aiResultDisplay = nullptr;  // Display for AI results
     //************SUBMISSION END***************************//
 };
 #endif // MAINWINDOW_H

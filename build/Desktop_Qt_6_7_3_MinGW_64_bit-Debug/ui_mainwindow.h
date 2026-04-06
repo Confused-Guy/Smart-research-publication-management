@@ -391,6 +391,7 @@ public:
     QPushButton *searchSubmissionBtn;
     QPushButton *refreshSubmissionBtn;
     QPushButton *editSubmissionBtn;
+    QPushButton *previewSubmissionBtn;
     QTableWidget *submissionTableWidget_2;
     QWidget *page_8;
     QFrame *frame_7;
@@ -3590,6 +3591,10 @@ public:
         QIcon icon28;
         icon28.addFile(QString::fromUtf8("icons/edit-3.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         editSubmissionBtn->setIcon(icon28);
+        previewSubmissionBtn = new QPushButton(groupBox_3);
+        previewSubmissionBtn->setObjectName("previewSubmissionBtn");
+        previewSubmissionBtn->setGeometry(QRect(760, 50, 91, 29));
+        previewSubmissionBtn->setIcon(icon26);
         submissionTableWidget_2 = new QTableWidget(groupBox_3);
         if (submissionTableWidget_2->columnCount() < 5)
             submissionTableWidget_2->setColumnCount(5);
@@ -4399,6 +4404,7 @@ public:
         searchSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Search submission", nullptr));
         refreshSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Refresh submissions", nullptr));
         editSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Edit submission", nullptr));
+        previewSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Preview", nullptr));
         groupBox_2->setTitle(QString());
         loginLogo->setText(QString());
         linkFor->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><a href=\"go\"><span style=\" text-decoration: underline; color:#27bf73;\">Forgot your password?</span></a></p></body></html>", nullptr));

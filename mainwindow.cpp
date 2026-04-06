@@ -24,6 +24,8 @@
 #include <QTextStream>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QFileInfo>
+#include <QProcess>
 
 // Layouts
 #include <QVBoxLayout>
@@ -45,6 +47,7 @@
 #include <QFrame>
 #include <QTableWidget>
 #include <QInputDialog>
+#include <QDebug>
 
 // Drawing
 #include <QPainter>
@@ -72,6 +75,7 @@
 #include <QDateTime>
 #include <QPalette>
 #include <QRandomGenerator>
+#include <QCoreApplication>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -103,6 +107,34 @@ MainWindow::MainWindow(QWidget *parent)
     ui->dropPlace->setPixmap(drop);
 
     loadSubmissions();
+    
+    // Initialize Ollama integration
+    ollamaIntegration = new OllamaIntegration(this);
+    
+    // Create AI Status Label (shows below AI Checker button)
+    QWidget *submissionPage = ui->stackedWidget->widget(6);  // Submission page (tab_7)
+    if (submissionPage) {
+        qDebug() << "Submission page found";
+        // Button is at (100, 60) with size (111, 29), so place label below it
+        aiStatusLabel = new QLabel(submissionPage);
+        aiStatusLabel->setGeometry(100, 92, 111, 20);  // Below the button
+        aiStatusLabel->setText("Ready");
+        aiStatusLabel->setStyleSheet("QLabel { color: #00AA00; font-size: 10px; text-align: center; }");
+        aiStatusLabel->setAlignment(Qt::AlignCenter);
+        aiStatusLabel->show();
+        qDebug() << "AI Status Label created and shown";
+    } else {
+        qDebug() << "ERROR: Submission page not found!";
+    }
+    
+    // Create AI Result Display (shown in Likelihood of acceptance box)
+    aiResultDisplay = new QTextEdit(ui->groupBox_12);
+    aiResultDisplay->setGeometry(10, 25, 231, 156);
+    aiResultDisplay->setReadOnly(true);
+    aiResultDisplay->setStyleSheet("QTextEdit { background-color: #1e1e1e; color: #00ff00; font-size: 14px; font-weight: bold; border: 1px solid #00aa00; }");
+    aiResultDisplay->setText("No analysis yet");
+    aiResultDisplay->show();
+    qDebug() << "AI Result Display created and shown";
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index) {
         if (ui->tabWidget->widget(index) == ui->ReviewT)
@@ -4612,10 +4644,23 @@ void MainWindow::setupAndFillSubmissionTable(QTableWidget *table, const QList<Su
         connect(table, &QTableWidget::itemSelectionChanged, this, [this, table]() {
             int selectedRow = table->currentRow();
             if (selectedRow >= 0 && table->item(selectedRow, 0)) {
-                editingSubmissionId = table->item(selectedRow, 0)->text().toInt();
-                qDebug() << "Selected submission ID:" << editingSubmissionId;
+                int submissionId = table->item(selectedRow, 0)->text().toInt();
+                editingSubmissionId = submissionId;
+                
+                // Fetch the full submission data to get the manuscript path
+                Submission tempSub;
+                QList<Submission> allSubmissions = tempSub.read();
+                for (const Submission &sub : allSubmissions) {
+                    if (sub.getSubmissionID() == submissionId) {
+                        selectedManuscriptPath = sub.getManuscript();
+                        qDebug() << "Selected submission ID:" << editingSubmissionId;
+                        qDebug() << "Selected manuscript path:" << selectedManuscriptPath;
+                        break;
+                    }
+                }
             } else {
                 editingSubmissionId = -1;
+                selectedManuscriptPath = "";
             }
         });
     }
@@ -5186,6 +5231,192 @@ void MainWindow::clearSubmissionForm()
     editingSubmissionId = -1;
     if (ui->submissionTableWidget)
         ui->submissionTableWidget->clearSelection();
+}
+
+void MainWindow::on_previewSubmissionBtn_clicked()
+{
+    // Get the currently selected submission manuscript
+    if (selectedManuscriptPath.isEmpty()) {
+        QMessageBox::warning(this, "No File Selected", "Please select a submission with a manuscript file first.");
+        return;
+    }
+
+    if (!QFileInfo(selectedManuscriptPath).exists()) {
+        QMessageBox::warning(this, "File Not Found", "The manuscript file could not be found: " + selectedManuscriptPath);
+        return;
+    }
+
+    // Open file preview dialog
+    FilePreviewDialog preview(selectedManuscriptPath, this);
+    preview.exec();
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    QMessageBox::information(this, "DEBUG", "AI Checker slot called!\nPath: " + selectedManuscriptPath);
+    
+    qDebug() << "DEBUG: on_aiChecker_clicked() called!";
+    qDebug() << "Selected manuscript path:" << selectedManuscriptPath;
+    
+    // Get the currently selected submission manuscript
+    if (selectedManuscriptPath.isEmpty()) {
+        qDebug() << "DEBUG: No manuscript selected";
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ No file selected</span>");
+        QMessageBox::warning(this, "No File Selected", "Please select a submission with a manuscript file first.");
+        return;
+    }
+
+    if (!QFileInfo(selectedManuscriptPath).exists()) {
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ File not found</span>");
+        QMessageBox::warning(this, "File Not Found", "The manuscript file could not be found: " + selectedManuscriptPath);
+        return;
+    }
+
+    // Update status label
+    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Checking Ollama...</span>");
+    if (aiResultDisplay) aiResultDisplay->setText("Analyzing...");
+    QCoreApplication::processEvents();
+
+    // Check if Ollama is available
+    if (!ollamaIntegration->isOllamaAvailable()) {
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Ollama unavailable</span>");
+        if (aiResultDisplay) aiResultDisplay->setText("ERROR: Ollama not available\n\nStarting Ollama...");
+        QMessageBox::critical(this, "Ollama Not Available",
+            "Could not connect to Ollama at http://localhost:11434\n"
+            "Please make sure Ollama is running and accessible.");
+        return;
+    }
+
+    // Update status label
+    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Extracting text...</span>");
+    QCoreApplication::processEvents();
+
+    // Extract text from the manuscript
+    QFile file(selectedManuscriptPath);
+    QString manuscriptText;
+
+    QFileInfo fileInfo(selectedManuscriptPath);
+    QString fileExt = fileInfo.suffix().toLower();
+
+    if (fileExt == "txt") {
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            manuscriptText = in.readAll();
+            file.close();
+        }
+    }
+    else if (fileExt == "docx") {
+        // Use PowerShell to extract text from DOCX file (which is a ZIP archive)
+        QProcess process;
+        process.setProcessChannelMode(QProcess::MergedChannels);
+        
+        // PowerShell command to extract and parse DOCX XML
+        QString psCommand = QString(
+            "$path = '%1'; "
+            "$tempDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'docx_' + [System.Guid]::NewGuid().ToString()); "
+            "$null = New-Item -Path $tempDir -ItemType Directory -Force; "
+            "try { "
+            "  [System.IO.Compression.ZipFile]::ExtractToDirectory($path, $tempDir, $true); "
+            "  $docXml = [xml](Get-Content \"$tempDir\\word\\document.xml\" -Raw); "
+            "  $ns = @{w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; "
+            "  $texts = @($docXml.SelectNodes('//w:t', $ns) | ForEach-Object { $_.InnerText }); "
+            "  Write-Output ($texts -join ''); "
+            "} finally { "
+            "  Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue; "
+            "}"
+        ).arg(selectedManuscriptPath.replace("'", "''"));
+        
+        process.start("powershell.exe", QStringList() << "-NoProfile" << "-Command" << psCommand);
+        
+        if (!process.waitForFinished(10000)) {
+            process.kill();
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ DOCX extraction timeout</span>");
+            if (aiResultDisplay) aiResultDisplay->setText("ERROR: DOCX extraction\ntimed out\n\nTry converting to TXT");
+            QMessageBox::warning(this, "DOCX Extraction Timeout", 
+                "The DOCX text extraction took too long.\n\n"
+                "Please convert your DOCX to TXT format and try again.");
+            return;
+        }
+        
+        manuscriptText = QString::fromUtf8(process.readAllStandardOutput()).trimmed();
+        int exitCode = process.exitCode();
+        
+        if (exitCode != 0 || manuscriptText.isEmpty()) {
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ DOCX extraction failed</span>");
+            if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from DOCX\n\nTry converting to TXT");
+            QMessageBox::information(this, "DOCX Extraction Failed", 
+                "Could not extract text from this DOCX file.\n\n"
+                "Possible reasons:\n"
+                "• File is corrupted or invalid\n"
+                "• Document contains only images/tables\n"
+                "• Unusual formatting\n\n"
+                "To analyze with AI:\n"
+                "1. Convert your DOCX to TXT format\n"
+                "2. Upload the TXT version\n"
+                "3. Try AI Checker again");
+            return;
+        }
+    }
+    else if (fileExt == "pdf") {
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ PDF not supported</span>");
+        if (aiResultDisplay) aiResultDisplay->setText("ERROR: PDF not supported\n\nConvert to TXT and try again");
+        QMessageBox::information(this, "PDF Not Supported for AI", 
+            "PDF file detected but full text extraction requires additional libraries.\n"
+            "To analyze your manuscript with AI:\n\n"
+            "1. Convert your PDF file to TXT format\n"
+            "2. Upload the TXT version to the submission\n"
+            "3. Then use the AI Checker\n\n"
+            "Alternatively, you can preview the PDF file using the Preview button or an external PDF viewer.");
+        return;
+    }
+
+    if (manuscriptText.isEmpty()) {
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Empty manuscript</span>");
+        if (aiResultDisplay) aiResultDisplay->setText("ERROR: Manuscript is empty");
+        QMessageBox::warning(this, "Could Not Extract Text",
+            "Unable to extract text from the manuscript file.");
+        return;
+    }
+
+    // Update status label - sending to AI
+    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Calling AI (llama3.1:8b)...</span>");
+    QCoreApplication::processEvents();
+
+    // Call Ollama API to get acceptance probability
+    int percentage = ollamaIntegration->checkManuscriptAcceptance(manuscriptText, "llama3.1:8b");
+
+    if (percentage >= 0) {
+        // Update status
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #00ff00;'>✓ Analysis complete!</span>");
+        
+        // Display result in the result display widget
+        QString resultText = QString::number(percentage) + "%";
+        if (aiResultDisplay) {
+            aiResultDisplay->setText(resultText + "\n\n" + 
+                "Acceptance\nProbability\n\n" +
+                "(llama3.1:8b)");
+        }
+        
+        // Also show in message box for extra visibility
+        QString resultMessage = QString(
+            "Acceptance Probability: %1%\n\n"
+            "This represents the AI's assessment of the probability that this manuscript "
+            "would be accepted at a top-tier conference, based on factors like clarity, "
+            "methodology, novelty, and presentation quality."
+        ).arg(percentage);
+
+        QMessageBox::information(this, "AI Review Result", resultMessage);
+    }
+    else {
+        // Update status
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ AI analysis failed</span>");
+        if (aiResultDisplay) aiResultDisplay->setText("ERROR: Invalid response\nfrom AI");
+        
+        QMessageBox::warning(this, "AI Analysis Failed",
+            "Could not get a valid response from the AI.\n"
+            "Please ensure the model (llama3.1:8b) is properly loaded in Ollama\n"
+            "and try again.");
+    }
 }
 
 //************SUBMISSION END***************************//

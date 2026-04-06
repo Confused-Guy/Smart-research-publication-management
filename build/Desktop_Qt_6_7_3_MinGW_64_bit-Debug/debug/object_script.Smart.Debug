@@ -1,0 +1,13 @@
+debug/publication.o
+debug/collaboration.o
+debug/conference.o
+debug/main.o
+debug/mainwindow.o
+debug/review.o
+debug/submission.o
+debug/user.o
+debug/filepreviewdialog.o
+debug/ollamaintegration.o
+debug/moc_mainwindow.o
+debug/moc_filepreviewdialog.o
+debug/moc_ollamaintegration.o

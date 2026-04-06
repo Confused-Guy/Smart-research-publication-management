@@ -13,7 +13,9 @@ SOURCES += \
     mainwindow.cpp \
     review.cpp \
     submission.cpp \
-    user.cpp
+    user.cpp \
+    filepreviewdialog.cpp \
+    ollamaintegration.cpp
 
 HEADERS += \
     publication.h \
@@ -22,7 +24,9 @@ HEADERS += \
     mainwindow.h \
     review.h \
     submission.h \
-    user.h
+    user.h \
+    filepreviewdialog.h \
+    ollamaintegration.h
 
 FORMS += \
     mainwindow.ui
