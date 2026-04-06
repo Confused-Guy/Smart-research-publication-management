@@ -447,7 +447,7 @@ void MainWindow::loadReviews(bool ascending, QString searchFilter)
         QVBoxLayout* reviewCardLayout = new QVBoxLayout(reviewCard);
 
         QString statusColor, statusBg;
-        if (status == "Approved") {
+        if (status == "Accepted") {
             statusColor = "#15803d"; statusBg = "#dcfce7";
         } else if (status == "Rejected") {
             statusColor = "#b91c1c"; statusBg = "#fee2e2";
@@ -712,7 +712,7 @@ void MainWindow::buildCreateReviewUI()
         while (statQ.next()) {
             QString s = statQ.value(0).toString();
             int     n = statQ.value(1).toInt();
-            if (s == "Approved")  cntApproved  = n;
+            if (s == "Accepted")  cntApproved  = n;
             else if (s == "Rejected")  cntRejected  = n;
             else if (s == "In Review") cntInReview  = n;
             else                       cntPending   += n; // catches "Pending" and empty
@@ -759,7 +759,7 @@ void MainWindow::buildCreateReviewUI()
     QVector<SliceData> slices = {
         { cntPending,  QColor(59, 130, 246),     "Pending"   },
         { cntInReview, QColor(245, 158, 11),     "In Review" },
-        { cntApproved, QColor(34, 197, 94),      "Approved"  },
+        { cntApproved, QColor(34, 197, 94),      "Accepted"  },
         { cntRejected, QColor(239, 68, 68),      "Rejected"  }
     };
 
@@ -861,7 +861,7 @@ void MainWindow::buildCreateReviewUI()
     QVector<LegendEntry> legendEntries = {
         { "Pending",   QColor(59, 130, 246),  cntPending   },
         { "In Review", QColor(245, 158, 11),  cntInReview  },
-        { "Approved",  QColor(34, 197, 94),   cntApproved  },
+        { "Accepted",  QColor(34, 197, 94),   cntApproved  },
         { "Rejected",  QColor(239, 68, 68),   cntRejected  },
     };
 
@@ -1005,7 +1005,7 @@ void MainWindow::showReviewDialog(int reviewId)
 
     QDialog* dialog = new QDialog(this);
     dialog->setWindowTitle(isEditing ? "Edit Review" : "Send to Review");
-    dialog->setFixedSize(520, isEditing ? 640 : 660);
+    dialog->setFixedSize(520, 600);
     dialog->setAttribute(Qt::WA_StyledBackground, true);
 
     const bool dark          = !mode;
@@ -1107,7 +1107,7 @@ void MainWindow::showReviewDialog(int reviewId)
     QComboBox* statusInput = nullptr;
     if (isEditing) {
         statusInput = new QComboBox();
-        statusInput->addItems({"Pending", "In Review", "Approved", "Rejected"});
+        statusInput->addItems({"Pending", "In Review", "Accepted", "Rejected"});
         statusInput->setStyleSheet(QString(
                                        "QComboBox { %1 }"
                                        "QComboBox:focus { border: 2px solid #30b9bf; padding: 11px 13px; }"
@@ -1127,7 +1127,20 @@ void MainWindow::showReviewDialog(int reviewId)
     formLayout->addWidget(makeLabel("Comment"));
     formLayout->addWidget(commentInput);
 
-    mainLayout->addWidget(formCard);
+    QScrollArea* scrollArea = new QScrollArea();
+    scrollArea->setWidget(formCard);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setStyleSheet(QString(
+        "QScrollArea { background: transparent; border: none; }"
+        "QScrollBar:vertical { background: %1; width: 6px; border-radius: 3px; }"
+        "QScrollBar::handle:vertical { background: %2; border-radius: 3px; min-height: 30px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+    ).arg(dark ? "#1a1f2e" : "#f6f8fc", dark ? "#3e4859" : "#cbd5e1"));
+
+    mainLayout->addWidget(scrollArea, 1);
 
     if (isEditing) {
         QSqlQuery q;
@@ -1189,9 +1202,8 @@ void MainWindow::showReviewDialog(int reviewId)
             return;
         }
 
-        QSqlQuery query;
-
         if (isEditing) {
+            QSqlQuery query;
             query.prepare(
                 "UPDATE REVIEW SET "
                 "  REVIEWER_NAME = :name, "
@@ -1205,25 +1217,49 @@ void MainWindow::showReviewDialog(int reviewId)
             query.bindValue(":comment", commentInput->toPlainText().trimmed());
             query.bindValue(":status",  statusInput->currentText());
             query.bindValue(":id",      reviewId);
-        } else {
-            int comboIdx = submissionCombo->currentIndex();
-            int sid      = submissionData[comboIdx].first;
 
-            // Get a default Publication ID from the database
-            int defaultPubId = getDefaultPublicationId();
-
-            query.prepare(
-                "INSERT INTO REVIEW "
-                "  (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS) "
-                "VALUES "
-                "  (REVIEW_SEQ.NEXTVAL, :name, :date, :sid, :pid, :comment, 'Pending')"
-                );
-            query.bindValue(":name",    nameInput->text().trimmed());
-            query.bindValue(":date",    dateInput->date());
-            query.bindValue(":sid",     sid);
-            query.bindValue(":pid",     defaultPubId);
-            query.bindValue(":comment", commentInput->toPlainText().trimmed());
+            if (query.exec()) {
+                QString newStatus = statusInput->currentText();
+                if (newStatus == "Accepted" || newStatus == "Rejected") {
+                    QSqlQuery subUpdate;
+                    subUpdate.prepare(
+                        "UPDATE Submission SET Status = :status "
+                        "WHERE SubmissionID = ("
+                        "  SELECT SUBMISSION_ID FROM REVIEW WHERE IDREVIEW = :id"
+                        ")"
+                        );
+                    subUpdate.bindValue(":status", newStatus);
+                    subUpdate.bindValue(":id",     reviewId);
+                    if (!subUpdate.exec()) {
+                        qDebug() << "Submission status sync failed:" << subUpdate.lastError().text();
+                    }
+                }
+                loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
+                dialog->accept();
+            } else {
+                QMessageBox::critical(dialog, "Error",
+                                      "Failed to save review:\n" + query.lastError().text());
+            }
+            return;
         }
+
+        // Insert path (new review)
+        int comboIdx = submissionCombo->currentIndex();
+        int sid      = submissionData[comboIdx].first;
+        int defaultPubId = getDefaultPublicationId();
+
+        QSqlQuery query;
+        query.prepare(
+            "INSERT INTO REVIEW "
+            "  (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS) "
+            "VALUES "
+            "  (REVIEW_SEQ.NEXTVAL, :name, :date, :sid, :pid, :comment, 'Pending')"
+            );
+        query.bindValue(":name",    nameInput->text().trimmed());
+        query.bindValue(":date",    dateInput->date());
+        query.bindValue(":sid",     sid);
+        query.bindValue(":pid",     defaultPubId);
+        query.bindValue(":comment", commentInput->toPlainText().trimmed());
 
         if (query.exec()) {
             loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
@@ -1236,7 +1272,6 @@ void MainWindow::showReviewDialog(int reviewId)
 
     dialog->exec();
 }
-
 void MainWindow::exportReviewPDF(int reviewId, const QString& reviewerName, const QDate& reviewDate,
                                  int submissionId, int publicationId, const QString& comment,
                                  const QString& status)
@@ -1268,7 +1303,7 @@ void MainWindow::exportReviewPDF(int reviewId, const QString& reviewerName, cons
     QString reviewDateStr = reviewDate.toString("MMMM dd, yyyy");
 
     QString statusColor, statusBg;
-    if (status == "Approved") {
+    if (status == "Accepted") {
         statusColor = "#15803d"; statusBg = "#dcfce7";
     } else if (status == "Rejected") {
         statusColor = "#b91c1c"; statusBg = "#fee2e2";
@@ -1399,7 +1434,7 @@ void MainWindow::loadReviewsReadOnly()
         QString status       = reviewQuery.value(6).toString();
 
         QString statusColor, statusBg;
-        if (status == "Approved") {
+        if (status == "Accepted") {
             statusColor = "#15803d"; statusBg = "#dcfce7";
         } else if (status == "Rejected") {
             statusColor = "#b91c1c"; statusBg = "#fee2e2";
