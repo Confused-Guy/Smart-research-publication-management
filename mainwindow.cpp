@@ -64,6 +64,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QWebEngineView>
+#include <QWebEngineSettings>
 
 // JSON (for geocoding API response - Conference Map)
 #include <QJsonDocument>
@@ -2845,21 +2847,20 @@ void MainWindow::showConferenceCalendar()
 //5 MAP
 void MainWindow::showConferenceMap(const QString& location, const QString& title)
 {
-    //Dark mode compatible
     const bool dark = !mode;
 
     const QString bgPage     = dark ? "#2a3142" : "#f6f8fc";
     const QString txtPrimary = dark ? "#e0e7f1" : "#1f2937";
     const QString txtSub     = dark ? "#8892a4" : "#9ca3af";
 
-    //Loading dialog
+    // Loading dialog
     QDialog* loadingDialog = new QDialog(this);
     loadingDialog->setWindowTitle("Loading Map...");
     loadingDialog->setFixedSize(320, 100);
     loadingDialog->setAttribute(Qt::WA_StyledBackground, true);
     loadingDialog->setStyleSheet(QString(
-                                     "QDialog { background-color: %1; border: none; }"
-                                     ).arg(bgPage));
+        "QDialog { background-color: %1; border: none; }"
+    ).arg(bgPage));
 
     QVBoxLayout* ll = new QVBoxLayout(loadingDialog);
     ll->setContentsMargins(20, 16, 20, 16);
@@ -2868,26 +2869,26 @@ void MainWindow::showConferenceMap(const QString& location, const QString& title
     QLabel* loadingLabel = new QLabel("🌍  Geocoding location...");
     loadingLabel->setAlignment(Qt::AlignCenter);
     loadingLabel->setStyleSheet(QString(
-                                    "font-size: 11px; font-weight: bold; color: %1; background: transparent;"
-                                    ).arg(txtPrimary));
+        "font-size: 11px; font-weight: bold; color: %1; background: transparent;"
+    ).arg(txtPrimary));
 
     QLabel* locLabel = new QLabel(location);
     locLabel->setAlignment(Qt::AlignCenter);
     locLabel->setStyleSheet(QString(
-                                "font-size: 9px; color: %1; background: transparent;"
-                                ).arg(txtSub));
+        "font-size: 9px; color: %1; background: transparent;"
+    ).arg(txtSub));
     locLabel->setWordWrap(true);
 
     ll->addWidget(loadingLabel);
     ll->addWidget(locLabel);
 
-    //Geocode
+    // Geocode
     auto* geocoder = new QNetworkAccessManager(this);
     QString encoded = QString::fromUtf8(QUrl::toPercentEncoding(location));
     QNetworkRequest geoReq(
         QUrl("https://nominatim.openstreetmap.org/search?q="
              + encoded + "&format=json&limit=1")
-        );
+    );
     geoReq.setRawHeader("User-Agent", "PeerlyResearchApp/1.0");
     QNetworkReply* geoReply = geocoder->get(geoReq);
 
@@ -2911,23 +2912,21 @@ void MainWindow::showConferenceMap(const QString& location, const QString& title
             }
         }
 
-        //Tile layer based on mode
         QString tileLayer = dark
-                                ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                                : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-        QString tileAttrib = dark
-                                 ? "© OpenStreetMap contributors © CARTO"
-                                 : "© OpenStreetMap contributors";
+            ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+            : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
+        QString tileAttrib = "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>";
+        tileAttrib.replace("'", "\\'");
 
         QString notFoundCss = found ? "" :
-                                  "#notfound { position:fixed; top:60px; left:50%;"
-                                  "transform:translateX(-50%);"
-                                  "background:rgba(220,38,38,0.85);"
-                                  "color:white; padding:8px 18px;"
-                                  "border-radius:20px; font-size:12px; z-index:9999; }";
+            "#notfound { position:fixed; top:60px; left:50%;"
+            "transform:translateX(-50%);"
+            "background:rgba(220,38,38,0.85);"
+            "color:white; padding:8px 18px;"
+            "border-radius:20px; font-size:12px; z-index:9999; }";
 
         QString notFoundHtml = found ? "" :
-                                   "<div id='notfound'>⚠️ Location not found — showing approximate area</div>";
+            "<div id='notfound'>⚠️ Location not found — showing approximate area</div>";
 
         QString latStr = QString::number(lat, 'f', 6);
         QString lonStr = QString::number(lon, 'f', 6);
@@ -2939,52 +2938,61 @@ void MainWindow::showConferenceMap(const QString& location, const QString& title
             "transform:rotate(-45deg);"
             "box-shadow:0 2px 8px rgba(0,0,0,0.35);";
 
-        //Build HTML
+        // Build HTML
         QString html =
             "<!DOCTYPE html><html><head>"
             "<meta charset='utf-8'/>"
             "<meta name='viewport' content='width=device-width,initial-scale=1.0'>"
             "<title>" + title.toHtmlEscaped() + "</title>"
-                                      "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>"
-                                      "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>"
-                                      "<style>"
-                                      "* { margin:0; padding:0; box-sizing:border-box; }"
-                                      "body { font-family:Arial,sans-serif; }"
-                                      "#topbar { background:#30b9bf; color:white; padding:10px 20px; height:48px;"
-                                      "  display:flex; align-items:center; justify-content:space-between;"
-                                      "  font-size:14px; font-weight:bold; }"
-                                      "#topbar span { font-size:11px; opacity:0.85; font-weight:normal; }"
-                                      "#map { height:calc(100vh - 48px); width:100%; }"
+            "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>"
+            "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>"
+            "<style>"
+            "* { margin:0; padding:0; box-sizing:border-box; }"
+            "body { font-family:Arial,sans-serif; }"
+            "#topbar { background:#30b9bf; color:white; padding:10px 20px; height:48px;"
+            "  display:flex; align-items:center; justify-content:space-between;"
+            "  font-size:14px; font-weight:bold; }"
+            "#topbar span { font-size:11px; opacity:0.85; font-weight:normal; }"
+            "#map { height:calc(100vh - 48px); width:100%; }"
             + notFoundCss +
             "</style></head><body>"
             "<div id='topbar'>"
             "  <div>📍 " + title.toHtmlEscaped() + "</div>"
-                                      "  <span>" + location.toHtmlEscaped() + "</span>"
-                                         "</div>"
+            "  <span>" + location.toHtmlEscaped() + "</span>"
+            "</div>"
             + notFoundHtml +
             "<div id='map'></div>"
             "<script>"
             "var map = L.map('map',{zoomControl:true,scrollWheelZoom:true})"
             ".setView([" + latStr + "," + lonStr + "],14);"
-                                      "L.tileLayer('" + tileLayer + "',{"
-                          "  maxZoom:19, attribution:'" + tileAttrib + "'"
-                           "}).addTo(map);"
-                           "var icon=L.divIcon({"
-                           "  html:'<div style=\"" + pinStyle + "\"></div>',"
-                         "  iconSize:[22,22],iconAnchor:[11,22],className:''"
-                         "});"
-                         "L.marker([" + latStr + "," + lonStr + "],{icon:icon})"
-                                      ".addTo(map)"
-                                      ".bindPopup("
-                                      "  '<div style=\"font-family:Arial;min-width:160px;\">"
-                                      "  <b style=\"color:#30b9bf;font-size:14px;\">" + title.toHtmlEscaped() + "</b><br>"
-                                      "  <span style=\"color:#6b7280;font-size:12px;\">📍 " + location.toHtmlEscaped() + "</span>"
-                                         "  </div>',"
-                                         "  {maxWidth:250}"
-                                         ").openPopup();"
-                                         "</script></body></html>";
+            "L.tileLayer('" + tileLayer + "',{"
+            "  maxZoom:19,"
+            "  attribution:'" + tileAttrib + "'"
+            "}).addTo(map);"
+            "var icon=L.divIcon({"
+            "  html:'<div style=\"" + pinStyle + "\"></div>',"
+            "  iconSize:[22,22],iconAnchor:[11,22],className:''"
+            "});"
+            "L.marker([" + latStr + "," + lonStr + "],{icon:icon})"
+            ".addTo(map)"
+            ".bindPopup("
+            "  '<div style=\"font-family:Arial;min-width:160px;\">"
+            "  <b style=\"color:#30b9bf;font-size:14px;\">" + title.toHtmlEscaped() + "</b><br>"
+            "  <span style=\"color:#6b7280;font-size:12px;\">📍 " + location.toHtmlEscaped() + "</span>"
+            "  </div>',"
+            "  {maxWidth:250}"
+            ").openPopup();"
+            "</script></body></html>";
 
-        //Write to temp file and open in browser
+        QWebEngineView* mapView = new QWebEngineView();
+        mapView->setWindowTitle("Map — " + title);
+        mapView->resize(900, 650);
+        mapView->setAttribute(Qt::WA_DeleteOnClose);
+
+        QWebEngineSettings* settings = mapView->settings();
+        settings->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls, true);
+        settings->setAttribute(QWebEngineSettings::JavascriptEnabled, true);
+
         QString tmpPath = QDir::tempPath() + "/peerly_map_"
                           + QString::number(QDateTime::currentMSecsSinceEpoch())
                           + ".html";
@@ -2994,8 +3002,10 @@ void MainWindow::showConferenceMap(const QString& location, const QString& title
             QTextStream stream(&file);
             stream << html;
             file.close();
-            QDesktopServices::openUrl(QUrl::fromLocalFile(tmpPath));
+            mapView->load(QUrl::fromLocalFile(tmpPath));
         }
+
+        mapView->show();
     });
 
     loadingDialog->show();
