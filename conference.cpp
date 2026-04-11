@@ -1,30 +1,96 @@
 #include "conference.h"
-#include "ui_conference.h"
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlQueryModel>
+#include <QDebug>
+#include <QDateTime>
+#include <QVariant>
 
-#include "addconferencedialog.h"
-#include "conference_model.h"
+Conference::Conference() {}
 
-conference::conference(QWidget *parent)
-    : QMainWindow(parent),
-    ui(new Ui::conference)
+Conference::Conference(int id, QString title, int publicationId,
+                       QDate date, QString location,
+                       double price)
 {
-    ui->setupUi(this);
+    this->id       = id;
+    this->title    = title;
+    this->publicationId  = publicationId;
+    this->date     = date;
+    this->location = location;
+    this->price    = price;
 }
 
-conference::~conference()
+//GETTERS
+int     Conference::getId()       const { return id; }
+QString Conference::getTitle()    const { return title; }
+int     Conference::getPublicationId()  const { return publicationId; }
+QDate   Conference::getDate()     const { return date; }
+QString Conference::getLocation() const { return location; }
+double  Conference::getPrice()    const { return price; }
+
+bool Conference::add()
 {
-    delete ui;
-}
+    QSqlQuery query;
+    query.prepare(
+        "INSERT INTO CONFERENCE "
+        "(ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE) "
+        "VALUES (CONF_SEQ.NEXTVAL, ?, ?, ?, ?, ?)"
+        );
+    query.addBindValue(title);
+    query.addBindValue(publicationId);
+    query.addBindValue(QDateTime(date, QTime(0, 0, 0)));
+    query.addBindValue(location);
+    query.addBindValue(price);
 
-void conference::on_addConferenceBtn_clicked()
-{
-    addconferencedialog dialog(this);
-
-    if (dialog.exec() == QDialog::Accepted)
-    {
-        conference_model c = dialog.getConference();
-
-
+    if (!query.exec()) {
+        qDebug() << "Insert error:" << query.lastError().text();
+        return false;
     }
+    return true;
 }
 
+bool Conference::update()
+{
+    QSqlQuery query;
+    query.prepare(
+        "UPDATE CONFERENCE SET "
+        "TITLE = ?, "
+        "PUBLICATIONID = ?, "
+        "CONF_DATE = ?, "
+        "LOCATION = ?, "
+        "PRICE = ? "
+        "WHERE ID = ?"
+        );
+    query.addBindValue(title);
+    query.addBindValue(publicationId);
+    query.addBindValue(QDateTime(date, QTime(0, 0, 0)));
+    query.addBindValue(location);
+    query.addBindValue(price);
+    query.addBindValue(id);
+
+    if (!query.exec()) {
+        qDebug() << "Update error:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool Conference::remove(int id)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM CONFERENCE WHERE ID = ?");
+    query.addBindValue(id);
+
+    if (!query.exec()) {
+        qDebug() << "Delete error:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+QSqlQueryModel* Conference::display()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT * FROM CONFERENCE ORDER BY CONF_DATE DESC");
+    return model;
+}

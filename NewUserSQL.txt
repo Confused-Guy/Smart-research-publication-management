@@ -1,0 +1,15 @@
+-- Create user with password
+CREATE USER peerly IDENTIFIED BY root;
+
+-- Grant necessary privileges
+GRANT CONNECT TO peerly;
+GRANT RESOURCE TO peerly;
+GRANT CREATE SESSION TO peerly;
+GRANT CREATE TABLE TO peerly;
+GRANT CREATE VIEW TO peerly;
+GRANT CREATE SEQUENCE TO peerly;
+GRANT CREATE TRIGGER TO peerly;
+GRANT CREATE PROCEDURE TO peerly;
+GRANT UNLIMITED TABLESPACE TO peerly;
+
+COMMIT;

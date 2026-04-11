@@ -1,0 +1,146 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// --- Shared State ---
+String events[10];
+int eventCount = 0;
+int currentEvent = 0;
+
+int totalConferences = 0;
+int upcomingConferences = 0;
+
+// Display mode: 0 = events, 1 = stats
+int screenMode = 0;
+int statsDisplayMode = 0;
+
+unsigned long lastUpdate = 0;
+const unsigned long SCROLL_INTERVAL = 3000;
+
+void setup() {
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Peerly Research");
+  lcd.setCursor(0, 1);
+  lcd.print("Loading...");
+  delay(2000);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+
+    if (command == "CLEAR") {
+      eventCount = 0;
+      currentEvent = 0;
+      totalConferences = 0;
+      upcomingConferences = 0;
+      lcd.clear();
+
+    } else if (command == "GOODBYE") {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Peerly Research");
+      lcd.setCursor(0, 1);
+      lcd.print("Goodbye!");
+
+    } else if (command.startsWith("EVENT:")) {
+      // Format: EVENT:Title|Date
+      String data = command.substring(6);
+      if (eventCount < 10) {
+        events[eventCount++] = data;
+      }
+      screenMode = 0;
+
+    } else if (command.startsWith("STATS:")) {
+      // Format: STATS:total,upcoming
+      String data = command.substring(6);
+      int commaPos = data.indexOf(',');
+      if (commaPos > 0) {
+        totalConferences = data.substring(0, commaPos).toInt();
+        upcomingConferences = data.substring(commaPos + 1).toInt();
+      }
+      screenMode = 1;
+      statsDisplayMode = 0;
+
+    } else if (command == "DISPLAY") {
+      lastUpdate = millis();
+      if (screenMode == 0) displayEvents();
+      else displayStats();
+    }
+  }
+
+  // Auto-scroll
+  if (millis() - lastUpdate > SCROLL_INTERVAL) {
+    lastUpdate = millis();
+    if (screenMode == 0) {
+      displayEvents();
+      if (eventCount > 0)
+        currentEvent = (currentEvent + 1) % eventCount;
+    } else {
+      displayStats();
+      statsDisplayMode = (statsDisplayMode + 1) % 3;
+    }
+  }
+}
+
+void displayEvents() {
+  if (eventCount == 0) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("No upcoming");
+    lcd.setCursor(0, 1);
+    lcd.print("conferences");
+    return;
+  }
+
+  lcd.clear();
+  String event = events[currentEvent];
+  int pipePos = event.indexOf('|');
+
+  if (pipePos > 0) {
+    String title = event.substring(0, pipePos);
+    String date  = event.substring(pipePos + 1);
+
+    if (title.length() > 16)
+      title = title.substring(0, 13) + "...";
+
+    lcd.setCursor(0, 0);
+    lcd.print(title);
+    lcd.setCursor(0, 1);
+    lcd.print(date);
+  }
+
+  // Event counter in bottom-right (e.g. "3" if on 3rd of 5)
+  lcd.setCursor(15, 1);
+  lcd.print(currentEvent + 1);
+}
+
+void displayStats() {
+  lcd.clear();
+  switch (statsDisplayMode) {
+    case 0:
+      lcd.setCursor(0, 0);
+      lcd.print("Total Conf:");
+      lcd.setCursor(0, 1);
+      lcd.print(totalConferences);
+      break;
+    case 1:
+      lcd.setCursor(0, 0);
+      lcd.print("Upcoming:");
+      lcd.setCursor(0, 1);
+      lcd.print(upcomingConferences);
+      break;
+    case 2:
+      lcd.setCursor(0, 0);
+      lcd.print("Past:");
+      lcd.setCursor(0, 1);
+      lcd.print(totalConferences - upcomingConferences);
+      break;
+  }
+}

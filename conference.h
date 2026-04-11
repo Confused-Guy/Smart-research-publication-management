@@ -1,25 +1,41 @@
 #ifndef CONFERENCE_H
 #define CONFERENCE_H
 
-#include <QMainWindow>
+#include "qsqlquerymodel.h"
+#include <QString>
+#include <QDate>
 
-namespace Ui {
-class conference;
-}
-
-class conference : public QMainWindow
+class Conference
 {
-    Q_OBJECT
+private:
+    int id;
+    QString title;
+    int publicationId;
+    QDate date;
+    QString location;
+    double price;
+
 
 public:
-    explicit conference(QWidget *parent = nullptr);
-    ~conference();
+    Conference();
+    Conference(int id, QString title, int publicationId,
+               QDate date, QString location,
+               double price);
 
-private slots:
-    void on_addConferenceBtn_clicked();
+    // Getters
+    int getId() const;
+    QString getTitle() const;
+    int getPublicationId() const;
+    QDate getDate() const;
+    QString getLocation() const;
+    double getPrice() const;
 
-private:
-    Ui::conference *ui;
+    // CRUD
+    bool add();
+    bool update();
+    bool remove(int id);
+    QSqlQueryModel* display();
+
 };
 
 #endif

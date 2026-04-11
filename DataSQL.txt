@@ -1,0 +1,391 @@
+------------------------------------------------------------
+-- SAMPLE DATA FOR PEERLY DATABASE
+-- Uses sequences correctly - safe to run
+------------------------------------------------------------
+
+-----------------------------
+-- 1. USERS TABLE
+-----------------------------
+INSERT INTO USERS (USERID, EMAIL, PASSWORD, USERNAME, ROLE, SPECIALTY)
+VALUES (USER_SEQ.NEXTVAL, 'alice.chen@research.edu', 'pass123', 'Alice Chen', 'Researcher', 'Machine Learning');
+
+INSERT INTO USERS (USERID, EMAIL, PASSWORD, USERNAME, ROLE, SPECIALTY)
+VALUES (USER_SEQ.NEXTVAL, 'bob.martinez@university.org', 'pass456', 'Bob Martinez', 'Professor', 'Data Science');
+
+INSERT INTO USERS (USERID, EMAIL, PASSWORD, USERNAME, ROLE, SPECIALTY)
+VALUES (USER_SEQ.NEXTVAL, 'carol.williams@tech.com', 'pass789', 'Carol Williams', 'PhD Student', 'Computer Vision');
+
+INSERT INTO USERS (USERID, EMAIL, PASSWORD, USERNAME, ROLE, SPECIALTY)
+VALUES (USER_SEQ.NEXTVAL, 'david.lee@institute.edu', 'passabc', 'David Lee', 'Researcher', 'Natural Language Processing');
+
+INSERT INTO USERS (USERID, EMAIL, PASSWORD, USERNAME, ROLE, SPECIALTY)
+VALUES (USER_SEQ.NEXTVAL, 'emma.taylor@lab.org', 'passdef', 'Emma Taylor', 'Associate Professor', 'Robotics');
+
+-----------------------------
+-- 2. SUBMISSIONS TABLE
+-----------------------------
+INSERT INTO SUBMISSION (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT)
+VALUES (
+    SUBMISSION_SEQ.NEXTVAL,
+    'Deep Learning Approaches for Image Classification',
+    'Accepted',
+    'LeCun et al. (2015), Krizhevsky et al. (2012), He et al. (2016)',
+    TO_DATE('2024-01-15', 'YYYY-MM-DD'),
+    1,
+    'Computer Vision',
+    'This paper presents novel deep learning architectures for robust image classification tasks...'
+);
+
+INSERT INTO SUBMISSION (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT)
+VALUES (
+    SUBMISSION_SEQ.NEXTVAL,
+    'Transformer Models in Natural Language Understanding',
+    'Under Review',
+    'Vaswani et al. (2017), Devlin et al. (2019), Brown et al. (2020)',
+    TO_DATE('2024-02-20', 'YYYY-MM-DD'),
+    2,
+    'NLP',
+    'We explore the application of transformer architectures to improve language understanding metrics...'
+);
+
+INSERT INTO SUBMISSION (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT)
+VALUES (
+    SUBMISSION_SEQ.NEXTVAL,
+    'Reinforcement Learning for Autonomous Navigation',
+    'Revision Required',
+    'Sutton & Barto (2018), Mnih et al. (2015), Schulman et al. (2017)',
+    TO_DATE('2024-03-10', 'YYYY-MM-DD'),
+    3,
+    'Robotics',
+    'This research investigates reinforcement learning algorithms for real-world navigation scenarios...'
+);
+
+INSERT INTO SUBMISSION (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT)
+VALUES (
+    SUBMISSION_SEQ.NEXTVAL,
+    'Ethical Considerations in AI Development',
+    'Submitted',
+    'Floridi et al. (2018), Mittelstadt et al. (2016)',
+    TO_DATE('2024-04-05', 'YYYY-MM-DD'),
+    4,
+    'AI Ethics',
+    'An analysis of ethical frameworks necessary for responsible AI system development...'
+);
+
+INSERT INTO SUBMISSION (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT)
+VALUES (
+    SUBMISSION_SEQ.NEXTVAL,
+    'Federated Learning for Privacy-Preserving ML',
+    'Draft',
+    'McMahan et al. (2017), Konečný et al. (2016)',
+    TO_DATE('2024-05-12', 'YYYY-MM-DD'),
+    5,
+    'Machine Learning',
+    'We propose improvements to federated learning protocols to enhance privacy guarantees...'
+);
+
+INSERT INTO SUBMISSION (SUBMISSIONID, TITLE, STATUS, SOURCESCITATION, CREATEDAT, AUTHORID, TOPIC, MANUSCRIPT)
+VALUES (
+    SUBMISSION_SEQ.NEXTVAL,
+    'Graph Neural Networks for Social Network Analysis',
+    'Accepted',
+    'Kipf & Welling (2017), Hamilton et al. (2017)',
+    TO_DATE('2024-01-25', 'YYYY-MM-DD'),
+    1,
+    'Graph Learning',
+    'Application of graph neural networks to understand complex social network dynamics...'
+);
+
+-----------------------------
+-- 3. PUBLICATIONS TABLE
+-----------------------------
+INSERT INTO PUBLICATIONS (PUBLICATIONID, AUTHORID, SUBMISSIONID, DESCRIPTION, CREATEDDATE, FIELD)
+VALUES (
+    PUB_SEQ.NEXTVAL,
+    1,
+    1,
+    'Published in IEEE Conference on Computer Vision and Pattern Recognition (CVPR)',
+    TO_DATE('2024-06-15', 'YYYY-MM-DD'),
+    'Computer Vision'
+);
+
+INSERT INTO PUBLICATIONS (PUBLICATIONID, AUTHORID, SUBMISSIONID, DESCRIPTION, CREATEDDATE, FIELD)
+VALUES (
+    PUB_SEQ.NEXTVAL,
+    2,
+    2,
+    'Submitted to Association for Computational Linguistics (ACL) Conference',
+    TO_DATE('2024-07-01', 'YYYY-MM-DD'),
+    'NLP'
+);
+
+INSERT INTO PUBLICATIONS (PUBLICATIONID, AUTHORID, SUBMISSIONID, DESCRIPTION, CREATEDDATE, FIELD)
+VALUES (
+    PUB_SEQ.NEXTVAL,
+    3,
+    3,
+    'International Conference on Robotics and Automation (ICRA)',
+    TO_DATE('2024-08-10', 'YYYY-MM-DD'),
+    'Robotics'
+);
+
+INSERT INTO PUBLICATIONS (PUBLICATIONID, AUTHORID, SUBMISSIONID, DESCRIPTION, CREATEDDATE, FIELD)
+VALUES (
+    PUB_SEQ.NEXTVAL,
+    1,
+    6,
+    'Published in Neural Information Processing Systems (NeurIPS)',
+    TO_DATE('2024-09-20', 'YYYY-MM-DD'),
+    'Machine Learning'
+);
+
+INSERT INTO PUBLICATIONS (PUBLICATIONID, AUTHORID, SUBMISSIONID, DESCRIPTION, CREATEDDATE, FIELD)
+VALUES (
+    PUB_SEQ.NEXTVAL,
+    5,
+    5,
+    'Workshop on Privacy in Machine Learning - International Conference on ML',
+    TO_DATE('2024-10-05', 'YYYY-MM-DD'),
+    'Machine Learning'
+);
+
+-----------------------------
+-- 4. CONFERENCES TABLE
+-----------------------------
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'International Conference on Computer Vision 2025',
+    1,
+    TO_DATE('2025-06-15', 'YYYY-MM-DD'),
+    'Paris, France',
+    850.50
+);
+
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'ACL 2025 - Annual Meeting',
+    2,
+    TO_DATE('2025-07-20', 'YYYY-MM-DD'),
+    'Toronto, Canada',
+    720.00
+);
+
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'ICRA 2025 - Robotics and Automation',
+    3,
+    TO_DATE('2025-05-25', 'YYYY-MM-DD'),
+    'Atlanta, USA',
+    950.75
+);
+
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'NeurIPS 2025',
+    4,
+    TO_DATE('2025-12-08', 'YYYY-MM-DD'),
+    'New Orleans, USA',
+    1200.00
+);
+
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'ICML 2025 - International Conference on ML',
+    5,
+    TO_DATE('2025-07-12', 'YYYY-MM-DD'),
+    'Vienna, Austria',
+    890.25
+);
+
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'AI Ethics Summit 2025',
+    2,
+    TO_DATE('2025-04-18', 'YYYY-MM-DD'),
+    'London, UK',
+    450.00
+);
+
+INSERT INTO CONFERENCE (ID, TITLE, PUBLICATIONID, CONF_DATE, LOCATION, PRICE)
+VALUES (
+    CONF_SEQ.NEXTVAL,
+    'Mediterranean Conference on ML',
+    1,
+    TO_DATE('2025-09-10', 'YYYY-MM-DD'),
+    'Tunis, Tunisia',
+    320.00
+);
+
+-----------------------------
+-- 5. REVIEWS TABLE
+-----------------------------
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Dr. Sarah Johnson',
+    TO_DATE('2024-02-10', 'YYYY-MM-DD'),
+    1,
+    1,
+    'Approved',
+    'Excellent work. The methodology is sound and results are clearly presented. Minor revisions needed in the discussion section.'
+);
+
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Prof. Michael Zhang',
+    TO_DATE('2024-03-15', 'YYYY-MM-DD'),
+    2,
+    2,
+    'Pending',
+    'The paper shows promise but requires significant revision. Literature review needs expansion with more recent papers from 2023-2024.'
+);
+
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Dr. Lisa Anderson',
+    TO_DATE('2024-04-01', 'YYYY-MM-DD'),
+    3,
+    3,
+    'Revision Required',
+    'Innovative approach to autonomous navigation. However, experimental validation needs more real-world scenarios. Statistical analysis section requires elaboration.'
+);
+
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Prof. James Wilson',
+    TO_DATE('2024-02-20', 'YYYY-MM-DD'),
+    6,
+    4,
+    'Approved',
+    'Outstanding contribution to the field. The graph neural network architecture is well-designed and evaluation is comprehensive.'
+);
+
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Dr. Emily Roberts',
+    TO_DATE('2024-05-20', 'YYYY-MM-DD'),
+    5,
+    5,
+    'Pending',
+    'Privacy-preserving approach is interesting. Need more details on computational overhead and scalability analysis.'
+);
+
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Dr. Thomas Moore',
+    TO_DATE('2024-03-05', 'YYYY-MM-DD'),
+    1,
+    1,
+    'Approved',
+    'Strong empirical results. The comparison with baseline methods is thorough and convincing.'
+);
+
+INSERT INTO REVIEW (IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, STATUS, COMMENTREVIEW)
+VALUES (
+    REVIEW_SEQ.NEXTVAL,
+    'Prof. Rachel Green',
+    TO_DATE('2024-04-12', 'YYYY-MM-DD'),
+    2,
+    2,
+    'Revision Required',
+    'The transformer architecture modifications are interesting but ablation studies are needed to justify design choices.'
+);
+
+-----------------------------
+-- 6. COLLABORATIONS TABLE
+-----------------------------
+INSERT INTO COLLABORATION (IDCOLLABORATION, TITLE, DESCRIPTION, AUTHORID, PUBLICATIONID)
+VALUES (
+    COLLAB_SEQ.NEXTVAL,
+    'CV Research Partnership',
+    'Collaborative research on computer vision applications with focus on real-time object detection and tracking systems for autonomous vehicles.',
+    1,
+    1
+);
+
+INSERT INTO COLLABORATION (IDCOLLABORATION, TITLE, DESCRIPTION, AUTHORID, PUBLICATIONID)
+VALUES (
+    COLLAB_SEQ.NEXTVAL,
+    'NLP Joint Initiative',
+    'Multi-institutional collaboration exploring transformer models for low-resource languages and cross-lingual transfer learning.',
+    2,
+    2
+);
+
+INSERT INTO COLLABORATION (IDCOLLABORATION, TITLE, DESCRIPTION, AUTHORID, PUBLICATIONID)
+VALUES (
+    COLLAB_SEQ.NEXTVAL,
+    'Robotics Lab Partnership',
+    'Joint research program developing reinforcement learning algorithms for robotic manipulation tasks in unstructured environments.',
+    3,
+    3
+);
+
+INSERT INTO COLLABORATION (IDCOLLABORATION, TITLE, DESCRIPTION, AUTHORID, PUBLICATIONID)
+VALUES (
+    COLLAB_SEQ.NEXTVAL,
+    'Graph ML Consortium',
+    'International consortium studying graph neural networks for social network analysis, recommendation systems, and knowledge graphs.',
+    1,
+    4
+);
+
+INSERT INTO COLLABORATION (IDCOLLABORATION, TITLE, DESCRIPTION, AUTHORID, PUBLICATIONID)
+VALUES (
+    COLLAB_SEQ.NEXTVAL,
+    'Privacy-ML Alliance',
+    'Industry-academia partnership advancing federated learning and differential privacy techniques for healthcare applications.',
+    5,
+    5
+);
+
+-----------------------------
+-- 7. USER_SUBMISSION (Junction Table)
+-----------------------------
+-- Alice works on submissions 1 and 6
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (1, 1);
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (1, 6);
+
+-- Bob works on submission 2
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (2, 2);
+
+-- Carol works on submission 3
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (3, 3);
+
+-- David works on submission 4
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (4, 4);
+
+-- Emma works on submission 5
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (5, 5);
+
+-- Bob and Emma collaborate on submission 2
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (5, 2);
+
+-- Alice and Carol collaborate on submission 3
+INSERT INTO USER_SUBMISSION (USERID, SUBMISSIONID) VALUES (1, 3);
+
+COMMIT;
+
+------------------------------------------------------------
+-- DATA INSERTION COMPLETE
+------------------------------------------------------------
+-- Summary:
+-- 5 Users
+-- 6 Submissions
+-- 5 Publications
+-- 7 Conferences
+-- 7 Reviews
+-- 5 Collaborations
+-- 8 User-Submission relationships
+------------------------------------------------------------
