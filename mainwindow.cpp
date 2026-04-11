@@ -79,6 +79,9 @@
 #include <QRandomGenerator>
 #include <QCoreApplication>
 
+#include <QThread>
+#include <QTimer>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -143,11 +146,130 @@ MainWindow::MainWindow(QWidget *parent)
             loadReviewsReadOnly();
     });
 
+    setupArduino();
 }
 
 MainWindow::~MainWindow()
 {
+    clearArduinoLCD();  // Clear LCD before closing
+
+        if (arduino) {
+            delete arduino;
+        }
+
     delete ui;
+}
+
+//Arduino setup
+void MainWindow::setupArduino()
+{
+    arduino = new QSerialPort(this);
+
+    const auto ports = QSerialPortInfo::availablePorts();
+
+    // Try to find Arduino
+    for (const QSerialPortInfo &portInfo : ports) {
+        QString desc = portInfo.description().toLower();
+        QString mfg = portInfo.manufacturer().toLower();
+        QString portName = portInfo.portName();
+
+        // Check if its Arduino or USB Serial
+        if (desc.contains("arduino") ||
+            mfg.contains("arduino") ||
+            portName.startsWith("ttyACM") ||
+            portName.startsWith("ttyUSB")) {
+
+            qDebug() << "Attempting to connect to:" << portInfo.systemLocation();
+
+            arduino->setPortName(portInfo.portName());
+            arduino->setBaudRate(QSerialPort::Baud9600);
+            arduino->setDataBits(QSerialPort::Data8);
+            arduino->setParity(QSerialPort::NoParity);
+            arduino->setStopBits(QSerialPort::OneStop);
+            arduino->setFlowControl(QSerialPort::NoFlowControl);
+
+            if (arduino->open(QIODevice::ReadWrite)) {
+                qDebug() << "Arduino connected on port:" << portInfo.systemLocation();
+
+                // Wait for Arduino to reset
+                QTimer::singleShot(2000, this, [this]() {
+                    sendUpcomingEventsToArduino();
+                });
+
+                return;
+            } else {
+                qDebug() << "Failed to open:" << arduino->errorString();
+            }
+        }
+    }
+
+    qDebug() << "Arduino not found on any port!";
+    QMessageBox::warning(this, "Arduino Not Found",
+        "Could not connect to Arduino.\n\n"
+        "You may choose to ingnore this warning if the Arduino is not needed.\n\n"
+        "Check the Application Output for available ports.\n\n"
+        "Make sure:\n"
+        "• Arduino is plugged in\n"
+        "• You uploaded the code to Arduino\n"
+        "• No other program (like Arduino IDE Serial Monitor) is using the port");
+}
+
+// Clear LCD function
+void MainWindow::clearArduinoLCD()
+{
+    if (!arduino || !arduino->isOpen()) {
+        qDebug() << "Arduino not connected, skipping LCD clear";
+        return;
+    }
+
+    qDebug() << "Sending goodbye message to Arduino...";
+
+    // Send goodbye message
+    arduino->write("GOODBYE\n");
+    arduino->flush();
+
+    // Wait for Arduino to display message
+    QEventLoop loop;
+    QTimer::singleShot(500, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    // Then clear
+    arduino->write("CLEAR\n");
+    arduino->flush();
+
+    QTimer::singleShot(200, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    arduino->close();
+
+    qDebug() << "Arduino LCD cleared and port closed";
+}
+
+// Displaying stats
+void MainWindow::sendModuleStatsToArduino(
+    const QString &moduleLabel,
+    const QList<QPair<QString,QString>> &stats)
+{
+    if (!arduino || !arduino->isOpen()) {
+        qDebug() << "Arduino not connected";
+        return;
+    }
+
+    arduino->write("CLEAR\n");
+    QThread::msleep(100);
+
+    // Announce module
+    arduino->write(("MODULE:" + moduleLabel + "\n").toUtf8());
+    QThread::msleep(50);
+
+    // Send each stat line
+    for (const auto &pair : stats) {
+        QString line = "STAT:" + pair.first + "|" + pair.second + "\n";
+        arduino->write(line.toUtf8());
+        QThread::msleep(50);
+    }
+
+    arduino->write("DISPLAY\n");
 }
 
 /*********************************************************** USER START ***********************************************************************************/
@@ -424,6 +546,27 @@ void MainWindow::on_exportUserPDF_clicked(){
 
 void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
 
+//ARDUINO USER
+void MainWindow::on_usersArduinoBtn_clicked()
+{
+    QSqlQuery q;
+    int total = 0, authors = 0, reviewers = 0;
+
+    q.exec("SELECT COUNT(*) FROM USERS");
+    if (q.next()) total = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM USERS WHERE ROLE='Author'");
+    if (q.next()) authors = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM USERS WHERE ROLE='Reviewer'");
+    if (q.next()) reviewers = q.value(0).toInt();
+
+    sendModuleStatsToArduino("Users", {
+        {"Total",     QString::number(total)},
+        {"Authors",   QString::number(authors)},
+        {"Reviewers", QString::number(reviewers)}
+    });
+}
 
 /********************************************************** USER END *************************************************************************************/
 
@@ -1571,6 +1714,27 @@ void MainWindow::loadReviewsReadOnly()
     }
 
     reviewLayout->addStretch();
+}
+
+//ARDUINO REVIEWS
+void MainWindow::on_reviewsArduinoBtn_clicked()
+{
+    QSqlQuery q;
+    int total = 0, pending = 0, done = 0;
+
+    q.exec("SELECT COUNT(*) FROM REVIEW");
+    if (q.next()) total = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM REVIEW WHERE STATUS='Pending'");
+    if (q.next()) pending = q.value(0).toInt();
+
+    done = total - pending;
+
+    sendModuleStatsToArduino("Reviews", {
+        {"Total",   QString::number(total)},
+        {"Pending", QString::number(pending)},
+        {"Done",    QString::number(done)}
+    });
 }
 
 //********************REVIEW END****************************************************************************************************************************************//
@@ -3207,6 +3371,71 @@ void MainWindow::on_searchConfBtn_clicked()
     loadConferences(sortAscending, ui->searchConfEdit->text());
 }
 
+//8 ARDUINO
+
+// Send upcoming events
+void MainWindow::sendUpcomingEventsToArduino()
+{
+    if (!arduino || !arduino->isOpen()) {
+        qDebug() << "Arduino not connected";
+        return;
+    }
+
+    // Clear old events
+    arduino->write("CLEAR\n");
+    QThread::msleep(100);
+
+    // Query upcoming conferences
+    QSqlQuery query;
+    query.prepare(
+        "SELECT TITLE, CONF_DATE FROM CONFERENCE "
+        "WHERE CONF_DATE >= TRUNC(SYSDATE) "
+        "ORDER BY CONF_DATE ASC "
+        "FETCH FIRST 10 ROWS ONLY"
+    );
+
+    if (query.exec()) {
+        while (query.next()) {
+            QString title = query.value(0).toString();
+            QString date = query.value(1).toDate().toString("dd/MM/yyyy");
+
+            // Format: EVENT:Title|Date
+            QString message = "EVENT:" + title + "|" + date + "\n";
+            arduino->write(message.toUtf8());
+            QThread::msleep(50);  //delay between messages
+        }
+    }
+
+    // Tell Arduino to display
+    arduino->write("DISPLAY\n");
+}
+
+void MainWindow::on_conferencesArduinoBtn_clicked()
+{
+    QSqlQuery q;
+    int total = 0, upcoming = 0, past = 0;
+
+    q.exec("SELECT COUNT(*) FROM CONFERENCE");
+    if (q.next()) total = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM CONFERENCE WHERE CONF_DATE >= TRUNC(SYSDATE)");
+    if (q.next()) upcoming = q.value(0).toInt();
+
+    past = total - upcoming;
+
+    sendModuleStatsToArduino("Conferences", {
+        {"Total",    QString::number(total)},
+        {"Upcoming", QString::number(upcoming)},
+        {"Past",     QString::number(past)}
+    });
+}
+
+// Button slot
+void MainWindow::on_eventArduinoBtn_clicked()
+{
+    sendUpcomingEventsToArduino();
+}
+
 //LINKING BUTTONS
 void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
@@ -3488,6 +3717,25 @@ void MainWindow::on_collaborationCreationCollaborationDescriptionEdit_textChange
 void MainWindow::on_collaborationCreationCollaborationTitileEdit_textChanged()
 {
     ui->collaborationCreationCancelButton->setEnabled(true);
+}
+
+//ARDUINO COLLABS
+void MainWindow::on_collaborationsArduinoBtn_clicked()
+{
+    QSqlQuery q;
+    int total = 0, linked = 0;
+
+    q.exec("SELECT COUNT(*) FROM COLLABORATION");
+    if (q.next()) total = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM COLLABORATION WHERE PUBLICATIONID IS NOT NULL");
+    if (q.next()) linked = q.value(0).toInt();
+
+    sendModuleStatsToArduino("Collabs", {
+        {"Total",  QString::number(total)},
+        {"Linked", QString::number(linked)},
+        {"NoLink", QString::number(total - linked)}
+    });
 }
 
 //**********Collabs End**********//
@@ -4523,6 +4771,36 @@ void MainWindow::showPublicationStats()
     dialog->exec();
 }
 
+// ARDUINO PUBLICATION
+void MainWindow::on_publicationsArduinoBtn_clicked()
+{
+    QSqlQuery q;
+    int total = 0, fields = 0;
+
+    q.exec("SELECT COUNT(*) FROM PUBLICATIONS");
+    if (q.next()) total = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(DISTINCT FIELD) FROM PUBLICATIONS");
+    if (q.next()) fields = q.value(0).toInt();
+
+    // Most common field
+    QString topField = "N/A";
+    q.exec(
+        "SELECT FIELD FROM ("
+        "  SELECT FIELD, COUNT(*) AS CNT FROM PUBLICATIONS "
+        "  GROUP BY FIELD ORDER BY CNT DESC"
+        ") WHERE ROWNUM = 1"
+    );
+    if (q.next()) topField = q.value(0).toString();
+    if (topField.length() > 9) topField = topField.left(9); // fits "Top:xxxxxxxxx"
+
+    sendModuleStatsToArduino("Publications", {
+        {"Total",  QString::number(total)},
+        {"Fields", QString::number(fields)},
+        {"Top",    topField}
+    });
+}
+
 //********************PUBLICATION END************************************************************************************************************************//
 
 
@@ -5464,6 +5742,41 @@ void MainWindow::on_pushButton_8_clicked()
             "Please ensure the model (llama3.1:8b) is properly loaded in Ollama\n"
             "and try again.");
     }
+}
+
+// SUBMISSION ARDUINO
+void MainWindow::on_submissionsArduinoBtn_clicked()
+{
+    QSqlQuery q;
+    int total = 0, draft = 0, submitted = 0,
+        underReview = 0, accepted = 0, rejected = 0;
+
+    q.exec("SELECT COUNT(*) FROM SUBMISSION");
+    if (q.next()) total = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Draft'");
+    if (q.next()) draft = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Submitted'");
+    if (q.next()) submitted = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Under Review'");
+    if (q.next()) underReview = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Accepted'");
+    if (q.next()) accepted = q.value(0).toInt();
+
+    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Rejected'");
+    if (q.next()) rejected = q.value(0).toInt();
+
+    sendModuleStatsToArduino("Submissions", {
+        {"Total",       QString::number(total)},
+        {"Draft",       QString::number(draft)},
+        {"Submitted",   QString::number(submitted)},
+        {"UnderReview", QString::number(underReview)},
+        {"Accepted",    QString::number(accepted)},
+        {"Rejected",    QString::number(rejected)}
+    });
 }
 
 //************SUBMISSION END***************************//

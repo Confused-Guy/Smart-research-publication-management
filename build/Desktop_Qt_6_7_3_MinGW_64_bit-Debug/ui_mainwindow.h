@@ -68,6 +68,7 @@ public:
     QLabel *label_25;
     QPushButton *collaborationCreationNewButton;
     QPlainTextEdit *collabsSearchBox;
+    QPushButton *collaborationsArduinoBtn;
     QPushButton *collabsGroupChatButton;
     QWidget *page_3;
     QTabWidget *tabWidget;
@@ -104,6 +105,9 @@ public:
     QPushButton *searchUserBTN;
     QPushButton *reviewSub;
     QPushButton *editUserPage;
+    QPushButton *usersArduinoBtn;
+    QPushButton *reviewsArduinoBtn;
+    QLabel *label;
     QWidget *page_4;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
@@ -130,6 +134,8 @@ public:
     QPushButton *viewCalendarBtn;
     QPushButton *addConferenceBtn;
     QPushButton *confStatsBtn;
+    QPushButton *eventArduinoBtn;
+    QPushButton *conferencesArduinoBtn;
     QWidget *page_9;
     QStackedWidget *stackedWidget_2;
     QWidget *page_12;
@@ -376,6 +382,7 @@ public:
     QSpacerItem *horizontalSpacer;
     QGroupBox *FeatsGroup;
     QHBoxLayout *horizontalLayout_features;
+    QPushButton *publicationsArduinoBtn;
     QPushButton *export_2;
     QPushButton *summaryButton;
     QPushButton *emailButton;
@@ -393,6 +400,7 @@ public:
     QPushButton *editSubmissionBtn;
     QPushButton *previewSubmissionBtn;
     QTableWidget *submissionTableWidget_2;
+    QPushButton *submissionsArduinoBtn;
     QWidget *page_8;
     QFrame *frame_7;
     QGroupBox *groupBox_2;
@@ -592,6 +600,10 @@ public:
         collabsSearchBox = new QPlainTextEdit(frame_6);
         collabsSearchBox->setObjectName("collabsSearchBox");
         collabsSearchBox->setGeometry(QRect(10, 30, 241, 51));
+        collaborationsArduinoBtn = new QPushButton(frame_6);
+        collaborationsArduinoBtn->setObjectName("collaborationsArduinoBtn");
+        collaborationsArduinoBtn->setGeometry(QRect(990, 300, 141, 41));
+        collaborationsArduinoBtn->setFont(font1);
         collabsGroupChatButton = new QPushButton(page_2);
         collabsGroupChatButton->setObjectName("collabsGroupChatButton");
         collabsGroupChatButton->setEnabled(false);
@@ -790,6 +802,15 @@ public:
         editUserPage = new QPushButton(page_3);
         editUserPage->setObjectName("editUserPage");
         editUserPage->setGeometry(QRect(880, 90, 141, 41));
+        usersArduinoBtn = new QPushButton(page_3);
+        usersArduinoBtn->setObjectName("usersArduinoBtn");
+        usersArduinoBtn->setGeometry(QRect(1020, 150, 151, 31));
+        reviewsArduinoBtn = new QPushButton(page_3);
+        reviewsArduinoBtn->setObjectName("reviewsArduinoBtn");
+        reviewsArduinoBtn->setGeometry(QRect(1020, 200, 151, 31));
+        label = new QLabel(page_3);
+        label->setObjectName("label");
+        label->setGeometry(QRect(870, 150, 141, 20));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");
@@ -918,19 +939,25 @@ public:
         scrollArea->setWidget(scrollAreaWidgetContents);
         viewCalendarBtn = new QPushButton(page_4);
         viewCalendarBtn->setObjectName("viewCalendarBtn");
-        viewCalendarBtn->setGeometry(QRect(420, 640, 321, 51));
+        viewCalendarBtn->setGeometry(QRect(420, 620, 321, 51));
         viewCalendarBtn->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         viewCalendarBtn->setStyleSheet(QString::fromUtf8(""));
         addConferenceBtn = new QPushButton(page_4);
         addConferenceBtn->setObjectName("addConferenceBtn");
-        addConferenceBtn->setGeometry(QRect(70, 640, 301, 51));
+        addConferenceBtn->setGeometry(QRect(70, 620, 301, 51));
         addConferenceBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         addConferenceBtn->setStyleSheet(QString::fromUtf8(""));
         confStatsBtn = new QPushButton(page_4);
         confStatsBtn->setObjectName("confStatsBtn");
-        confStatsBtn->setGeometry(QRect(790, 640, 321, 51));
+        confStatsBtn->setGeometry(QRect(790, 620, 321, 51));
         confStatsBtn->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         confStatsBtn->setStyleSheet(QString::fromUtf8(""));
+        eventArduinoBtn = new QPushButton(page_4);
+        eventArduinoBtn->setObjectName("eventArduinoBtn");
+        eventArduinoBtn->setGeometry(QRect(510, 680, 151, 21));
+        conferencesArduinoBtn = new QPushButton(page_4);
+        conferencesArduinoBtn->setObjectName("conferencesArduinoBtn");
+        conferencesArduinoBtn->setGeometry(QRect(870, 680, 151, 21));
         stackedWidget->addWidget(page_4);
         page_9 = new QWidget();
         page_9->setObjectName("page_9");
@@ -3458,6 +3485,11 @@ public:
         FeatsGroup->setObjectName("FeatsGroup");
         horizontalLayout_features = new QHBoxLayout(FeatsGroup);
         horizontalLayout_features->setObjectName("horizontalLayout_features");
+        publicationsArduinoBtn = new QPushButton(FeatsGroup);
+        publicationsArduinoBtn->setObjectName("publicationsArduinoBtn");
+
+        horizontalLayout_features->addWidget(publicationsArduinoBtn);
+
         export_2 = new QPushButton(FeatsGroup);
         export_2->setObjectName("export_2");
 
@@ -3602,6 +3634,10 @@ public:
         submissionTableWidget_2->setGeometry(QRect(50, 210, 801, 291));
         submissionTableWidget_2->setRowCount(0);
         submissionTableWidget_2->setColumnCount(5);
+        submissionsArduinoBtn = new QPushButton(groupBox_3);
+        submissionsArduinoBtn->setObjectName("submissionsArduinoBtn");
+        submissionsArduinoBtn->setGeometry(QRect(230, 130, 201, 29));
+        submissionsArduinoBtn->setIcon(icon26);
         stackedWidget->addWidget(page_7);
         page_8 = new QWidget();
         page_8->setObjectName("page_8");
@@ -3949,7 +3985,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(2);
+        stackedWidget->setCurrentIndex(3);
         tabWidget->setCurrentIndex(1);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -3976,6 +4012,7 @@ public:
         label_25->setText(QCoreApplication::translate("MainWindow", "Decription:", nullptr));
         collaborationCreationNewButton->setText(QCoreApplication::translate("MainWindow", "New", nullptr));
         collabsSearchBox->setPlaceholderText(QCoreApplication::translate("MainWindow", "search...", nullptr));
+        collaborationsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Arduino Stats ", nullptr));
         collabsGroupChatButton->setText(QCoreApplication::translate("MainWindow", "  Group Chat", nullptr));
         pushButton_7->setText(QString());
         pushButton_8->setText(QCoreApplication::translate("MainWindow", "Ai checker", nullptr));
@@ -4004,6 +4041,9 @@ public:
         searchUserBTN->setText(QCoreApplication::translate("MainWindow", "Search user", nullptr));
         reviewSub->setText(QCoreApplication::translate("MainWindow", "Review Submissions", nullptr));
         editUserPage->setText(QCoreApplication::translate("MainWindow", "Edit User", nullptr));
+        usersArduinoBtn->setText(QCoreApplication::translate("MainWindow", "User Stats", nullptr));
+        reviewsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Review Stats", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Display Stats in Arduino:", nullptr));
         searchConfEdit->setText(QString());
         searchConfEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search for something...", nullptr));
         searchConfBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
@@ -4019,6 +4059,8 @@ public:
         viewCalendarBtn->setText(QCoreApplication::translate("MainWindow", "View Calendar", nullptr));
         addConferenceBtn->setText(QCoreApplication::translate("MainWindow", "Add Conference", nullptr));
         confStatsBtn->setText(QCoreApplication::translate("MainWindow", "Conference Statistics", nullptr));
+        eventArduinoBtn->setText(QCoreApplication::translate("MainWindow", "in Arduino", nullptr));
+        conferencesArduinoBtn->setText(QCoreApplication::translate("MainWindow", "in Arduino", nullptr));
 #if QT_CONFIG(tooltip)
         reveiw4_2->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -4392,6 +4434,7 @@ public:
         addButton->setText(QCoreApplication::translate("MainWindow", " Add Publication", nullptr));
         deleteButton->setText(QCoreApplication::translate("MainWindow", "Delete Selected", nullptr));
         FeatsGroup->setTitle(QString());
+        publicationsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Display Stats in Arduino", nullptr));
         export_2->setText(QCoreApplication::translate("MainWindow", "export to pdf", nullptr));
         summaryButton->setText(QCoreApplication::translate("MainWindow", "Summary", nullptr));
         emailButton->setText(QCoreApplication::translate("MainWindow", "Send Email Notification", nullptr));
@@ -4405,6 +4448,7 @@ public:
         refreshSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Refresh submissions", nullptr));
         editSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Edit submission", nullptr));
         previewSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Preview", nullptr));
+        submissionsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Display Stats in Arduino", nullptr));
         groupBox_2->setTitle(QString());
         loginLogo->setText(QString());
         linkFor->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><a href=\"go\"><span style=\" text-decoration: underline; color:#27bf73;\">Forgot your password?</span></a></p></body></html>", nullptr));

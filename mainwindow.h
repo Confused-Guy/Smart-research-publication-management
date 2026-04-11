@@ -10,7 +10,8 @@
 #include "filepreviewdialog.h"
 #include "ollamaintegration.h"
 
-
+#include <QSerialPort>
+#include <QSerialPortInfo>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,21 +35,15 @@ private slots:
 
     void on_profile_clicked();
 
-
     void on_publication_clicked();
 
-
     void on_Research_clicked();
-
-
 
     void toggleDarkMode();
 
     void on_modeSwitch_clicked(){ toggleDarkMode();}
 
     void on_temp_clicked();
-
-
 
     void on_linkFor_linkActivated();
 
@@ -73,8 +68,7 @@ private slots:
     void on_Researcher_checkStateChanged(const Qt::CheckState &state);
     void exportTableToPDF(const QString &fileName);
     void on_exportUserPDF_clicked();
-
-
+    void on_usersArduinoBtn_clicked(); //Review Stats Arduino
 
     /***************************************   USER END   **********************************************************/
 
@@ -88,10 +82,11 @@ private slots:
 
     void  on_conf_clicked();
 
+    void on_eventArduinoBtn_clicked();
+    void on_conferencesArduinoBtn_clicked();
     //************CONFERENCE END***************************//
 
     //************Reveiw Start***************************//
-
 
     void on_review_clicked();
     void on_reviewSub_clicked();
@@ -101,6 +96,7 @@ private slots:
     void loadReviews(bool Rascending, QString RsearchFilter);
     void loadReviewsReadOnly();
 
+    void on_reviewsArduinoBtn_clicked(); //Review Stats Arduino
     //************Reveiw Start***************************//
 
     //***********Collabs Start*****************//
@@ -116,9 +112,10 @@ private slots:
     void on_collaborationCreationCollaborationTitileEdit_textChanged();
     void on_collabsEditButton_clicked();
     void on_collabsSearchBox_textChanged();
-
+    void on_collaborationsArduinoBtn_clicked(); //Collabs Stats Arduino
 
     //***********Collabs End*******************//
+
     //************PUBLICATION START***************************//
     void on_addButton_clicked();
     void on_deleteButton_clicked();
@@ -127,6 +124,7 @@ private slots:
     void on_emailButton_clicked();
     void on_pubStatsBtn_clicked();
     void showPublicationStats();
+    void on_publicationsArduinoBtn_clicked(); //Publication Stats Arduino
     //************PUBLICATION END***************************//
 
     //************SUBMISSION START***************************//
@@ -138,11 +136,21 @@ private slots:
     void on_submissionStatusChanged(const QString &newStatus);
     void on_previewSubmissionBtn_clicked();
     void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
+    void on_submissionsArduinoBtn_clicked(); //Submission Stats Arduino
     //************SUBMISSION END***************************//
 
 private:
     Ui::MainWindow *ui;
     bool mode;
+
+    //************ARDUINO START****************************//
+    QSerialPort *arduino;
+    void setupArduino();
+    void sendUpcomingEventsToArduino();
+    void sendModuleStatsToArduino(const QString &moduleLabel,
+                                  const QList<QPair<QString,QString>> &stats);
+    void clearArduinoLCD();
+    //************ARDUINO END*****************************//
 
     //************CONFERENCE START***************************//
     //Variables
@@ -181,6 +189,7 @@ private:
     bool loadCollabs();
     std::vector<Collaboration> collaborations;
     //************collabs end**********//
+
     //************PUBLICATION START***************************//
 
     Publication pubTmp;
@@ -225,6 +234,7 @@ private:
     OllamaIntegration *ollamaIntegration;
     QLabel *aiStatusLabel = nullptr;  // Status messages for AI Checker
     QTextEdit *aiResultDisplay = nullptr;  // Display for AI results
+
     //************SUBMISSION END***************************//
 };
 #endif // MAINWINDOW_H
