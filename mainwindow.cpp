@@ -82,6 +82,8 @@
 #include <QThread>
 #include <QTimer>
 
+QTextToSpeech textToSpeech;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -3511,6 +3513,14 @@ bool MainWindow::loadCollabs()
 
     return true;
 }
+//read collabs description
+void MainWindow::on_ReadCollabDesc_clicked()
+{
+    if(ui->collabsList->currentRow() < 0)
+        return;
+
+    textToSpeech.say(collaborations[ui->collabsList->currentRow()].getDescription());
+}
 
 void MainWindow::on_collaborationCreationSortSwitch_clicked()
 {
@@ -6490,3 +6500,6 @@ void MainWindow::toggleDarkMode(){
             );
     }
 }
+
+
+

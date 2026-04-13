@@ -13,6 +13,8 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
+#include <QTextToSpeech>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -138,6 +140,8 @@ private slots:
     void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
     void on_submissionsArduinoBtn_clicked(); //Submission Stats Arduino
     //************SUBMISSION END***************************//
+
+    void on_ReadCollabDesc_clicked();
 
 private:
     Ui::MainWindow *ui;

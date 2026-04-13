@@ -223,10 +223,7 @@ QSqlQueryModel* User::filter2(int state)
     QSqlQuery query;
 
     if (state == 1) {
-
-
         model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE SPECIALTY = 'Reviewer'");
-
     } else {
         model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS");
     }
