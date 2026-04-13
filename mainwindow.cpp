@@ -5677,6 +5677,37 @@ void MainWindow::on_pushButton_8_clicked()
 
     QFileInfo fileInfo(selectedManuscriptPath);
     QString fileExt = fileInfo.suffix().toLower();
+    
+    // Define a lambda to try extracting with a Python script and capture errors
+    auto tryExtraction = [this](const QString &scriptName, const QString &scriptLabel) -> QString {
+        QProcess process;
+        process.setProcessChannelMode(QProcess::MergedChannels);
+        QString scriptPath = QCoreApplication::applicationDirPath() + "/" + scriptName;
+        
+        // Log the execution for debugging
+        qDebug() << "Executing: python" << scriptPath << selectedManuscriptPath;
+        
+        process.start("python", QStringList() << scriptPath << selectedManuscriptPath);
+        
+        if (!process.waitForFinished(30000)) {
+            process.kill();
+            qDebug() << scriptLabel << "extraction timed out";
+            return "";  // Timeout
+        }
+        
+        QString output = QString::fromUtf8(process.readAllStandardOutput()).trimmed();
+        int exitCode = process.exitCode();
+        
+        qDebug() << scriptLabel << "exit code:" << exitCode;
+        qDebug() << scriptLabel << "output length:" << output.length();
+        
+        if (exitCode != 0) {
+            // Exit code indicates error - output will contain ERROR message
+            qDebug() << scriptLabel << "error output:" << output;
+        }
+        
+        return (exitCode == 0 && !output.isEmpty()) ? output : "";
+    };
 
     if (fileExt == "txt") {
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -5686,68 +5717,95 @@ void MainWindow::on_pushButton_8_clicked()
         }
     }
     else if (fileExt == "docx") {
-        // Use PowerShell to extract text from DOCX file (which is a ZIP archive)
-        QProcess process;
-        process.setProcessChannelMode(QProcess::MergedChannels);
+        // Use Python to extract text from DOCX file
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Extracting DOCX...</span>");
+        QCoreApplication::processEvents();
         
-        // PowerShell command to extract and parse DOCX XML
-        QString psCommand = QString(
-            "$path = '%1'; "
-            "$tempDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'docx_' + [System.Guid]::NewGuid().ToString()); "
-            "$null = New-Item -Path $tempDir -ItemType Directory -Force; "
-            "try { "
-            "  [System.IO.Compression.ZipFile]::ExtractToDirectory($path, $tempDir, $true); "
-            "  $docXml = [xml](Get-Content \"$tempDir\\word\\document.xml\" -Raw); "
-            "  $ns = @{w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; "
-            "  $texts = @($docXml.SelectNodes('//w:t', $ns) | ForEach-Object { $_.InnerText }); "
-            "  Write-Output ($texts -join ''); "
-            "} finally { "
-            "  Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue; "
-            "}"
-        ).arg(selectedManuscriptPath.replace("'", "''"));
+        manuscriptText = tryExtraction("extract_docx.py", "DOCX");
         
-        process.start("powershell.exe", QStringList() << "-NoProfile" << "-Command" << psCommand);
-        
-        if (!process.waitForFinished(10000)) {
-            process.kill();
-            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ DOCX extraction timeout</span>");
-            if (aiResultDisplay) aiResultDisplay->setText("ERROR: DOCX extraction\ntimed out\n\nTry converting to TXT");
-            QMessageBox::warning(this, "DOCX Extraction Timeout", 
-                "The DOCX text extraction took too long.\n\n"
-                "Please convert your DOCX to TXT format and try again.");
-            return;
-        }
-        
-        manuscriptText = QString::fromUtf8(process.readAllStandardOutput()).trimmed();
-        int exitCode = process.exitCode();
-        
-        if (exitCode != 0 || manuscriptText.isEmpty()) {
-            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ DOCX extraction failed</span>");
-            if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from DOCX\n\nTry converting to TXT");
-            QMessageBox::information(this, "DOCX Extraction Failed", 
-                "Could not extract text from this DOCX file.\n\n"
-                "Possible reasons:\n"
-                "• File is corrupted or invalid\n"
-                "• Document contains only images/tables\n"
-                "• Unusual formatting\n\n"
-                "To analyze with AI:\n"
-                "1. Convert your DOCX to TXT format\n"
-                "2. Upload the TXT version\n"
-                "3. Try AI Checker again");
-            return;
+        if (manuscriptText.isEmpty()) {
+            // Try PDF as fallback
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Trying PDF format...</span>");
+            QCoreApplication::processEvents();
+            manuscriptText = tryExtraction("extract_pdf.py", "PDF");
+            
+            if (manuscriptText.isEmpty()) {
+                if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Extraction failed</span>");
+                if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from file");
+                QMessageBox::warning(this, "Extraction Failed", 
+                    "Could not extract text from the file.\n\n"
+                    "Ensure dependencies are installed:\n"
+                    "pip install python-docx PyMuPDF");
+                return;
+            }
         }
     }
     else if (fileExt == "pdf") {
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ PDF not supported</span>");
-        if (aiResultDisplay) aiResultDisplay->setText("ERROR: PDF not supported\n\nConvert to TXT and try again");
-        QMessageBox::information(this, "PDF Not Supported for AI", 
-            "PDF file detected but full text extraction requires additional libraries.\n"
-            "To analyze your manuscript with AI:\n\n"
-            "1. Convert your PDF file to TXT format\n"
-            "2. Upload the TXT version to the submission\n"
-            "3. Then use the AI Checker\n\n"
-            "Alternatively, you can preview the PDF file using the Preview button or an external PDF viewer.");
-        return;
+        // Use Python to extract text from PDF file
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Extracting PDF...</span>");
+        QCoreApplication::processEvents();
+        
+        manuscriptText = tryExtraction("extract_pdf.py", "PDF");
+        
+        if (manuscriptText.isEmpty()) {
+            // Try DOCX as fallback
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Trying DOCX format...</span>");
+            QCoreApplication::processEvents();
+            manuscriptText = tryExtraction("extract_docx.py", "DOCX");
+            
+            if (manuscriptText.isEmpty()) {
+                if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ PDF extraction failed</span>");
+                if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from PDF");
+                
+                QString errorMsg = "Could not extract text from the PDF file.\n\n"
+                    "Common causes:\n"
+                    "• PDF is image-only (scanned document) - requires OCR\n"
+                    "• PDF is encrypted or password-protected\n"
+                    "• PDF is corrupted\n"
+                    "• PDF uses unsupported text encoding\n\n"
+                    "Solutions:\n"
+                    "1. Convert PDF to TXT or Word document format\n"
+                    "2. Try re-exporting the PDF from original application\n"
+                    "3. For scanned PDFs: Use online OCR tool first (e.g., ILovePDF.com)\n"
+                    "4. Ensure PyMuPDF is installed: pip install PyMuPDF";
+                
+                QMessageBox::warning(this, "PDF Extraction Failed", errorMsg);
+                return;
+            }
+        }
+    }
+    else {
+        // Unknown file type - try both DOCX and PDF
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Detecting file format...</span>");
+        QCoreApplication::processEvents();
+        
+        // Try DOCX first
+        manuscriptText = tryExtraction("extract_docx.py", "DOCX");
+        
+        if (manuscriptText.isEmpty()) {
+            // Try PDF
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Trying PDF format...</span>");
+            QCoreApplication::processEvents();
+            manuscriptText = tryExtraction("extract_pdf.py", "PDF");
+        }
+        
+        // Try TXT if both failed
+        if (manuscriptText.isEmpty() && file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&file);
+            manuscriptText = in.readAll();
+            file.close();
+        }
+        
+        if (manuscriptText.isEmpty()) {
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Extraction failed</span>");
+            if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from file");
+            QMessageBox::warning(this, "Extraction Failed", 
+                "Could not extract text from the file.\n\n"
+                "Unsupported file format or corrupted file. Supported: TXT, DOCX, PDF\n\n"
+                "Ensure dependencies are installed:\n"
+                "pip install python-docx PyMuPDF");
+            return;
+        }
     }
 
     if (manuscriptText.isEmpty()) {

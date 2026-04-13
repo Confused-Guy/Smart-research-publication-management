@@ -15,6 +15,7 @@
 #include <QProcess>
 #include <QDir>
 #include <QTime>
+#include <QCoreApplication>
 
 FilePreviewDialog::FilePreviewDialog(const QString &filePath, QWidget *parent)
     : QDialog(parent), filePath(filePath), textDisplay(nullptr), statusLabel(nullptr)
@@ -124,22 +125,36 @@ QString FilePreviewDialog::loadTextFile(const QString &path)
 
 QString FilePreviewDialog::loadPdfFile(const QString &path)
 {
-    // For PDFs, open with system default viewer
-    QUrl fileUrl = QUrl::fromLocalFile(QFileInfo(path).absoluteFilePath());
-    if (QDesktopServices::openUrl(fileUrl)) {
-        return "PDF File: " + QFileInfo(path).fileName() + "\n\n"
-               "✓ Opening in default PDF viewer...\n\n"
-               "The file has been opened in your system's default PDF viewer.\n"
-               "This preview window shows that the file was successfully located and opened.";
+    // Use Python with PyMuPDF to extract PDF text
+    QProcess process;
+    process.setProcessChannelMode(QProcess::MergedChannels);
+    
+    // Get the path to the Python script (same directory as executable)
+    QString scriptPath = QCoreApplication::applicationDirPath() + "/extract_pdf.py";
+    
+    // Run Python script
+    process.start("python", QStringList() << scriptPath << path);
+    
+    if (!process.waitForFinished(30000)) {  // 30 second timeout
+        process.kill();
+        return "⚠️ PDF Extraction Timeout\n\n"
+               "The extraction took too long.\n\n"
+               "Make sure PyMuPDF is installed:\n"
+               "pip install PyMuPDF";
     }
-    else {
-        return "PDF File: " + QFileInfo(path).fileName() + "\n\n"
-               "⚠ Could not open with default viewer.\n\n"
-               "The file exists but your system doesn't have a default PDF viewer configured.\n"
-               "Please:\n"
-               "1. Install a PDF reader (Adobe Reader, Foxit, etc.)\n"
-               "2. Or manually open the file from: " + path;
+    
+    QString output = QString::fromUtf8(process.readAllStandardOutput()).trimmed();
+    int exitCode = process.exitCode();
+    
+    if (exitCode != 0 || output.isEmpty()) {
+        QString error = QString::fromUtf8(process.readAllStandardError());
+        return "⚠️ PDF Extraction Failed\n\n"
+               "Make sure PyMuPDF is installed:\n"
+               "pip install PyMuPDF\n\n"
+               "Error: " + error;
     }
+    
+    return output;
 }
 
 QString FilePreviewDialog::loadDocxFile(const QString &path)
@@ -149,46 +164,33 @@ QString FilePreviewDialog::loadDocxFile(const QString &path)
 
 QString FilePreviewDialog::extractTextFromDocx(const QString &path)
 {
-    // DOCX files are ZIP archives - use PowerShell to extract
+    // Use Python with python-docx to extract DOCX text
     QProcess process;
     process.setProcessChannelMode(QProcess::MergedChannels);
     
-    // Create a non-const copy of path to avoid const issues
-    QString pathCopy = path;
-    QString escapedPath = pathCopy.replace("'", "''");
-    QString tempDir = QDir::temp().path() + "/docx_extract_" + QString::number(QTime::currentTime().msec());
+    // Get the path to the Python script (same directory as executable)
+    QString scriptPath = QCoreApplication::applicationDirPath() + "/extract_docx.py";
     
-    // PowerShell command to extract document.xml from DOCX zip
-    QString psCommand = QString(
-        "[System.IO.Compression.ZipFile]::ExtractToDirectory('%1', '%2', $true); "
-        "$xml = [xml](Get-Content '%2\\word\\document.xml' -Raw); "
-        "$text = @(); "
-        "$xml.SelectNodes('//w:t', @{w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'}) | ForEach-Object { $text += $_.InnerText }; "
-        "Write-Output ($text -join '')"
-    ).arg(escapedPath, tempDir);
+    // Run Python script
+    process.start("python", QStringList() << scriptPath << path);
     
-    process.start("powershell.exe", QStringList() << "-NoProfile" << "-Command" << psCommand);
-    
-    if (!process.waitForFinished(10000)) {  // 10 second timeout
+    if (!process.waitForFinished(30000)) {  // 30 second timeout
         process.kill();
-        qDebug() << "PowerShell DOCX extraction timeout";
-        return "⚠️ DOCX Extraction Timeout\n\nThe extraction took too long.\nPlease convert to TXT format.";
+        return "⚠️ DOCX Extraction Timeout\n\n"
+               "The extraction took too long.\n\n"
+               "Make sure python-docx is installed:\n"
+               "pip install python-docx";
     }
     
     QString output = QString::fromUtf8(process.readAllStandardOutput()).trimmed();
     int exitCode = process.exitCode();
     
-    qDebug() << "PowerShell exit code:" << exitCode;
-    qDebug() << "Extracted text length:" << output.length();
-    
     if (exitCode != 0 || output.isEmpty()) {
-        qDebug() << "DOCX extraction failed or empty result";
-        return "⚠️ Could not extract text from DOCX\n\n"
-               "The file may be:\n"
-               "• Corrupted or invalid\n"
-               "• Contains only images/tables\n"
-               "• Using unusual formatting\n\n"
-               "Workaround: Convert to TXT and try again";
+        QString error = QString::fromUtf8(process.readAllStandardError());
+        return "⚠️ DOCX Extraction Failed\n\n"
+               "Make sure python-docx is installed:\n"
+               "pip install python-docx\n\n"
+               "Error: " + error;
     }
     
     return output;
