@@ -3511,14 +3511,61 @@ bool MainWindow::loadCollabs()
 
     return true;
 }
+//export to pdf
+//collabs export to pdf
+void MainWindow::on_collabsExportButton_clicked()
+{
+    QString filepath = QFileDialog::getSaveFileName
+    (
+        this,
+        "Export Collaborations as PDF",
+        QDir::homePath() + "/Collaborations.pdf",
+        nullptr
+    );
+
+    if(filepath.isEmpty())
+    {
+        qDebug() << "No path was provided\n";
+        return;
+    }
+
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filepath);
+
+    QTextDocument doc;
+    QString content;
+    for(auto &it : collaborations)
+    {
+        content += QString
+                (
+                    "<p>Collaboration Title: %1</p>"
+                    "<p>Description: %2</p><br>"
+                ).arg(it.getTitle(), it.getDescription());
+    }
+    doc.setHtml(content);
+    doc.print(&printer);
+}
+
+
 //read collabs description
+//collabs text to speech (for use with ctrl + f)
 void MainWindow::on_ReadCollabDesc_clicked()
 {
     if(ui->collabsList->currentRow() < 0)
-        return;
+    return;
 
-    textToSpeech.say(collaborations[ui->collabsList->currentRow()].getDescription());
+    if(textToSpeech.state() == QTextToSpeech::State::Speaking)
+    {
+        textToSpeech.pause();
+    }
+    else
+    {
+        textToSpeech.say(collaborations[ui->collabsList->currentRow()].getDescription());
+    }
 }
+
 
 void MainWindow::on_collaborationCreationSortSwitch_clicked()
 {
@@ -6498,6 +6545,9 @@ void MainWindow::toggleDarkMode(){
             );
     }
 }
+
+
+
 
 
 

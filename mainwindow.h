@@ -143,6 +143,8 @@ private slots:
     void on_submissionsArduinoBtn_clicked(); //Submission Stats Arduino
     //************SUBMISSION END***************************//
 
+    void on_collabsExportButton_clicked();
+
     void on_ReadCollabDesc_clicked();
 
 private:
@@ -197,6 +199,8 @@ private:
     //************collabs start*********//
     bool loadCollabs();
     std::vector<Collaboration> collaborations;
+    // void on_collabsExportButton_clicked();
+    // void on_ReadCollabDesc_clicked();
     //************collabs end**********//
 
     //************PUBLICATION START***************************//
