@@ -15,6 +15,8 @@
 
 #include <QTextToSpeech>
 
+#include <QSystemTrayIcon>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -186,6 +188,9 @@ private:
                          int submissionId, int publicationId, const QString& comment,
                          const QString& status);
     void buildCreateReviewUI();
+    QSystemTrayIcon* m_trayIcon = nullptr;
+    void initTrayIcon();
+    void showTrayNotification(const QString& title, const QString& message);
 
     //************REVIEW END***************************//
 

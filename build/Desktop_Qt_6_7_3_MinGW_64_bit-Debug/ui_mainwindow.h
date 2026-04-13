@@ -69,6 +69,7 @@ public:
     QPushButton *collaborationCreationNewButton;
     QPlainTextEdit *collabsSearchBox;
     QPushButton *collaborationsArduinoBtn;
+    QPushButton *ReadCollabDesc;
     QPushButton *collabsGroupChatButton;
     QWidget *page_3;
     QTabWidget *tabWidget;
@@ -604,6 +605,9 @@ public:
         collaborationsArduinoBtn->setObjectName("collaborationsArduinoBtn");
         collaborationsArduinoBtn->setGeometry(QRect(990, 300, 141, 41));
         collaborationsArduinoBtn->setFont(font1);
+        ReadCollabDesc = new QPushButton(frame_6);
+        ReadCollabDesc->setObjectName("ReadCollabDesc");
+        ReadCollabDesc->setGeometry(QRect(20, 600, 90, 29));
         collabsGroupChatButton = new QPushButton(page_2);
         collabsGroupChatButton->setObjectName("collabsGroupChatButton");
         collabsGroupChatButton->setEnabled(false);
@@ -3985,7 +3989,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(3);
+        stackedWidget->setCurrentIndex(2);
         tabWidget->setCurrentIndex(1);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
@@ -4010,9 +4014,13 @@ public:
         collabsEditButton->setText(QCoreApplication::translate("MainWindow", "Edit", nullptr));
         collabsMessageSendButton->setText(QCoreApplication::translate("MainWindow", "Send", nullptr));
         label_25->setText(QCoreApplication::translate("MainWindow", "Decription:", nullptr));
+#if QT_CONFIG(tooltip)
+        collaborationCreationNewButton->setToolTip(QCoreApplication::translate("MainWindow", "New", nullptr));
+#endif // QT_CONFIG(tooltip)
         collaborationCreationNewButton->setText(QCoreApplication::translate("MainWindow", "New", nullptr));
         collabsSearchBox->setPlaceholderText(QCoreApplication::translate("MainWindow", "search...", nullptr));
         collaborationsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Arduino Stats ", nullptr));
+        ReadCollabDesc->setText(QCoreApplication::translate("MainWindow", "Read", nullptr));
         collabsGroupChatButton->setText(QCoreApplication::translate("MainWindow", "  Group Chat", nullptr));
         pushButton_7->setText(QString());
         pushButton_8->setText(QCoreApplication::translate("MainWindow", "Ai checker", nullptr));

@@ -446,6 +446,9 @@
          <pointsize>10</pointsize>
         </font>
        </property>
+       <property name="toolTip">
+        <string>New</string>
+       </property>
        <property name="text">
         <string>New</string>
        </property>
