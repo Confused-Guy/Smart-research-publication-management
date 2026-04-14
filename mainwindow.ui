@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>11</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -9090,22 +9090,6 @@ QTabBar::tab:hover {
          <string>Email</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="role_reg">
-        <property name="geometry">
-         <rect>
-          <x>260</x>
-          <y>160</y>
-          <width>211</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Role</string>
-        </property>
-       </widget>
        <widget class="QLineEdit" name="username_reg">
         <property name="geometry">
          <rect>
@@ -9160,6 +9144,31 @@ QTabBar::tab:hover {
         <property name="placeholderText">
          <string>Password</string>
         </property>
+       </widget>
+       <widget class="QComboBox" name="role_reg">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>160</y>
+          <width>201</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>Researcher</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Viewer</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Reviewer</string>
+         </property>
+        </item>
        </widget>
       </widget>
      </widget>

@@ -305,7 +305,7 @@ void MainWindow::on_addUser_clicked/* ADD USER*/(){
 
     QString email = ui->email_reg->text();
     QString password = ui->password_reg->text();
-    QString role = ui->role_reg->text();
+    QString role = ui->role_reg->currentText();
     QString username = ui->username_reg->text();
     QString specialty = ui->specialty_reg->text();
 
@@ -394,6 +394,11 @@ void MainWindow::on_searchUserBTN_clicked()
     ui->userListView_3->setModel(u.loadUserStatistics());
     ui->userListView_3->verticalHeader()->setDefaultSectionSize(30);
     ui->userListView_3->verticalHeader()->setVisible(true);
+    ui->userListView_3->horizontalHeader()->setStretchLastSection(true);
+    ui->userListView_3->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->userListView_3->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->userListView_3->verticalHeader()->setVisible(false);
+    ui->userListView_3->setCornerButtonEnabled(false);
 
 
 }

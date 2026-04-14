@@ -208,7 +208,7 @@ QSqlQueryModel* User::filter(int state)
     QSqlQuery query;
 
     if (state == 1) {
-        model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE SPECIALTY = 'Viewer'");
+        model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE ROLE = 'Viewer'");
 
     } else {
         model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS");
@@ -223,7 +223,7 @@ QSqlQueryModel* User::filter2(int state)
     QSqlQuery query;
 
     if (state == 1) {
-        model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE SPECIALTY = 'Reviewer'");
+        model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE ROLE = 'Reviewer'");
     } else {
         model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS");
     }
@@ -238,7 +238,7 @@ QSqlQueryModel* User::filter3(int state)
 
     if (state == 1) {
 
-        model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE SPECIALTY = 'Researcher'");
+        model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS WHERE ROLE = 'Researcher'");
 
     } else {
         model->setQuery("SELECT USERID || ' | ' || EMAIL || ' | ' || USERNAME || ' | ' || ROLE || ' | ' || SPECIALTY AS info FROM USERS");
