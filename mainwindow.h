@@ -72,8 +72,9 @@ private slots:
     void on_Researcher_checkStateChanged(const Qt::CheckState &state);
     void exportTableToPDF(const QString &fileName);
     void on_exportUserPDF_clicked();
-    void on_usersArduinoBtn_clicked(); //Review Stats Arduino
 
+    void onArduinoDataReceived();
+    void on_rfidLoginBtn_clicked();
     /***************************************   USER END   **********************************************************/
 
 
@@ -85,9 +86,6 @@ private slots:
     void  on_viewCalendarBtn_clicked();
 
     void  on_conf_clicked();
-
-    void on_eventArduinoBtn_clicked();
-    void on_conferencesArduinoBtn_clicked();
     //************CONFERENCE END***************************//
 
     //************Reveiw Start***************************//
@@ -100,7 +98,6 @@ private slots:
     void loadReviews(bool Rascending, QString RsearchFilter);
     void loadReviewsReadOnly();
 
-    void on_reviewsArduinoBtn_clicked(); //Review Stats Arduino
     //************Reveiw Start***************************//
 
     //***********Collabs Start*****************//
@@ -116,7 +113,6 @@ private slots:
     void on_collaborationCreationCollaborationTitileEdit_textChanged();
     void on_collabsEditButton_clicked();
     void on_collabsSearchBox_textChanged();
-    void on_collaborationsArduinoBtn_clicked(); //Collabs Stats Arduino
 
     //***********Collabs End*******************//
 
@@ -128,7 +124,6 @@ private slots:
     void on_emailButton_clicked();
     void on_pubStatsBtn_clicked();
     void showPublicationStats();
-    void on_publicationsArduinoBtn_clicked(); //Publication Stats Arduino
     //************PUBLICATION END***************************//
 
     //************SUBMISSION START***************************//
@@ -140,7 +135,6 @@ private slots:
     void on_submissionStatusChanged(const QString &newStatus);
     void on_previewSubmissionBtn_clicked();
     void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
-    void on_submissionsArduinoBtn_clicked(); //Submission Stats Arduino
     //************SUBMISSION END***************************//
 
     void on_collabsExportButton_clicked();
@@ -154,10 +148,9 @@ private:
     //************ARDUINO START****************************//
     QSerialPort *arduino;
     void setupArduino();
-    void sendUpcomingEventsToArduino();
-    void sendModuleStatsToArduino(const QString &moduleLabel,
-                                  const QList<QPair<QString,QString>> &stats);
     void clearArduinoLCD();
+    void handleRFIDLogin(const QString &rfidCode);
+    bool rfidLoginActive = false;
     //************ARDUINO END*****************************//
 
     //************CONFERENCE START***************************//

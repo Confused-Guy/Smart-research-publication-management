@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>11</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -464,25 +464,6 @@
        </property>
        <property name="placeholderText">
         <string>search...</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="collaborationsArduinoBtn">
-       <property name="geometry">
-        <rect>
-         <x>990</x>
-         <y>300</y>
-         <width>141</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>-apple-system</family>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Arduino Stats </string>
        </property>
       </widget>
       <widget class="QPushButton" name="ReadCollabDesc">
@@ -1043,45 +1024,6 @@ QScrollArea &gt; QWidget {
        <string>Edit User</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="usersArduinoBtn">
-      <property name="geometry">
-       <rect>
-        <x>1020</x>
-        <y>150</y>
-        <width>151</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>User Stats</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="reviewsArduinoBtn">
-      <property name="geometry">
-       <rect>
-        <x>1020</x>
-        <y>200</y>
-        <width>151</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Review Stats</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>870</x>
-        <y>150</y>
-        <width>141</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Display Stats in Arduino:</string>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="page_4">
      <widget class="QScrollArea" name="scrollArea">
@@ -1344,32 +1286,6 @@ QScrollArea &gt; QWidget {
       </property>
       <property name="text">
        <string>Conference Statistics</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="eventArduinoBtn">
-      <property name="geometry">
-       <rect>
-        <x>510</x>
-        <y>680</y>
-        <width>151</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>in Arduino</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="conferencesArduinoBtn">
-      <property name="geometry">
-       <rect>
-        <x>870</x>
-        <y>680</y>
-        <width>151</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>in Arduino</string>
       </property>
      </widget>
     </widget>
@@ -8244,13 +8160,6 @@ QTabBar::tab:hover {
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_features">
           <item>
-           <widget class="QPushButton" name="publicationsArduinoBtn">
-            <property name="text">
-             <string>Display Stats in Arduino</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="export_2">
             <property name="text">
              <string>export to pdf</string>
@@ -8844,23 +8753,6 @@ QTabBar::tab:hover {
        <column/>
        <column/>
       </widget>
-      <widget class="QPushButton" name="submissionsArduinoBtn">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>130</y>
-         <width>201</width>
-         <height>29</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Display Stats in Arduino</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>icons/eye.svg</normaloff>icons/eye.svg</iconset>
-       </property>
-      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="page_8">
@@ -8945,7 +8837,7 @@ QTabBar::tab:hover {
        <widget class="QPushButton" name="login">
         <property name="geometry">
          <rect>
-          <x>320</x>
+          <x>180</x>
           <y>350</y>
           <width>121</width>
           <height>60</height>
@@ -8968,7 +8860,7 @@ QTabBar::tab:hover {
        <widget class="QPushButton" name="backLoginBTN_2">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>20</x>
           <y>350</y>
           <width>131</width>
           <height>61</height>
@@ -9002,6 +8894,29 @@ QTabBar::tab:hover {
         </property>
         <property name="placeholderText">
          <string>Email</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="rfidLoginBtn">
+        <property name="geometry">
+         <rect>
+          <x>330</x>
+          <y>350</y>
+          <width>121</width>
+          <height>60</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+    background-color: #3498db;
+    border-radius: 20px;
+    border: 2px solid #3498db;
+    min-height: 40px;
+    color: white;
+}
+</string>
+        </property>
+        <property name="text">
+         <string>RFID LOGIN</string>
         </property>
        </widget>
       </widget>

@@ -198,10 +198,7 @@ void MainWindow::setupArduino()
             if (arduino->open(QIODevice::ReadWrite)) {
                 qDebug() << "Arduino connected on port:" << portInfo.systemLocation();
 
-                // Wait for Arduino to reset
-                QTimer::singleShot(2000, this, [this]() {
-                    sendUpcomingEventsToArduino();
-                });
+                connect(arduino, &QSerialPort::readyRead, this, &MainWindow::onArduinoDataReceived);
 
                 return;
             } else {
@@ -219,6 +216,70 @@ void MainWindow::setupArduino()
         "• Arduino is plugged in\n"
         "• You uploaded the code to Arduino\n"
         "• No other program (like Arduino IDE Serial Monitor) is using the port");
+}
+
+// ARDUINO RFID LOG IN
+// Read serial data from Arduino and handle RFID login
+void MainWindow::onArduinoDataReceived() {
+    static QString buffer; // accumulates bytes until newline
+
+    buffer += QString::fromUtf8(arduino->readAll());
+
+    // Arduino sends RFID codes terminated with \n
+    while (buffer.contains('\n')) {
+        int idx = buffer.indexOf('\n');
+        QString line = buffer.left(idx).trimmed();
+        buffer = buffer.mid(idx + 1);
+
+        if (line.isEmpty()) continue;
+
+        qDebug() << "Received from Arduino:" << line;
+
+        // Only handle RFID lines
+        if (line.startsWith("RFID:") && rfidLoginActive) {
+            QString uid = line.mid(5).trimmed(); // strip "RFID:" prefix
+            handleRFIDLogin(uid);
+        }
+        // "TEMP:" and "MOTION:" handlers go here later for scenarios 2 & 3
+    }
+}
+
+// Attempts login with the scanned RFID and updates the UI accordingly
+void MainWindow::handleRFIDLogin(const QString &rfidCode) {
+
+    rfidLoginActive = false;
+
+    User user;
+
+    if (user.loginByRFID(rfidCode)) {
+        qDebug() << "RFID Login success for:" << user.getUsername();
+
+        // Send welcome message to Arduino LCD
+        QString msg = "LOGIN_OK:" + user.getUsername() + "\n";
+        arduino->write(msg.toUtf8());
+        arduino->flush();
+
+        // Stop login mode on Arduino
+        arduino->write("STOP_LOGIN\n");
+        arduino->flush();
+
+        // Go to home page
+        ui->sideBarStack->setCurrentIndex(0);
+        ui->sideBarStack->show();
+        ui->stackedWidget->setCurrentIndex(3);
+
+        ui->displayUsername_2->setText(user.getUsername());
+        ui->displaySpecialty_2->setText(user.getSpecialty());
+
+    } else {
+        qDebug() << "RFID Login failed for UID:" << rfidCode;
+
+        arduino->write("LOGIN_FAIL\n");
+        arduino->flush();
+
+        // Re-enable so user can try again
+        rfidLoginActive = true;
+    }
 }
 
 // Clear LCD function
@@ -250,33 +311,6 @@ void MainWindow::clearArduinoLCD()
     arduino->close();
 
     qDebug() << "Arduino LCD cleared and port closed";
-}
-
-// Displaying stats
-void MainWindow::sendModuleStatsToArduino(
-    const QString &moduleLabel,
-    const QList<QPair<QString,QString>> &stats)
-{
-    if (!arduino || !arduino->isOpen()) {
-        qDebug() << "Arduino not connected";
-        return;
-    }
-
-    arduino->write("CLEAR\n");
-    QThread::msleep(100);
-
-    // Announce module
-    arduino->write(("MODULE:" + moduleLabel + "\n").toUtf8());
-    QThread::msleep(50);
-
-    // Send each stat line
-    for (const auto &pair : stats) {
-        QString line = "STAT:" + pair.first + "|" + pair.second + "\n";
-        arduino->write(line.toUtf8());
-        QThread::msleep(50);
-    }
-
-    arduino->write("DISPLAY\n");
 }
 
 /*********************************************************** USER START ***********************************************************************************/
@@ -558,26 +592,21 @@ void MainWindow::on_exportUserPDF_clicked(){
 
 void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
 
-//ARDUINO USER
-void MainWindow::on_usersArduinoBtn_clicked()
+//Arduino User
+void MainWindow::on_rfidLoginBtn_clicked()
 {
-    QSqlQuery q;
-    int total = 0, authors = 0, reviewers = 0;
+    if (!arduino || !arduino->isOpen()) {
+        QMessageBox::warning(this, "Arduino Not Connected",
+            "Cannot use RFID login: Arduino is not connected.");
+        return;
+    }
 
-    q.exec("SELECT COUNT(*) FROM USERS");
-    if (q.next()) total = q.value(0).toInt();
+    rfidLoginActive = true;
+    qDebug() << "Sending START_LOGIN...";
+    arduino->write("START_LOGIN\n");
+    arduino->flush();
 
-    q.exec("SELECT COUNT(*) FROM USERS WHERE ROLE='Author'");
-    if (q.next()) authors = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM USERS WHERE ROLE='Reviewer'");
-    if (q.next()) reviewers = q.value(0).toInt();
-
-    sendModuleStatsToArduino("Users", {
-        {"Total",     QString::number(total)},
-        {"Authors",   QString::number(authors)},
-        {"Reviewers", QString::number(reviewers)}
-    });
+    qDebug() << "RFID login mode started";
 }
 
 /********************************************************** USER END *************************************************************************************/
@@ -1365,7 +1394,7 @@ void MainWindow::showReviewDialog(int reviewId)
 
     connect(cancelBtn, &QPushButton::clicked, dialog, &QDialog::reject);
 
-    connect(saveReviewBtn, &QPushButton::clicked, this, [=, oldStatus]() mutable {
+    connect(saveReviewBtn, &QPushButton::clicked, this, [=]() mutable {
         if (nameInput->text().trimmed().isEmpty()) {
             QMessageBox::warning(dialog, "Validation Error", "Please enter a reviewer name.");
             return;
@@ -1720,26 +1749,6 @@ void MainWindow::loadReviewsReadOnly()
     }
 
     reviewLayout->addStretch();
-}
-
-void MainWindow::on_reviewsArduinoBtn_clicked()
-{
-    QSqlQuery q;
-    int total = 0, pending = 0, done = 0;
-
-    q.exec("SELECT COUNT(*) FROM REVIEW");
-    if (q.next()) total = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM REVIEW WHERE STATUS='Pending'");
-    if (q.next()) pending = q.value(0).toInt();
-
-    done = total - pending;
-
-    sendModuleStatsToArduino("Reviews", {
-        {"Total",   QString::number(total)},
-        {"Pending", QString::number(pending)},
-        {"Done",    QString::number(done)}
-    });
 }
 
 //********************REVIEW END****************************************************************************************************************************************//
@@ -3376,71 +3385,6 @@ void MainWindow::on_searchConfBtn_clicked()
     loadConferences(sortAscending, ui->searchConfEdit->text());
 }
 
-//8 ARDUINO
-
-// Send upcoming events
-void MainWindow::sendUpcomingEventsToArduino()
-{
-    if (!arduino || !arduino->isOpen()) {
-        qDebug() << "Arduino not connected";
-        return;
-    }
-
-    // Clear old events
-    arduino->write("CLEAR\n");
-    QThread::msleep(100);
-
-    // Query upcoming conferences
-    QSqlQuery query;
-    query.prepare(
-        "SELECT TITLE, CONF_DATE FROM CONFERENCE "
-        "WHERE CONF_DATE >= TRUNC(SYSDATE) "
-        "ORDER BY CONF_DATE ASC "
-        "FETCH FIRST 10 ROWS ONLY"
-    );
-
-    if (query.exec()) {
-        while (query.next()) {
-            QString title = query.value(0).toString();
-            QString date = query.value(1).toDate().toString("dd/MM/yyyy");
-
-            // Format: EVENT:Title|Date
-            QString message = "EVENT:" + title + "|" + date + "\n";
-            arduino->write(message.toUtf8());
-            QThread::msleep(50);  //delay between messages
-        }
-    }
-
-    // Tell Arduino to display
-    arduino->write("DISPLAY\n");
-}
-
-void MainWindow::on_conferencesArduinoBtn_clicked()
-{
-    QSqlQuery q;
-    int total = 0, upcoming = 0, past = 0;
-
-    q.exec("SELECT COUNT(*) FROM CONFERENCE");
-    if (q.next()) total = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM CONFERENCE WHERE CONF_DATE >= TRUNC(SYSDATE)");
-    if (q.next()) upcoming = q.value(0).toInt();
-
-    past = total - upcoming;
-
-    sendModuleStatsToArduino("Conferences", {
-        {"Total",    QString::number(total)},
-        {"Upcoming", QString::number(upcoming)},
-        {"Past",     QString::number(past)}
-    });
-}
-
-// Button slot
-void MainWindow::on_eventArduinoBtn_clicked()
-{
-    sendUpcomingEventsToArduino();
-}
-
 //LINKING BUTTONS
 void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
@@ -3777,25 +3721,6 @@ void MainWindow::on_collaborationCreationCollaborationDescriptionEdit_textChange
 void MainWindow::on_collaborationCreationCollaborationTitileEdit_textChanged()
 {
     ui->collaborationCreationCancelButton->setEnabled(true);
-}
-
-//ARDUINO COLLABS
-void MainWindow::on_collaborationsArduinoBtn_clicked()
-{
-    QSqlQuery q;
-    int total = 0, linked = 0;
-
-    q.exec("SELECT COUNT(*) FROM COLLABORATION");
-    if (q.next()) total = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM COLLABORATION WHERE PUBLICATIONID IS NOT NULL");
-    if (q.next()) linked = q.value(0).toInt();
-
-    sendModuleStatsToArduino("Collabs", {
-        {"Total",  QString::number(total)},
-        {"Linked", QString::number(linked)},
-        {"NoLink", QString::number(total - linked)}
-    });
 }
 
 //**********Collabs End**********//
@@ -4831,36 +4756,6 @@ void MainWindow::showPublicationStats()
     dialog->exec();
 }
 
-// ARDUINO PUBLICATION
-void MainWindow::on_publicationsArduinoBtn_clicked()
-{
-    QSqlQuery q;
-    int total = 0, fields = 0;
-
-    q.exec("SELECT COUNT(*) FROM PUBLICATIONS");
-    if (q.next()) total = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(DISTINCT FIELD) FROM PUBLICATIONS");
-    if (q.next()) fields = q.value(0).toInt();
-
-    // Most common field
-    QString topField = "N/A";
-    q.exec(
-        "SELECT FIELD FROM ("
-        "  SELECT FIELD, COUNT(*) AS CNT FROM PUBLICATIONS "
-        "  GROUP BY FIELD ORDER BY CNT DESC"
-        ") WHERE ROWNUM = 1"
-    );
-    if (q.next()) topField = q.value(0).toString();
-    if (topField.length() > 9) topField = topField.left(9); // fits "Top:xxxxxxxxx"
-
-    sendModuleStatsToArduino("Publications", {
-        {"Total",  QString::number(total)},
-        {"Fields", QString::number(fields)},
-        {"Top",    topField}
-    });
-}
-
 //********************PUBLICATION END************************************************************************************************************************//
 
 
@@ -5860,41 +5755,6 @@ void MainWindow::on_pushButton_8_clicked()
             "Please ensure the model (llama3.1:8b) is properly loaded in Ollama\n"
             "and try again.");
     }
-}
-
-// SUBMISSION ARDUINO
-void MainWindow::on_submissionsArduinoBtn_clicked()
-{
-    QSqlQuery q;
-    int total = 0, draft = 0, submitted = 0,
-        underReview = 0, accepted = 0, rejected = 0;
-
-    q.exec("SELECT COUNT(*) FROM SUBMISSION");
-    if (q.next()) total = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Draft'");
-    if (q.next()) draft = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Submitted'");
-    if (q.next()) submitted = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Under Review'");
-    if (q.next()) underReview = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Accepted'");
-    if (q.next()) accepted = q.value(0).toInt();
-
-    q.exec("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS='Rejected'");
-    if (q.next()) rejected = q.value(0).toInt();
-
-    sendModuleStatsToArduino("Submissions", {
-        {"Total",       QString::number(total)},
-        {"Draft",       QString::number(draft)},
-        {"Submitted",   QString::number(submitted)},
-        {"UnderReview", QString::number(underReview)},
-        {"Accepted",    QString::number(accepted)},
-        {"Rejected",    QString::number(rejected)}
-    });
 }
 
 //************SUBMISSION END***************************//

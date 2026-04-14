@@ -1,7 +1,9 @@
 #include "user.h"
+#include "qsqlerror.h"
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QSettings>
+#include <QCryptographicHash>
 
 User::User() {}
 
@@ -14,8 +16,6 @@ User::User( int userID,  QString email,QString password,QString username, QStrin
     this->role      = role;
     this->specialty = specialty;
 }
-
-#include <QCryptographicHash>
 
 QString User::hashPassword(const QString &password)
 {
@@ -36,12 +36,15 @@ void User::setId(int id){
 void User::setPassword(const QString &password){
     this->password = password;
 }
+
 void User::setUsername(const QString &username){
     this->username = username;
 }
+
 void User::setRole(const QString &role){
     this->role = role;
 }
+
 void User::setSpecialty(const QString &specialty){
     this->specialty = specialty;
 }
@@ -55,7 +58,6 @@ QString User::getEmail()        const{     return email;      }
 QString User::getUsername()     const{     return username;   }
 QString User::getRole()         const{     return role;       }
 QString User::getSpecialty()    const{     return specialty;  }
-
 
 
 bool User::create_user(){
@@ -79,7 +81,6 @@ bool User::create_user(){
         return false;
 
     return true;
-
 }
 
 bool User::update_user()
@@ -110,9 +111,6 @@ bool User::update_user()
         return false;
 
     return true;
-
-
-
 }
 
 bool User::delete_user(){
@@ -130,7 +128,6 @@ bool User::delete_user(){
     }
 
     return false;
-
 }
 
 QSqlQueryModel* User::display(){
@@ -157,8 +154,6 @@ void User::readSavedID(){
         this->userID = settings.value("userID").toInt();
 
     }
-
-
 }
 
 bool User::login(QString email, QString password){
@@ -257,7 +252,52 @@ QSqlQueryModel* User::loadUserStatistics()
     model->setHeaderData(1, Qt::Horizontal, "Total Users");
 
     return model;
-
-
 }
 
+//NEW ARDUINO STUFF
+void User::setRfidCode(const QString &rfidCode) {
+    this->rfidCode = rfidCode;
+}
+
+QString User::getRfidCode() const {
+    return rfidCode;
+}
+
+// Logs in a user by scanning their RFID card
+// Returns true if a matching user is found in the DB
+bool User::loginByRFID(const QString &rfidCode) {
+    QSqlQuery query;
+
+    query.prepare("SELECT * FROM USERS WHERE RFID_CODE = ?");
+    query.addBindValue(rfidCode);
+
+    if (query.exec() && query.next()) {
+        this->userID    = query.value("USERID").toInt();
+        this->username  = query.value("USERNAME").toString();
+        this->email     = query.value("EMAIL").toString();
+        this->role      = query.value("ROLE").toString();
+        this->specialty = query.value("SPECIALTY").toString();
+        this->rfidCode  = rfidCode;
+        User::saveID();
+        return true;
+    }
+
+    qDebug() << "RFID not recognized:" << rfidCode;
+    return false;
+}
+
+// Assigns an RFID code to an existing user (admin use)
+bool User::assignRFID(int userID, const QString &rfidCode) {
+    QSqlQuery query;
+
+    query.prepare("UPDATE USERS SET RFID_CODE = ? WHERE USERID = ?");
+    query.addBindValue(rfidCode);
+    query.addBindValue(userID);
+
+    if (!query.exec()) {
+        qDebug() << "Failed to assign RFID:" << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}

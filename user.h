@@ -13,7 +13,7 @@ private:
     QString username;
     QString role;
     QString specialty;
-
+    QString rfidCode; //NEW FOR THE ARDUINO LOG IN
 
 public:
     User();
@@ -49,7 +49,12 @@ public:
     QSqlQueryModel* filter3(int state);
     QSqlQueryModel* loadUserStatistics();
 
-
+    //NEW FOR ARDUINO LOG IN
+    void setRfidCode(const QString &rfidCode);
+    QString getRfidCode() const;
+    bool loginByRFID(const QString &rfidCode);
+    void extracted(QSqlQuery &query);
+    bool assignRFID(int userID, const QString &rfidCode);
 };
 
 #endif // USER_H
