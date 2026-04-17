@@ -3484,15 +3484,30 @@ void MainWindow::on_collabsExportButton_clicked()
     printer.setOutputFileName(filepath);
 
     QTextDocument doc;
-    QString content;
+    QString content =   "<style>"
+                        "table, th, td"
+                        "{"
+                        "  border:1px solid black;"
+                        "}"
+                        "</style>"
+                        "<table style='width:100%'>"
+                            "<tr>"
+                                "<th>Title</th>"
+                                "<th>Description</th>"
+                            "</tr>";
+
     for(auto &it : collaborations)
     {
         content += QString
                 (
-                    "<p>Collaboration Title: %1</p>"
-                    "<p>Description: %2</p><br>"
+                    "<tr>"
+                        "<td>%1</td>"
+                        "<td>%2</td>"
+                    "</tr>"
                 ).arg(it.getTitle(), it.getDescription());
     }
+    content += "</table>";
+
     doc.setHtml(content);
     doc.print(&printer);
 }
