@@ -3414,7 +3414,11 @@ bool MainWindow::loadCollabs()
 
     QSqlQuery query;
 
-    QString queryString = "SELECT * FROM collaboration WHERE authorId = ?";
+    QString queryString =   "SELECT * FROM collaboration "
+                            "INNER JOIN collaboration_users "
+                            "ON collaboration.idcollaboration = collaboration_users.idcollaboration "
+                            "WHERE collaboration_users.iduser = ?;";
+
     if (!ui->collabsSearchBox->toPlainText().isEmpty())
         queryString += " AND title LIKE ? ";
 
@@ -3436,12 +3440,17 @@ bool MainWindow::loadCollabs()
     if (!query.exec())
         return false;
 
-    while (query.next()) {
-        Collaboration collab(query.value(0).toInt(),
-                             query.value(1).toString(),
-                             query.value(2).toString(),
-                             query.value(3).toInt(),
-                             query.value(4).toInt());
+    //Collaboration(int collaborationId, QString title, QString description, int authorId, int publicationId);
+    while (query.next())
+    {
+        Collaboration collab =
+        {
+            query.value(0).toInt(),
+            query.value(1).toString(),
+            query.value(2).toString(),
+            query.value(3).toInt(),
+            query.value(4).toInt()
+        };
 
         ui->collabsList->addItem(collab.getTitle());
         collaborations.push_back(collab);
@@ -3459,6 +3468,63 @@ bool MainWindow::loadCollabs()
     }
 
     return true;
+}
+
+//collabs add collaborators
+void MainWindow::on_collabsAddButton_clicked()
+{
+    int i = ui->collabsAddList->currentRow();
+    if(i < 0)
+        return;
+
+    collabsUsersAdded.push_back(collabsUsersToAdd[i]);
+    collabsUsersToAdd.erase(collabsUsersToAdd.begin() + i);
+
+    ui->collabsAddList->clear();
+    for(size_t j = 0; j < collabsUsersToAdd.size(); j++)
+    {
+        QString item =  collabsUsersToAdd[j].getUsername() +
+                        ": " +
+                        QString::number(collabsUsersToAdd[j].getId());
+        ui->collabsAddList->addItem(item);
+    }
+
+    ui->collabsRemoveList->clear();
+    for(size_t j = 0; j < collabsUsersAdded.size(); j++)
+    {
+        QString item =  collabsUsersAdded[j].getUsername() +
+                        ": " +
+                        QString::number(collabsUsersAdded[j].getId());
+        ui->collabsRemoveList->addItem(item);
+    }
+}
+//collabs remove collaborators
+void MainWindow::on_collabsRemoveButton_clicked()
+{
+    int i = ui->collabsRemoveList->currentRow();
+    if(i < 0)
+        return;
+
+    collabsUsersToAdd.push_back(collabsUsersAdded[i]);
+    collabsUsersAdded.erase(collabsUsersAdded.begin() + i);
+
+    ui->collabsAddList->clear();
+    for(size_t j = 0; j < collabsUsersToAdd.size(); j++)
+    {
+        QString item =  collabsUsersToAdd[j].getUsername() +
+                        ": " +
+                        QString::number(collabsUsersToAdd[j].getId());
+        ui->collabsAddList->addItem(item);
+    }
+
+    ui->collabsRemoveList->clear();
+    for(size_t j = 0; j < collabsUsersAdded.size(); j++)
+    {
+        QString item =  collabsUsersAdded[j].getUsername() +
+                        ": " +
+                        QString::number(collabsUsersAdded[j].getId());
+        ui->collabsRemoveList->addItem(item);
+    }
 }
 //export to pdf
 //collabs export to pdf
@@ -3548,6 +3614,7 @@ void MainWindow::on_collaborationCreationSortSwitch_clicked()
     loadCollabs();
 }
 
+//load collabs descending
 void MainWindow::on_collaborationCreationDescSwitch_clicked()
 {
     loadCollabs();
@@ -3580,11 +3647,12 @@ void MainWindow::on_collab_clicked()
     loadCollabs();
 }
 
+//collabs search
 void MainWindow::on_collabsSearchBox_textChanged()
 {
     loadCollabs();
 }
-
+//collabs new collab
 void MainWindow::on_collaborationCreationNewButton_clicked()
 {
     ui->collabsList->setCurrentRow(-1);
@@ -3604,6 +3672,12 @@ void MainWindow::on_collaborationCreationNewButton_clicked()
 
     ui->stackedWidget->setCurrentIndex(12);
 
+    //clean lists and vectors
+    collabsUsersToAdd.clear();
+    collabsUsersAdded.clear();
+    ui->collabsAddList->clear();
+    ui->collabsRemoveList->clear();
+
     QSqlQuery pubQuery;
     pubQuery.prepare("SELECT PublicationID, DESCRIPTION FROM PUBLICATIONS");
     pubQuery.exec();
@@ -3615,6 +3689,38 @@ void MainWindow::on_collaborationCreationNewButton_clicked()
         QString desc = pubQuery.value(1).toString();
 
         ui->collaboartionCreationPublicationMenu->addItem(QString("ID %1 - %2").arg(pubId).arg(desc),pubId);
+    }
+
+    QSqlQuery usersQuery;
+    usersQuery.prepare("SELECT userid, email, password, username, role, specialty, rfid_code from USERS WHERE userid != ?");
+    usersQuery.addBindValue(userIdForCollabs);
+    if(!usersQuery.exec())
+    {
+        qDebug() << "Failed to query users for adding\n";
+        return;
+    }
+    //User(int id, QString email, QString password,QString username, QString role, QString specialty);
+    // + rfid_code
+    while(usersQuery.next())
+    {
+        User user =
+        {
+            usersQuery.value(0).toInt(),
+            usersQuery.value(1).toString(),
+            usersQuery.value(2).toString(),
+            usersQuery.value(3).toString(),
+            usersQuery.value(4).toString(),
+            usersQuery.value(5).toString(),
+        };
+        qDebug() << user.getId() << '\n';
+        user.setRfidCode(usersQuery.value(6).toString());
+
+        //add users to local array
+        collabsUsersToAdd.push_back(user);
+
+        //add users to list
+        QString item = user.getUsername() + " - " + QString::number(user.getId());
+        ui->collabsAddList->addItem(item);
     }
 }
 
@@ -3677,11 +3783,14 @@ void MainWindow::on_collaborationCreationConfirmButton_clicked()
     ui->collaborationCreationCollaborationTitileEdit->setPlaceholderText("Title of The Collaboration");
     ui->collaborationCreationCollaborationDescriptionEdit->setPlaceholderText("The Description of The Collaboration");
 
-    if (ui->collabsList->currentRow() < 0) {
+    if (ui->collabsList->currentRow() < 0)
+    {
         int publicationId = 0;
         Collaboration collab(0, title, description, userIdForCollabs, publicationId);
-        collab.create();
-    } else {
+        collab.create(collabsUsersToAdd);
+    }
+    else
+    {
         Collaboration collab = collaborations[ui->collabsList->currentRow()];
         collab.setTitle(title);
         collab.setDescription(description);
@@ -6483,6 +6592,9 @@ void MainWindow::toggleDarkMode(){
             );
     }
 }
+
+
+
 
 
 

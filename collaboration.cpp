@@ -1,8 +1,10 @@
 #include <QSqlQuery>
 #include <QSqlQueryModel>
+#include <ui_mainwindow.h>
 
 #include "collaboration.h"
-#include <ui_mainwindow.h>
+#include "user.h"
+
 
 Collaboration::Collaboration(int collaborationId, QString title, QString description, int authorId, int publicationId)
     :   m_collaborationId(collaborationId),
@@ -26,7 +28,7 @@ void Collaboration::setDescription(const QString &description)      { m_descript
 void Collaboration::setAuthorId(int authorId)                       { m_authorId = authorId; }
 void Collaboration::setPublicationId(int publicationId)             { m_publicationId = publicationId; }
 
-bool Collaboration::create()
+bool Collaboration::create(std::vector<User> &usersToAdd)
 {
     if (m_title.isEmpty())
         return false;
@@ -35,11 +37,16 @@ bool Collaboration::create()
         return false;
 
     QSqlQuery query;
-    query.prepare(
+    query.prepare
+    (
         "INSERT INTO collaboration "
         "(idcollaboration, title, description, authorId, publicationId) "
         "VALUES (collab_SEQ.NEXTVAL, ?, ?, ?, ?)"
-        );
+    );
+
+    //works on my machine
+    //SELECT current_value FROM sys.sequences WHERE name = 'OrderNumberSequence';
+
     query.addBindValue(m_title);
     query.addBindValue(m_description);
     query.addBindValue(m_authorId);
@@ -48,13 +55,29 @@ bool Collaboration::create()
     if(!query.exec())
         return false;
 
-    qDebug() << "Inserted Collab With The Following Attributes:";
-    qDebug() << "Title: " << m_title;
-    qDebug() << "Description: " << m_description;
-    qDebug() << "authorId: " << m_authorId;
-    qDebug() << "publicationId: " << m_publicationId;
-    qDebug() << "Id: " << m_collaborationId;
+    query.prepare("INSERT INTO collaboration_users"
+                  "(idcollaboration, iduser)"
+                  "VALUES(collab_SEQ.CURRVAL, ?)");
 
+    query.addBindValue(m_authorId);
+
+    if (!query.exec()) {
+        qDebug() << "failed to create COLLABORAION_USERS with author";
+        return false;
+    }
+
+    for (int i = 0; i < usersToAdd.size(); i++) {
+        query.prepare("INSERT INTO collaboration_users"
+                      "(idcollaboration, iduser)"
+                      "VALUES(collab_SEQ.CURRVAL, ?)");
+
+        int currentUserId = usersToAdd[i].getId();
+        query.addBindValue(currentUserId);
+
+        if (!query.exec()) {
+            qDebug() << "failed to create COLLABORAION_USERS with: " << currentUserId << '\n';
+        }
+    }
 
     return true;
 }
@@ -62,18 +85,17 @@ bool Collaboration::create()
 bool Collaboration::Delete()
 {
     QSqlQuery query;
+    query.prepare("DELETE FROM collaboration_users WHERE idcollaboration = ?");
+    query.addBindValue(m_collaborationId);
+
+    if (!query.exec())
+        return false;
+
     query.prepare("DELETE FROM collaboration WHERE idcollaboration = ?");
     query.addBindValue(m_collaborationId);
 
     if(!query.exec())
         return false;
-
-    qDebug() << "Deleted Collab With The Following Attributes:";
-    qDebug() << "Title: " << m_title;
-    qDebug() << "Description: " << m_description;
-    qDebug() << "authorId: " << m_authorId;
-    qDebug() << "publicationId: " << m_publicationId;
-    qDebug() << "Id: " << m_collaborationId;
 
     return true;
 }
@@ -81,14 +103,15 @@ bool Collaboration::Delete()
 bool Collaboration::update()
 {
     QSqlQuery query;
-    query.prepare(
+    query.prepare
+    (
         "UPDATE collaboration SET "
         "title = ?, "
         "description = ?, "
         "authorId = ?, "
         "publicationId = ? "
         "WHERE idcollaboration = ?"
-        );
+    );
     query.addBindValue(m_title);
     query.addBindValue(m_description);
     query.addBindValue(m_authorId);

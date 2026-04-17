@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>12</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -497,7 +497,7 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>../../../Desktop/Smart-research-publication-management/icons/video.svg</normaloff>../../../Desktop/Smart-research-publication-management/icons/video.svg</iconset>
+        <normaloff>../../Smart-research-publication-management/icons/video.svg</normaloff>../../Smart-research-publication-management/icons/video.svg</iconset>
       </property>
      </widget>
     </widget>
@@ -9375,10 +9375,10 @@ QTabBar::tab:hover {
      <widget class="QPushButton" name="collaborationCreationConfirmButton">
       <property name="geometry">
        <rect>
-        <x>700</x>
-        <y>530</y>
-        <width>161</width>
-        <height>61</height>
+        <x>1060</x>
+        <y>630</y>
+        <width>141</width>
+        <height>51</height>
        </rect>
       </property>
       <property name="font">
@@ -9392,7 +9392,7 @@ QTabBar::tab:hover {
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>../../../Desktop/Smart-research-publication-management/icons/save.svg</normaloff>../../../Desktop/Smart-research-publication-management/icons/save.svg</iconset>
+        <normaloff>../../Smart-research-publication-management/icons/save.svg</normaloff>../../Smart-research-publication-management/icons/save.svg</iconset>
       </property>
      </widget>
      <widget class="QPushButton" name="collaborationCreationCancelButton">
@@ -9401,10 +9401,10 @@ QTabBar::tab:hover {
       </property>
       <property name="geometry">
        <rect>
-        <x>880</x>
-        <y>530</y>
-        <width>161</width>
-        <height>61</height>
+        <x>1060</x>
+        <y>570</y>
+        <width>141</width>
+        <height>51</height>
        </rect>
       </property>
       <property name="font">
@@ -9420,10 +9420,10 @@ QTabBar::tab:hover {
      <widget class="QFrame" name="collaborationCreationFrame">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>130</y>
+        <x>110</x>
+        <y>40</y>
         <width>911</width>
-        <height>381</height>
+        <height>681</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -9496,23 +9496,13 @@ QTabBar::tab:hover {
         <string>Collaboration Description</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="collaboartionCreationPublicationMenu">
+      <widget class="QPushButton" name="collabsAddButton">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>320</y>
-         <width>401</width>
-         <height>51</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="collaborationCreationAddContributorsButton">
-       <property name="geometry">
-        <rect>
-         <x>490</x>
-         <y>320</y>
+         <x>60</x>
+         <y>620</y>
          <width>351</width>
-         <height>51</height>
+         <height>41</height>
         </rect>
        </property>
        <property name="font">
@@ -9522,7 +9512,69 @@ QTabBar::tab:hover {
         </font>
        </property>
        <property name="text">
-        <string>Add Contributors</string>
+        <string>Add</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="collaboartionCreationPublicationMenu">
+       <property name="geometry">
+        <rect>
+         <x>490</x>
+         <y>320</y>
+         <width>351</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="collabsRemoveButton">
+       <property name="geometry">
+        <rect>
+         <x>490</x>
+         <y>620</y>
+         <width>351</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>-apple-system</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Remove</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="collabsAddSearchBox">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>360</y>
+         <width>351</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Search...</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="collabsAddList">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>410</y>
+         <width>351</width>
+         <height>201</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="collabsRemoveList">
+       <property name="geometry">
+        <rect>
+         <x>490</x>
+         <y>410</y>
+         <width>351</width>
+         <height>201</height>
+        </rect>
        </property>
       </widget>
      </widget>

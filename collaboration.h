@@ -3,12 +3,13 @@
 
 #include <QString>
 
+class User;
 class Collaboration
 {
 public:
     Collaboration(int collaborationId, QString title, QString description, int authorId, int publicationId);
 
-    bool create();
+    bool create(std::vector<User> &usersToAdd);
     bool Delete();
     bool update();
 

@@ -20,7 +20,8 @@ int main(int argc, char *argv[])
         qDebug() << "Database Error:" << db.lastError().text();
     }else{
         qDebug() << "Datbase Connected";
-        qDebug() << "Username:" << db.userName();}
+        qDebug() << "Username:" << db.userName();
+    }
 
     MainWindow w;
     w.show();

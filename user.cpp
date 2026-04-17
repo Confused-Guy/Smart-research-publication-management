@@ -137,22 +137,20 @@ QSqlQueryModel* User::display(){
 }
 
 
-void User::saveID(){
-
+void User::saveID()
+{
     QSettings settings("researchApp", "sessionLogin");
     settings.setValue("userID", this->userID );
-
 }
 
 
-void User::readSavedID(){
-
+void User::readSavedID()
+{
     QSettings settings("researchApp","sessionLogin");
 
     if(settings.contains("userID"))
     {
         this->userID = settings.value("userID").toInt();
-
     }
 }
 

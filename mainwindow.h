@@ -9,6 +9,7 @@
 #include "submission.h"
 #include "filepreviewdialog.h"
 #include "ollamaintegration.h"
+#include "user.h"
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
@@ -113,7 +114,10 @@ private slots:
     void on_collaborationCreationCollaborationTitileEdit_textChanged();
     void on_collabsEditButton_clicked();
     void on_collabsSearchBox_textChanged();
-
+    void on_collabsExportButton_clicked();
+    void on_ReadCollabDesc_clicked();
+    void on_collabsAddButton_clicked();
+    void on_collabsRemoveButton_clicked();
     //***********Collabs End*******************//
 
     //************PUBLICATION START***************************//
@@ -137,9 +141,7 @@ private slots:
     void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
     //************SUBMISSION END***************************//
 
-    void on_collabsExportButton_clicked();
 
-    void on_ReadCollabDesc_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -192,6 +194,8 @@ private:
     //************collabs start*********//
     bool loadCollabs();
     std::vector<Collaboration> collaborations;
+    std::vector<User> collabsUsersToAdd;
+    std::vector<User> collabsUsersAdded;
     // void on_collabsExportButton_clicked();
     // void on_ReadCollabDesc_clicked();
     //************collabs end**********//
