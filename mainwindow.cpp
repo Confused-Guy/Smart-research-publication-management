@@ -149,7 +149,7 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "AI Result Display created and shown";
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index) {
-        if (ui->tabWidget->widget(index) == ui->ReviewT)
+        if (ui->tabWidget->widget(index) == ui->tab_7)
             loadReviewsReadOnly();
     });
 
@@ -611,9 +611,8 @@ void MainWindow::on_rfidLoginBtn_clicked()
 
 /********************************************************** USER END *************************************************************************************/
 
-//********************REVIEW START*********************************************************************************************************************//
+//******************REVIEW START**********************//
 
-// ── Call this once in your MainWindow constructor ──────────────────────────
 void MainWindow::initTrayIcon()
 {
     if (!m_trayIcon) {
@@ -628,6 +627,172 @@ void MainWindow::showTrayNotification(const QString& title, const QString& messa
     if (!m_trayIcon) return;
     if (!QSystemTrayIcon::supportsMessages()) return;
     m_trayIcon->showMessage(title, message, QSystemTrayIcon::Information, 4000);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  HELPER — fetch + extract manuscript text for a given submission ID
+// ─────────────────────────────────────────────────────────────────────────────
+QString MainWindow::getManuscriptTextForSubmission(int submissionId)
+{
+    QSqlQuery q;
+    q.prepare("SELECT Manuscript FROM Submission WHERE SubmissionID = ?");
+    q.addBindValue(submissionId);
+    if (!q.exec() || !q.next()) {
+        qDebug() << "getManuscriptTextForSubmission: DB query failed for ID" << submissionId;
+        return "";
+    }
+
+    QString path = q.value(0).toString().trimmed();
+    if (path.isEmpty()) {
+        qDebug() << "getManuscriptTextForSubmission: no manuscript path for ID" << submissionId;
+        return "";
+    }
+    if (!QFileInfo::exists(path)) {
+        qDebug() << "getManuscriptTextForSubmission: file not found:" << path;
+        return "";
+    }
+
+    QString ext = QFileInfo(path).suffix().toLower();
+
+    if (ext == "txt") {
+        QFile f(path);
+        if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&f);
+            return in.readAll();
+        }
+        return "";
+    }
+
+    auto tryScript = [&](const QString& scriptName) -> QString {
+        QString scriptPath = QCoreApplication::applicationDirPath() + "/" + scriptName;
+        QProcess proc;
+        proc.setProcessChannelMode(QProcess::MergedChannels);
+        proc.start("python", QStringList() << scriptPath << path);
+        if (!proc.waitForFinished(30000)) { proc.kill(); return ""; }
+        if (proc.exitCode() != 0) return "";
+        return QString::fromUtf8(proc.readAllStandardOutput()).trimmed();
+    };
+
+    if (ext == "docx") {
+        QString t = tryScript("extract_docx.py");
+        return t.isEmpty() ? tryScript("extract_pdf.py") : t;
+    }
+    if (ext == "pdf") {
+        QString t = tryScript("extract_pdf.py");
+        return t.isEmpty() ? tryScript("extract_docx.py") : t;
+    }
+
+    QString t = tryScript("extract_docx.py");
+    if (t.isEmpty()) t = tryScript("extract_pdf.py");
+    if (!t.isEmpty()) return t;
+
+    QFile f(path);
+    if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&f);
+        return in.readAll();
+    }
+    return "";
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  HELPER — local heuristic AI-content estimator (no network, no Ollama)
+//  Scores 0–100 based on four text-analysis signals.
+//  Returns -1 if text is too short to analyze.
+// ─────────────────────────────────────────────────────────────────────────────
+int MainWindow::detectAIContentPercentage(const QString& text)
+{
+    QString trimmed = text.trimmed();
+    if (trimmed.length() < 80) return -1;   // too short to be meaningful
+
+    QString lower = trimmed.toLower();
+    double score  = 0.0;
+
+    // ── Signal 1: AI-characteristic phrase density  (max 40 pts) ─────────
+    // These are phrases that LLMs overuse in academic writing
+    static const QStringList aiPhrases = {
+        "furthermore", "moreover", "in conclusion", "in summary",
+        "it is worth noting", "it should be noted", "it is important to note",
+        "this paper presents", "this study aims", "the results demonstrate",
+        "the proposed", "state-of-the-art", "comprehensive overview",
+        "delve into", "leverage", "it is crucial", "it is essential",
+        "in the context of", "facilitate", "utilize", "robust",
+        "novel approach", "significant improvement", "in this paper",
+        "we propose", "this work presents", "empirical results",
+        "the findings suggest", "needless to say", "it can be seen that",
+        "plays a crucial role", "shed light on", "in recent years"
+    };
+
+    int phraseHits = 0;
+    for (const QString& phrase : aiPhrases)
+        if (lower.contains(phrase)) phraseHits++;
+
+    // Scale: hitting ~8 or more phrases out of 32 maxes this signal out
+    double phraseScore = qMin((double)phraseHits / 8.0, 1.0) * 40.0;
+    score += phraseScore;
+
+    // ── Signal 2: Sentence-length uniformity  (max 30 pts) ────────────────
+    // AI tends to write sentences of suspiciously similar length
+    QStringList sentences = trimmed.split(
+        QRegularExpression("[.!?]+\\s*"), Qt::SkipEmptyParts);
+
+    QVector<int> sentLens;
+    for (const QString& s : sentences) {
+        int wc = s.trimmed().split(
+            QRegularExpression("\\s+"), Qt::SkipEmptyParts).size();
+        if (wc >= 3) sentLens.append(wc);
+    }
+
+    if (sentLens.size() >= 5) {
+        double mean = 0;
+        for (int l : sentLens) mean += l;
+        mean /= sentLens.size();
+
+        double variance = 0;
+        for (int l : sentLens) variance += (l - mean) * (l - mean);
+        variance /= sentLens.size();
+        double stddev = qSqrt(variance);
+
+        // Coefficient of variation: lower = more uniform = more AI-like
+        double cv = (mean > 0) ? (stddev / mean) : 1.0;
+        double uniformityScore = 0;
+        if      (cv < 0.18) uniformityScore = 30;
+        else if (cv < 0.28) uniformityScore = 20;
+        else if (cv < 0.38) uniformityScore = 10;
+        score += uniformityScore;
+    }
+
+    // ── Signal 3: Vocabulary richness / Type-Token Ratio  (max 20 pts) ────
+    // Use a fixed 100-word window to avoid length bias
+    QStringList words = lower.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts);
+    if (words.size() >= 50) {
+        int window = qMin((int)words.size(), 100);
+        QSet<QString> unique;
+        for (int i = 0; i < window; ++i) unique.insert(words[i]);
+        double ttr = (double)unique.size() / (double)window;
+
+        // Low TTR in a 100-word window (< 0.55) suggests repetitive/AI text
+        double ttrScore = 0;
+        if      (ttr < 0.48) ttrScore = 20;
+        else if (ttr < 0.56) ttrScore = 10;
+        score += ttrScore;
+    }
+
+    // ── Signal 4: Absence of personal/informal voice markers  (max 10 pts) ─
+    // Human writers use "I", "we", contractions, hedges like "honestly" etc.
+    QRegularExpression personalRe(
+        "\\b(i |i'm|i've|i'd|my |mine|we |we've|honestly|actually|"
+        "basically|literally|surprisingly|unfortunately|interestingly)\\b"
+    );
+    int personalCount = 0;
+    QRegularExpressionMatchIterator it = personalRe.globalMatch(lower);
+    while (it.hasNext()) { it.next(); personalCount++; }
+
+    // Density: hits per 100 chars
+    double markerDensity = (double)personalCount / (trimmed.length() / 100.0);
+    if (markerDensity < 0.3 && trimmed.length() > 300)
+        score += 10;  // very few personal markers → AI-like
+
+    return qBound(0, qRound(score), 100);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1181,12 +1346,10 @@ void MainWindow::buildCreateReviewUI()
         query.bindValue(":comment", commentInput->toPlainText().trimmed());
 
         if (query.exec()) {
-            // ── NOTIFICATION: new review created ──────────────────────────
             showTrayNotification(
                 "New Review Created",
                 "Submission \"" + submissionCombo->currentText() + "\" sent to review by " + nameInput->text().trimmed() + "."
             );
-            // ──────────────────────────────────────────────────────────────
             QMessageBox::information(page, "Success", "Submission sent to review successfully.");
             nameInput->clear();
             dateInput->setDate(QDate::currentDate());
@@ -1307,7 +1470,6 @@ void MainWindow::showReviewDialog(int reviewId)
     }
 
     QComboBox* statusInput = nullptr;
-    // Capture old status before user changes it, for notification diffing
     QString oldStatus;
 
     if (isEditing) {
@@ -1355,7 +1517,7 @@ void MainWindow::showReviewDialog(int reviewId)
             nameInput->setText(q.value(0).toString());
             dateInput->setDate(q.value(1).toDate());
             commentInput->setPlainText(q.value(2).toString());
-            oldStatus = q.value(3).toString();          // ← capture original status
+            oldStatus = q.value(3).toString();
             int idx = statusInput->findText(oldStatus);
             if (idx >= 0) statusInput->setCurrentIndex(idx);
         }
@@ -1427,14 +1589,12 @@ void MainWindow::showReviewDialog(int reviewId)
             query.bindValue(":id",      reviewId);
 
             if (query.exec()) {
-                // ── NOTIFICATION: status changed ───────────────────────────
                 if (newStatus != oldStatus) {
                     showTrayNotification(
                         "Review Status Updated",
                         "Reviewer \"" + nameInput->text().trimmed() + "\": " + oldStatus + " → " + newStatus + "."
                     );
                 }
-                // ──────────────────────────────────────────────────────────
 
                 if (newStatus == "Accepted" || newStatus == "Rejected") {
                     QSqlQuery subUpdate;
@@ -1458,7 +1618,6 @@ void MainWindow::showReviewDialog(int reviewId)
             return;
         }
 
-        // Insert path (new review via dialog)
         int comboIdx     = submissionCombo->currentIndex();
         int sid          = submissionData[comboIdx].first;
         int defaultPubId = getDefaultPublicationId();
@@ -1477,12 +1636,10 @@ void MainWindow::showReviewDialog(int reviewId)
         query.bindValue(":comment", commentInput->toPlainText().trimmed());
 
         if (query.exec()) {
-            // ── NOTIFICATION: new review created (via dialog) ─────────────
             showTrayNotification(
                 "New Review Created",
                 "Submission \"" + submissionCombo->currentText() + "\" sent to review by " + nameInput->text().trimmed() + "."
             );
-            // ──────────────────────────────────────────────────────────────
             loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
             dialog->accept();
         } else {
@@ -1612,25 +1769,57 @@ void MainWindow::on_review_clicked()
 
 void MainWindow::loadReviewsReadOnly()
 {
-    QVBoxLayout* reviewLayout = qobject_cast<QVBoxLayout*>(ui->ReviewT->layout());
-    if (!reviewLayout) {
-        reviewLayout = new QVBoxLayout(ui->ReviewT);
-        ui->ReviewT->setLayout(reviewLayout);
+    // ── Clear everything currently inside ReviewT ─────────────────────────
+    QLayout* existingLayout = ui->ReviewT->layout();
+    if (existingLayout) {
+        QLayoutItem* it;
+        while ((it = existingLayout->takeAt(0)) != nullptr) {
+            delete it->widget();
+            delete it;
+        }
+        delete existingLayout;
     }
 
-    QLayoutItem* item;
-    while ((item = reviewLayout->takeAt(0)) != nullptr) {
-        delete item->widget();
-        delete item;
-    }
+    // ── Wrap the whole list in a scroll area ──────────────────────────────
+    QVBoxLayout* outerLayout = new QVBoxLayout(ui->ReviewT);
+    outerLayout->setContentsMargins(0, 0, 0, 0);
+    outerLayout->setSpacing(0);
 
+    QScrollArea* scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setStyleSheet(
+        "QScrollArea { background: transparent; border: none; }"
+        "QScrollBar:vertical { background: #f1f5f9; width: 7px; border-radius: 3px; }"
+        "QScrollBar::handle:vertical { background: #cbd5e1; border-radius: 3px; min-height: 30px; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }"
+    );
+
+    QWidget* scrollContent = new QWidget();
+    scrollContent->setStyleSheet("background: transparent;");
+
+    QVBoxLayout* reviewLayout = new QVBoxLayout(scrollContent);
+    reviewLayout->setSpacing(10);
+    reviewLayout->setContentsMargins(8, 8, 8, 8);
+
+    scrollArea->setWidget(scrollContent);
+    outerLayout->addWidget(scrollArea);
+
+    // ── Query ─────────────────────────────────────────────────────────────
     QSqlQuery reviewQuery;
-    reviewQuery.prepare("SELECT IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, PUBLICATION_ID, COMMENTREVIEW, STATUS FROM REVIEW ORDER BY REVIEW_DATE DESC");
+    reviewQuery.prepare(
+        "SELECT IDREVIEW, REVIEWER_NAME, REVIEW_DATE, SUBMISSION_ID, "
+        "PUBLICATION_ID, COMMENTREVIEW, STATUS "
+        "FROM REVIEW ORDER BY REVIEW_DATE DESC"
+    );
 
     if (!reviewQuery.exec()) {
         QLabel* errorLabel = new QLabel("Error loading reviews: " + reviewQuery.lastError().text());
         errorLabel->setAlignment(Qt::AlignCenter);
         reviewLayout->addWidget(errorLabel);
+        reviewLayout->addStretch();
         return;
     }
 
@@ -1647,6 +1836,7 @@ void MainWindow::loadReviewsReadOnly()
         QString comment      = reviewQuery.value(5).toString();
         QString status       = reviewQuery.value(6).toString();
 
+        // ── Status colours ────────────────────────────────────────────────
         QString statusColor, statusBg;
         if (status == "Accepted") {
             statusColor = "#15803d"; statusBg = "#dcfce7";
@@ -1658,18 +1848,25 @@ void MainWindow::loadReviewsReadOnly()
             statusColor = "#1d4ed8"; statusBg = "#dbeafe";
         }
 
+        // ── Card container ────────────────────────────────────────────────
         QFrame* card = new QFrame();
         card->setFrameShape(QFrame::StyledPanel);
-        card->setMinimumHeight(130);
+        // Let height be determined by content — no setMinimumHeight
+        card->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
+        // Main horizontal split: [info column] | [AI box] | [PDF btn]
         QHBoxLayout* cardLayout = new QHBoxLayout(card);
-        cardLayout->setContentsMargins(16, 16, 16, 16);
-        cardLayout->setSpacing(16);
+        cardLayout->setContentsMargins(14, 12, 14, 12);
+        cardLayout->setSpacing(14);
 
+        // ── Left: info column ─────────────────────────────────────────────
         QVBoxLayout* infoLayout = new QVBoxLayout();
-        infoLayout->setSpacing(6);
+        infoLayout->setSpacing(5);
 
+        // Reviewer name + status badge on same row
         QHBoxLayout* nameRow = new QHBoxLayout();
+        nameRow->setSpacing(8);
+
         QLabel* nameLabel = new QLabel("<b>" + reviewerName + "</b>");
         nameLabel->setStyleSheet("font-size: 11pt;");
 
@@ -1701,43 +1898,124 @@ void MainWindow::loadReviewsReadOnly()
         infoLayout->addWidget(metaLabel);
         infoLayout->addWidget(commentLabel);
 
+        // ── Middle: AI content box ────────────────────────────────────────
         QFrame* aiBox = new QFrame();
-        aiBox->setFixedSize(110, 90);
-        aiBox->setStyleSheet("QFrame { border: 2px dashed #cbd5e1; border-radius: 10px; background-color: #f8fafc; }");
+        aiBox->setFixedSize(110, 110);
+        aiBox->setStyleSheet(
+            "QFrame { border: 2px dashed #cbd5e1; border-radius: 10px;"
+            " background-color: #f8fafc; }"
+        );
+        aiBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
         QVBoxLayout* aiLayout = new QVBoxLayout(aiBox);
         aiLayout->setAlignment(Qt::AlignCenter);
-        QLabel* aiLabel = new QLabel("AI Score");
+        aiLayout->setSpacing(4);
+        aiLayout->setContentsMargins(6, 6, 6, 6);
+
+        QLabel* aiLabel = new QLabel("AI Content");
         aiLabel->setAlignment(Qt::AlignCenter);
-        aiLabel->setStyleSheet("font-size: 8pt; color: #94a3b8; font-weight: 600; border: none;");
-        int aiScore = QRandomGenerator::global()->bounded(5, 55);
-        QLabel* aiValue = new QLabel(QString::number(aiScore) + "%");
+        aiLabel->setStyleSheet(
+            "font-size: 8pt; color: #94a3b8; font-weight: 600; border: none;"
+        );
+
+        QLabel* aiValue = new QLabel("—");
         aiValue->setAlignment(Qt::AlignCenter);
-        aiValue->setStyleSheet("font-size: 11pt; font-weight: 700; color: #30b9bf; border: none;");
+        aiValue->setStyleSheet(
+            "font-size: 14pt; font-weight: 700; color: #30b9bf; border: none;"
+        );
+        aiValue->setFixedHeight(24);
+
+        QPushButton* aiCheckBtn = new QPushButton("Analyze");
+        aiCheckBtn->setFixedSize(88, 24);
+        aiCheckBtn->setCursor(Qt::PointingHandCursor);
+        aiCheckBtn->setStyleSheet(
+            "QPushButton {"
+            "  background-color: #e0f7fa; color: #0891b2;"
+            "  border: 1px solid #30b9bf; border-radius: 4px;"
+            "  font-size: 7pt; font-weight: 700; }"
+            "QPushButton:hover  { background-color: #30b9bf; color: white; }"
+            "QPushButton:disabled { background-color: #f1f5f9; color: #94a3b8;"
+            "                       border-color: #e2e8f0; }"
+        );
+
         aiLayout->addWidget(aiLabel);
         aiLayout->addWidget(aiValue);
+        aiLayout->addWidget(aiCheckBtn, 0, Qt::AlignHCenter);
 
-        QPushButton* pdfBtn = new QPushButton("Export PDF");
-        pdfBtn->setFixedSize(100, 36);
+        // ── Right: Export PDF button (separate column, vertically centred) ─
+        QPushButton* pdfBtn = new QPushButton("Export\nPDF");
+        pdfBtn->setFixedSize(80, 52);
         pdfBtn->setCursor(Qt::PointingHandCursor);
         pdfBtn->setStyleSheet(
-            "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
-            "stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none; "
-            "border-radius: 8px; font-size: 9pt; font-weight: 700; }"
+            "QPushButton { background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+            "  stop:0 #3dd4db, stop:1 #30b9bf); color: white; border: none;"
+            "  border-radius: 8px; font-size: 8pt; font-weight: 700; }"
             "QPushButton:hover { background-color: #22d3dd; }"
         );
 
-        QVBoxLayout* rightLayout = new QVBoxLayout();
-        rightLayout->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-        rightLayout->addWidget(pdfBtn);
-
-        cardLayout->addLayout(infoLayout, 1);
-        cardLayout->addWidget(aiBox);
-        cardLayout->addLayout(rightLayout);
+        // Assemble card
+        cardLayout->addLayout(infoLayout, 1);   // info stretches
+        cardLayout->addWidget(aiBox,  0, Qt::AlignVCenter);
+        cardLayout->addWidget(pdfBtn, 0, Qt::AlignVCenter);
 
         reviewLayout->addWidget(card);
 
+        // ── Analyze button logic (local heuristic, no network) ────────────
+        int capturedSubId = submissionId;
+
+        connect(aiCheckBtn, &QPushButton::clicked, this,
+                [this, capturedSubId, aiValue, aiCheckBtn]()
+        {
+            aiCheckBtn->setEnabled(false);
+            aiCheckBtn->setText("…");
+            aiValue->setText("⏳");
+            aiValue->setStyleSheet(
+                "font-size: 12pt; font-weight: 700; color: #f59e0b; border: none;"
+            );
+            QCoreApplication::processEvents();
+
+            QString text = getManuscriptTextForSubmission(capturedSubId);
+
+            if (text.trimmed().isEmpty()) {
+                aiValue->setText("N/A");
+                aiValue->setStyleSheet(
+                    "font-size: 12pt; font-weight: 700; color: #94a3b8; border: none;"
+                );
+                aiCheckBtn->setText("No file");
+                return;
+            }
+
+            int pct = detectAIContentPercentage(text);
+
+            if (pct >= 0) {
+                aiValue->setText(QString::number(pct) + "%");
+
+                // Green < 30 %, amber 30–59 %, red ≥ 60 %
+                QString colour;
+                if      (pct < 30) colour = "#22c55e";
+                else if (pct < 60) colour = "#f59e0b";
+                else               colour = "#ef4444";
+
+                aiValue->setStyleSheet(
+                    QString("font-size: 14pt; font-weight: 700; color: %1; border: none;")
+                        .arg(colour)
+                );
+                aiCheckBtn->setText("Done ✓");
+                // Button stays disabled — result is final
+            } else {
+                // Text too short or other issue
+                aiValue->setText("—");
+                aiValue->setStyleSheet(
+                    "font-size: 14pt; font-weight: 700; color: #94a3b8; border: none;"
+                );
+                aiCheckBtn->setEnabled(true);
+                aiCheckBtn->setText("Retry");
+            }
+        });
+
         connect(pdfBtn, &QPushButton::clicked, this, [=]() {
-            exportReviewPDF(reviewId, reviewerName, reviewDate, submissionId, publicationId, comment, status);
+            exportReviewPDF(reviewId, reviewerName, reviewDate,
+                            submissionId, publicationId, comment, status);
         });
     }
 
@@ -1751,7 +2029,7 @@ void MainWindow::loadReviewsReadOnly()
     reviewLayout->addStretch();
 }
 
-//********************REVIEW END****************************************************************************************************************************************//
+//********************REVIEW END*************************************//
 //**********************************************************************************************************************************************************************//
 
 //**********************************************************************************************************************************************************************//

@@ -177,6 +177,9 @@ private:
     //************REVIEW START***************************//
     //Variables
     bool reviewSortAscending = true;
+    QSystemTrayIcon* m_trayIcon = nullptr;
+    QString getManuscriptTextForSubmission(int submissionId);
+    int     detectAIContentPercentage(const QString& text);
 
     //Functions
     void showReviewDialog(int reviewId = -1);
@@ -184,7 +187,6 @@ private:
                          int submissionId, int publicationId, const QString& comment,
                          const QString& status);
     void buildCreateReviewUI();
-    QSystemTrayIcon* m_trayIcon = nullptr;
     void initTrayIcon();
     void showTrayNotification(const QString& title, const QString& message);
 

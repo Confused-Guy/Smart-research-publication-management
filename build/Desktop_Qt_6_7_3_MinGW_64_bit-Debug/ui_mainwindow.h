@@ -68,7 +68,6 @@ public:
     QLabel *label_25;
     QPushButton *collaborationCreationNewButton;
     QPlainTextEdit *collabsSearchBox;
-    QPushButton *collaborationsArduinoBtn;
     QPushButton *ReadCollabDesc;
     QPushButton *collabsGroupChatButton;
     QWidget *page_3;
@@ -106,9 +105,6 @@ public:
     QPushButton *searchUserBTN;
     QPushButton *reviewSub;
     QPushButton *editUserPage;
-    QPushButton *usersArduinoBtn;
-    QPushButton *reviewsArduinoBtn;
-    QLabel *label;
     QWidget *page_4;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
@@ -135,8 +131,6 @@ public:
     QPushButton *viewCalendarBtn;
     QPushButton *addConferenceBtn;
     QPushButton *confStatsBtn;
-    QPushButton *eventArduinoBtn;
-    QPushButton *conferencesArduinoBtn;
     QWidget *page_9;
     QStackedWidget *stackedWidget_2;
     QWidget *page_12;
@@ -383,7 +377,6 @@ public:
     QSpacerItem *horizontalSpacer;
     QGroupBox *FeatsGroup;
     QHBoxLayout *horizontalLayout_features;
-    QPushButton *publicationsArduinoBtn;
     QPushButton *export_2;
     QPushButton *summaryButton;
     QPushButton *emailButton;
@@ -401,7 +394,6 @@ public:
     QPushButton *editSubmissionBtn;
     QPushButton *previewSubmissionBtn;
     QTableWidget *submissionTableWidget_2;
-    QPushButton *submissionsArduinoBtn;
     QWidget *page_8;
     QFrame *frame_7;
     QGroupBox *groupBox_2;
@@ -411,16 +403,17 @@ public:
     QPushButton *login;
     QPushButton *backLoginBTN_2;
     QLineEdit *emailLogin_2;
+    QPushButton *rfidLoginBtn;
     QWidget *page_10;
     QFrame *frame_8;
     QGroupBox *groupBox_5;
     QPushButton *addUser;
     QLineEdit *specialty_reg;
     QLineEdit *email_reg;
-    QLineEdit *role_reg;
     QLineEdit *username_reg;
     QPushButton *cancelBtnReg;
     QLineEdit *password_reg;
+    QComboBox *role_reg;
     QWidget *page_11;
     QFrame *frame_9;
     QGroupBox *groupBox_4;
@@ -450,8 +443,12 @@ public:
     QTextEdit *collaborationCreationCollaborationDescriptionEdit;
     QLabel *collaborationCreationCollaborationTitleLabel;
     QLabel *collaborationCreationCollaborationDescriptionLabel;
+    QPushButton *collabsAddButton;
     QComboBox *collaboartionCreationPublicationMenu;
-    QPushButton *collaborationCreationAddContributorsButton;
+    QPushButton *collabsRemoveButton;
+    QPlainTextEdit *collabsAddSearchBox;
+    QListWidget *collabsAddList;
+    QListWidget *collabsRemoveList;
     QWidget *page_50;
     QFrame *frame_34;
     QGroupBox *groupBox_25;
@@ -560,7 +557,7 @@ public:
         collabsStatsButton->setGeometry(QRect(990, 130, 141, 41));
         collabsExportButton = new QPushButton(frame_6);
         collabsExportButton->setObjectName("collabsExportButton");
-        collabsExportButton->setEnabled(false);
+        collabsExportButton->setEnabled(true);
         collabsExportButton->setGeometry(QRect(990, 180, 141, 41));
         collaborationCreationSortSwitch = new QCheckBox(frame_6);
         collaborationCreationSortSwitch->setObjectName("collaborationCreationSortSwitch");
@@ -601,10 +598,6 @@ public:
         collabsSearchBox = new QPlainTextEdit(frame_6);
         collabsSearchBox->setObjectName("collabsSearchBox");
         collabsSearchBox->setGeometry(QRect(10, 30, 241, 51));
-        collaborationsArduinoBtn = new QPushButton(frame_6);
-        collaborationsArduinoBtn->setObjectName("collaborationsArduinoBtn");
-        collaborationsArduinoBtn->setGeometry(QRect(990, 300, 141, 41));
-        collaborationsArduinoBtn->setFont(font1);
         ReadCollabDesc = new QPushButton(frame_6);
         ReadCollabDesc->setObjectName("ReadCollabDesc");
         ReadCollabDesc->setGeometry(QRect(20, 600, 90, 29));
@@ -613,7 +606,7 @@ public:
         collabsGroupChatButton->setEnabled(false);
         collabsGroupChatButton->setGeometry(QRect(990, 20, 141, 41));
         QIcon icon;
-        icon.addFile(QString::fromUtf8("../../../Desktop/Smart-research-publication-management/icons/video.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        icon.addFile(QString::fromUtf8("../../Smart-research-publication-management/icons/video.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         collabsGroupChatButton->setIcon(icon);
         stackedWidget->addWidget(page_2);
         page_3 = new QWidget();
@@ -806,15 +799,6 @@ public:
         editUserPage = new QPushButton(page_3);
         editUserPage->setObjectName("editUserPage");
         editUserPage->setGeometry(QRect(880, 90, 141, 41));
-        usersArduinoBtn = new QPushButton(page_3);
-        usersArduinoBtn->setObjectName("usersArduinoBtn");
-        usersArduinoBtn->setGeometry(QRect(1020, 150, 151, 31));
-        reviewsArduinoBtn = new QPushButton(page_3);
-        reviewsArduinoBtn->setObjectName("reviewsArduinoBtn");
-        reviewsArduinoBtn->setGeometry(QRect(1020, 200, 151, 31));
-        label = new QLabel(page_3);
-        label->setObjectName("label");
-        label->setGeometry(QRect(870, 150, 141, 20));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");
@@ -956,12 +940,6 @@ public:
         confStatsBtn->setGeometry(QRect(790, 620, 321, 51));
         confStatsBtn->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         confStatsBtn->setStyleSheet(QString::fromUtf8(""));
-        eventArduinoBtn = new QPushButton(page_4);
-        eventArduinoBtn->setObjectName("eventArduinoBtn");
-        eventArduinoBtn->setGeometry(QRect(510, 680, 151, 21));
-        conferencesArduinoBtn = new QPushButton(page_4);
-        conferencesArduinoBtn->setObjectName("conferencesArduinoBtn");
-        conferencesArduinoBtn->setGeometry(QRect(870, 680, 151, 21));
         stackedWidget->addWidget(page_4);
         page_9 = new QWidget();
         page_9->setObjectName("page_9");
@@ -3489,11 +3467,6 @@ public:
         FeatsGroup->setObjectName("FeatsGroup");
         horizontalLayout_features = new QHBoxLayout(FeatsGroup);
         horizontalLayout_features->setObjectName("horizontalLayout_features");
-        publicationsArduinoBtn = new QPushButton(FeatsGroup);
-        publicationsArduinoBtn->setObjectName("publicationsArduinoBtn");
-
-        horizontalLayout_features->addWidget(publicationsArduinoBtn);
-
         export_2 = new QPushButton(FeatsGroup);
         export_2->setObjectName("export_2");
 
@@ -3638,10 +3611,6 @@ public:
         submissionTableWidget_2->setGeometry(QRect(50, 210, 801, 291));
         submissionTableWidget_2->setRowCount(0);
         submissionTableWidget_2->setColumnCount(5);
-        submissionsArduinoBtn = new QPushButton(groupBox_3);
-        submissionsArduinoBtn->setObjectName("submissionsArduinoBtn");
-        submissionsArduinoBtn->setGeometry(QRect(230, 130, 201, 29));
-        submissionsArduinoBtn->setIcon(icon26);
         stackedWidget->addWidget(page_7);
         page_8 = new QWidget();
         page_8->setObjectName("page_8");
@@ -3667,7 +3636,7 @@ public:
         passwordLogin_2->setGeometry(QRect(120, 270, 211, 41));
         login = new QPushButton(groupBox_2);
         login->setObjectName("login");
-        login->setGeometry(QRect(320, 350, 121, 60));
+        login->setGeometry(QRect(180, 350, 121, 60));
         login->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #3498db;\n"
 "    border-radius: 20px;\n"
@@ -3678,7 +3647,7 @@ public:
 ""));
         backLoginBTN_2 = new QPushButton(groupBox_2);
         backLoginBTN_2->setObjectName("backLoginBTN_2");
-        backLoginBTN_2->setGeometry(QRect(50, 350, 131, 61));
+        backLoginBTN_2->setGeometry(QRect(20, 350, 131, 61));
         backLoginBTN_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #3498db;\n"
 "    border-radius: 20px;\n"
@@ -3690,6 +3659,17 @@ public:
         emailLogin_2 = new QLineEdit(groupBox_2);
         emailLogin_2->setObjectName("emailLogin_2");
         emailLogin_2->setGeometry(QRect(120, 220, 211, 41));
+        rfidLoginBtn = new QPushButton(groupBox_2);
+        rfidLoginBtn->setObjectName("rfidLoginBtn");
+        rfidLoginBtn->setGeometry(QRect(330, 350, 121, 60));
+        rfidLoginBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    background-color: #3498db;\n"
+"    border-radius: 20px;\n"
+"    border: 2px solid #3498db;\n"
+"    min-height: 40px;\n"
+"    color: white;\n"
+"}\n"
+""));
         stackedWidget->addWidget(page_8);
         page_10 = new QWidget();
         page_10->setObjectName("page_10");
@@ -3718,9 +3698,6 @@ public:
         email_reg = new QLineEdit(groupBox_5);
         email_reg->setObjectName("email_reg");
         email_reg->setGeometry(QRect(20, 70, 211, 41));
-        role_reg = new QLineEdit(groupBox_5);
-        role_reg->setObjectName("role_reg");
-        role_reg->setGeometry(QRect(260, 160, 211, 41));
         username_reg = new QLineEdit(groupBox_5);
         username_reg->setObjectName("username_reg");
         username_reg->setGeometry(QRect(20, 160, 211, 41));
@@ -3738,6 +3715,12 @@ public:
         password_reg = new QLineEdit(groupBox_5);
         password_reg->setObjectName("password_reg");
         password_reg->setGeometry(QRect(260, 70, 211, 41));
+        role_reg = new QComboBox(groupBox_5);
+        role_reg->addItem(QString());
+        role_reg->addItem(QString());
+        role_reg->addItem(QString());
+        role_reg->setObjectName("role_reg");
+        role_reg->setGeometry(QRect(260, 160, 201, 41));
         stackedWidget->addWidget(page_10);
         page_11 = new QWidget();
         page_11->setObjectName("page_11");
@@ -3826,19 +3809,19 @@ public:
         page_26->setObjectName("page_26");
         collaborationCreationConfirmButton = new QPushButton(page_26);
         collaborationCreationConfirmButton->setObjectName("collaborationCreationConfirmButton");
-        collaborationCreationConfirmButton->setGeometry(QRect(700, 530, 161, 61));
+        collaborationCreationConfirmButton->setGeometry(QRect(1060, 630, 141, 51));
         collaborationCreationConfirmButton->setFont(font1);
         QIcon icon29;
-        icon29.addFile(QString::fromUtf8("../../../Desktop/Smart-research-publication-management/icons/save.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        icon29.addFile(QString::fromUtf8("../../Smart-research-publication-management/icons/save.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         collaborationCreationConfirmButton->setIcon(icon29);
         collaborationCreationCancelButton = new QPushButton(page_26);
         collaborationCreationCancelButton->setObjectName("collaborationCreationCancelButton");
         collaborationCreationCancelButton->setEnabled(false);
-        collaborationCreationCancelButton->setGeometry(QRect(880, 530, 161, 61));
+        collaborationCreationCancelButton->setGeometry(QRect(1060, 570, 141, 51));
         collaborationCreationCancelButton->setFont(font1);
         collaborationCreationFrame = new QFrame(page_26);
         collaborationCreationFrame->setObjectName("collaborationCreationFrame");
-        collaborationCreationFrame->setGeometry(QRect(140, 130, 911, 381));
+        collaborationCreationFrame->setGeometry(QRect(110, 40, 911, 681));
         collaborationCreationFrame->setFrameShape(QFrame::Shape::NoFrame);
         collaborationCreationFrame->setFrameShadow(QFrame::Shadow::Raised);
         collaborationCreationCollaborationTitileEdit = new QPlainTextEdit(collaborationCreationFrame);
@@ -3855,13 +3838,26 @@ public:
         collaborationCreationCollaborationDescriptionLabel->setObjectName("collaborationCreationCollaborationDescriptionLabel");
         collaborationCreationCollaborationDescriptionLabel->setGeometry(QRect(10, 100, 251, 31));
         collaborationCreationCollaborationDescriptionLabel->setFont(font);
+        collabsAddButton = new QPushButton(collaborationCreationFrame);
+        collabsAddButton->setObjectName("collabsAddButton");
+        collabsAddButton->setGeometry(QRect(60, 620, 351, 41));
+        collabsAddButton->setFont(font1);
         collaboartionCreationPublicationMenu = new QComboBox(collaborationCreationFrame);
         collaboartionCreationPublicationMenu->setObjectName("collaboartionCreationPublicationMenu");
-        collaboartionCreationPublicationMenu->setGeometry(QRect(30, 320, 401, 51));
-        collaborationCreationAddContributorsButton = new QPushButton(collaborationCreationFrame);
-        collaborationCreationAddContributorsButton->setObjectName("collaborationCreationAddContributorsButton");
-        collaborationCreationAddContributorsButton->setGeometry(QRect(490, 320, 351, 51));
-        collaborationCreationAddContributorsButton->setFont(font1);
+        collaboartionCreationPublicationMenu->setGeometry(QRect(490, 320, 351, 41));
+        collabsRemoveButton = new QPushButton(collaborationCreationFrame);
+        collabsRemoveButton->setObjectName("collabsRemoveButton");
+        collabsRemoveButton->setGeometry(QRect(490, 620, 351, 41));
+        collabsRemoveButton->setFont(font1);
+        collabsAddSearchBox = new QPlainTextEdit(collaborationCreationFrame);
+        collabsAddSearchBox->setObjectName("collabsAddSearchBox");
+        collabsAddSearchBox->setGeometry(QRect(60, 360, 351, 41));
+        collabsAddList = new QListWidget(collaborationCreationFrame);
+        collabsAddList->setObjectName("collabsAddList");
+        collabsAddList->setGeometry(QRect(60, 410, 351, 201));
+        collabsRemoveList = new QListWidget(collaborationCreationFrame);
+        collabsRemoveList->setObjectName("collabsRemoveList");
+        collabsRemoveList->setGeometry(QRect(490, 410, 351, 201));
         stackedWidget->addWidget(page_26);
         page_50 = new QWidget();
         page_50->setObjectName("page_50");
@@ -3989,8 +3985,8 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(2);
-        tabWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(0);
         stackedWidget_2->setCurrentIndex(4);
         tabWidget_2->setCurrentIndex(0);
         sideBarStack->setCurrentIndex(0);
@@ -4019,7 +4015,6 @@ public:
 #endif // QT_CONFIG(tooltip)
         collaborationCreationNewButton->setText(QCoreApplication::translate("MainWindow", "New", nullptr));
         collabsSearchBox->setPlaceholderText(QCoreApplication::translate("MainWindow", "search...", nullptr));
-        collaborationsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Arduino Stats ", nullptr));
         ReadCollabDesc->setText(QCoreApplication::translate("MainWindow", "Read", nullptr));
         collabsGroupChatButton->setText(QCoreApplication::translate("MainWindow", "  Group Chat", nullptr));
         pushButton_7->setText(QString());
@@ -4049,9 +4044,6 @@ public:
         searchUserBTN->setText(QCoreApplication::translate("MainWindow", "Search user", nullptr));
         reviewSub->setText(QCoreApplication::translate("MainWindow", "Review Submissions", nullptr));
         editUserPage->setText(QCoreApplication::translate("MainWindow", "Edit User", nullptr));
-        usersArduinoBtn->setText(QCoreApplication::translate("MainWindow", "User Stats", nullptr));
-        reviewsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Review Stats", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "Display Stats in Arduino:", nullptr));
         searchConfEdit->setText(QString());
         searchConfEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search for something...", nullptr));
         searchConfBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
@@ -4067,8 +4059,6 @@ public:
         viewCalendarBtn->setText(QCoreApplication::translate("MainWindow", "View Calendar", nullptr));
         addConferenceBtn->setText(QCoreApplication::translate("MainWindow", "Add Conference", nullptr));
         confStatsBtn->setText(QCoreApplication::translate("MainWindow", "Conference Statistics", nullptr));
-        eventArduinoBtn->setText(QCoreApplication::translate("MainWindow", "in Arduino", nullptr));
-        conferencesArduinoBtn->setText(QCoreApplication::translate("MainWindow", "in Arduino", nullptr));
 #if QT_CONFIG(tooltip)
         reveiw4_2->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -4442,7 +4432,6 @@ public:
         addButton->setText(QCoreApplication::translate("MainWindow", " Add Publication", nullptr));
         deleteButton->setText(QCoreApplication::translate("MainWindow", "Delete Selected", nullptr));
         FeatsGroup->setTitle(QString());
-        publicationsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Display Stats in Arduino", nullptr));
         export_2->setText(QCoreApplication::translate("MainWindow", "export to pdf", nullptr));
         summaryButton->setText(QCoreApplication::translate("MainWindow", "Summary", nullptr));
         emailButton->setText(QCoreApplication::translate("MainWindow", "Send Email Notification", nullptr));
@@ -4456,7 +4445,6 @@ public:
         refreshSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Refresh submissions", nullptr));
         editSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Edit submission", nullptr));
         previewSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Preview", nullptr));
-        submissionsArduinoBtn->setText(QCoreApplication::translate("MainWindow", "Display Stats in Arduino", nullptr));
         groupBox_2->setTitle(QString());
         loginLogo->setText(QString());
         linkFor->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><a href=\"go\"><span style=\" text-decoration: underline; color:#27bf73;\">Forgot your password?</span></a></p></body></html>", nullptr));
@@ -4466,19 +4454,22 @@ public:
         backLoginBTN_2->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
         emailLogin_2->setText(QString());
         emailLogin_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "Email", nullptr));
+        rfidLoginBtn->setText(QCoreApplication::translate("MainWindow", "RFID LOGIN", nullptr));
         groupBox_5->setTitle(QCoreApplication::translate("MainWindow", "User Rigester", nullptr));
         addUser->setText(QCoreApplication::translate("MainWindow", "Create User", nullptr));
         specialty_reg->setText(QString());
         specialty_reg->setPlaceholderText(QCoreApplication::translate("MainWindow", "Specialty", nullptr));
         email_reg->setText(QString());
         email_reg->setPlaceholderText(QCoreApplication::translate("MainWindow", "Email", nullptr));
-        role_reg->setText(QString());
-        role_reg->setPlaceholderText(QCoreApplication::translate("MainWindow", "Role", nullptr));
         username_reg->setText(QString());
         username_reg->setPlaceholderText(QCoreApplication::translate("MainWindow", "Username", nullptr));
         cancelBtnReg->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
         password_reg->setText(QString());
         password_reg->setPlaceholderText(QCoreApplication::translate("MainWindow", "Password", nullptr));
+        role_reg->setItemText(0, QCoreApplication::translate("MainWindow", "Researcher", nullptr));
+        role_reg->setItemText(1, QCoreApplication::translate("MainWindow", "Viewer", nullptr));
+        role_reg->setItemText(2, QCoreApplication::translate("MainWindow", "Reviewer", nullptr));
+
         groupBox_4->setTitle(QString());
         label_41->setText(QCoreApplication::translate("MainWindow", "Forgot your password?", nullptr));
         label_43->setText(QCoreApplication::translate("MainWindow", "Check your email!", nullptr));
@@ -4502,7 +4493,9 @@ public:
         collaborationCreationCollaborationDescriptionEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "The Description of the Collaboration", nullptr));
         collaborationCreationCollaborationTitleLabel->setText(QCoreApplication::translate("MainWindow", "Collaboration Title", nullptr));
         collaborationCreationCollaborationDescriptionLabel->setText(QCoreApplication::translate("MainWindow", "Collaboration Description", nullptr));
-        collaborationCreationAddContributorsButton->setText(QCoreApplication::translate("MainWindow", "Add Contributors", nullptr));
+        collabsAddButton->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
+        collabsRemoveButton->setText(QCoreApplication::translate("MainWindow", "Remove", nullptr));
+        collabsAddSearchBox->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search...", nullptr));
         groupBox_25->setTitle(QCoreApplication::translate("MainWindow", "Edit User", nullptr));
         email_edit_2->setText(QString());
         email_edit_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "Email", nullptr));
