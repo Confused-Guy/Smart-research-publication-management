@@ -3697,18 +3697,19 @@ bool MainWindow::loadCollabs()
     QString queryString =   "SELECT * FROM collaboration "
                             "INNER JOIN collaboration_users "
                             "ON collaboration.idcollaboration = collaboration_users.idcollaboration "
-                            "WHERE collaboration_users.iduser = ?;";
+                            "WHERE collaboration_users.iduser = ?";
 
     if (!ui->collabsSearchBox->toPlainText().isEmpty())
-        queryString += " AND title LIKE ? ";
+        queryString += " AND collaboration.title LIKE ? ";
 
     if (ui->collaborationCreationSortSwitch->checkState() == Qt::CheckState::Checked)
     {
-        queryString += " ORDER BY TITLE ";
+        queryString += " ORDER BY collaboration.title ";
 
         if (ui->collaborationCreationDescSwitch->checkState() == Qt::CheckState::Checked)
             queryString += " DESC ";
     }
+    queryString += ';';
 
     query.prepare(queryString);
 
