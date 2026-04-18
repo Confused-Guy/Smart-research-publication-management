@@ -61,12 +61,14 @@ bool Collaboration::create(std::vector<User> &usersToAdd)
 
     query.addBindValue(m_authorId);
 
-    if (!query.exec()) {
+    if (!query.exec())
+    {
         qDebug() << "failed to create COLLABORAION_USERS with author";
         return false;
     }
 
-    for (int i = 0; i < usersToAdd.size(); i++) {
+    for (int i = 0; i < usersToAdd.size(); i++)
+    {
         query.prepare("INSERT INTO collaboration_users"
                       "(idcollaboration, iduser)"
                       "VALUES(collab_SEQ.CURRVAL, ?)");
@@ -74,7 +76,8 @@ bool Collaboration::create(std::vector<User> &usersToAdd)
         int currentUserId = usersToAdd[i].getId();
         query.addBindValue(currentUserId);
 
-        if (!query.exec()) {
+        if (!query.exec())
+        {
             qDebug() << "failed to create COLLABORAION_USERS with: " << currentUserId << '\n';
         }
     }
@@ -86,6 +89,12 @@ bool Collaboration::Delete()
 {
     QSqlQuery query;
     query.prepare("DELETE FROM collaboration_users WHERE idcollaboration = ?");
+    query.addBindValue(m_collaborationId);
+
+    if (!query.exec())
+        return false;
+
+    query.prepare("DELETE FROM collaboration_message WHERE idcollaboration = ?");
     query.addBindValue(m_collaborationId);
 
     if (!query.exec())

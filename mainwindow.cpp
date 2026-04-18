@@ -3401,6 +3401,8 @@ bool MainWindow::loadCollabs()
     u.readSavedID();
     userIdForCollabs = u.getId();
 
+    ui->collabsMessagesList->clear();
+    ui->collabsMessageBox->clear();
     ui->collabsList->clear();
     ui->collabsDescription->clear();
     ui->collabsDescription->setEnabled(false);
@@ -3468,6 +3470,99 @@ bool MainWindow::loadCollabs()
     }
 
     return true;
+}
+static bool loadMessagesCollabs(Ui::MainWindow *ui, std::vector<Collaboration> &collaborations)
+{
+    int currentRow = ui->collabsList->currentRow();
+    if(currentRow < 0)
+        return false;
+
+    //"SELECT * FROM collaboration "
+    //"INNER JOIN collaboration_users "
+    //"ON collaboration.idcollaboration = collaboration_users.idcollaboration "
+    //"WHERE collaboration_users.iduser = ?;";
+
+    QSqlQuery messageQuery;
+    messageQuery.prepare
+    (
+        "SELECT users.userid, users.username, collaboration_message.message FROM collaboration_message "
+
+        //get message contenst
+        "INNER JOIN collaboration "
+        "ON collaboration_message.idcollaboration = collaboration.idcollaboration "
+
+        //get usernames
+        "INNER JOIN users "
+        "ON collaboration_message.iduser = users.userid "
+
+        "WHERE collaboration.idcollaboration = ? "
+        "ORDER BY collaboration_message.m_timestamp;"
+    );
+
+    messageQuery.addBindValue(collaborations[currentRow].getId());
+
+    if(!messageQuery.exec())
+    {
+        qDebug() << "Failed to load messages for: " << collaborations[currentRow].getTitle();
+        return false;
+    }
+    ui->collabsMessagesList->clear();
+    while(messageQuery.next())
+    {
+        QString message;
+        int userId = messageQuery.value(0).toInt();
+
+        if(userId == userIdForCollabs)
+        {
+            message = "You: ";   //concat with you instead of username
+                                //if current user is the one who sent the message
+        }
+        else
+        {
+            message = messageQuery.value(1).toString();
+        }
+
+        message +=  ": " +
+                    messageQuery.value(2).toString();// actual message
+
+        ui->collabsMessagesList->addItem(message);
+    }
+}
+//collabs send message
+void MainWindow::on_collabsMessageSendButton_clicked()
+{
+    if(ui->collabsMessageBox->toPlainText().isEmpty())
+        return;
+
+    if(ui->collabsList->currentRow() < 0)
+        return;
+
+    //"INSERT INTO collaboration "
+    //"(idcollaboration, title, description, authorId, publicationId) "
+    //"VALUES (collab_SEQ.NEXTVAL, ?, ?, ?, ?)"
+
+    QSqlQuery messageQuery;
+    messageQuery.prepare
+    (
+        "INSERT INTO collaboration_message"
+        "(idcollaboration, iduser, message, m_timestamp)"
+        "VALUES (?, ?, ?, SYSTIMESTAMP);"
+    );
+
+    int index = ui->collabsList->currentRow();
+    int collabId = collaborations[index].getId();
+    QString message = ui->collabsMessageBox->toPlainText();
+    messageQuery.addBindValue(collabId);
+    messageQuery.addBindValue(userIdForCollabs);
+    messageQuery.addBindValue(message);
+
+    if(!messageQuery.exec())
+    {
+        qDebug() << "failed to send message";
+        return;
+    }
+    ui->collabsMessageBox->clear();
+    loadMessagesCollabs(ui, collaborations);
 }
 
 //collabs add collaborators
@@ -3577,8 +3672,6 @@ void MainWindow::on_collabsExportButton_clicked()
     doc.setHtml(content);
     doc.print(&printer);
 }
-
-
 //read collabs description
 //collabs text to speech (for use with ctrl + f)
 void MainWindow::on_ReadCollabDesc_clicked()
@@ -3596,7 +3689,6 @@ void MainWindow::on_ReadCollabDesc_clicked()
     }
 }
 
-
 void MainWindow::on_collaborationCreationSortSwitch_clicked()
 {
     if (ui->collaborationCreationSortSwitch->checkState() == Qt::CheckState::Checked) {
@@ -3604,7 +3696,6 @@ void MainWindow::on_collaborationCreationSortSwitch_clicked()
         ui->collaborationCreationDescSwitch->show();
         qDebug() << "Sorting";
     }
-
     else if (ui->collaborationCreationSortSwitch->checkState() == Qt::CheckState::Unchecked) {
         ui->collaborationCreationDescSwitch->setEnabled(false);
         ui->collaborationCreationDescSwitch->hide();
@@ -3622,6 +3713,7 @@ void MainWindow::on_collaborationCreationDescSwitch_clicked()
 
 void MainWindow::on_collabsList_clicked()
 {
+    loadMessagesCollabs(ui, collaborations);
     const int i = ui->collabsList->currentRow();
     ui->collaborationCreationCollaborationDescriptionEdit->setText(
         collaborations[i].getDescription());
@@ -3639,6 +3731,7 @@ void MainWindow::on_collabsList_clicked()
 
     int _ = ui->collabsList->currentRow();
     ui->collabsDescription->setText(collaborations[_].getDescription());
+
 }
 
 void MainWindow::on_collab_clicked()
@@ -3744,12 +3837,15 @@ void MainWindow::on_collabsEditButton_clicked()
 
 void MainWindow::on_collaborationCreationCancelButton_clicked()
 {
-    if (ui->collabsList->currentRow() >= 0) {
+    if (ui->collabsList->currentRow() >= 0)
+    {
         const int i = ui->collabsList->currentRow();
         ui->collaborationCreationCollaborationDescriptionEdit->setText(
             collaborations[i].getDescription());
         ui->collaborationCreationCollaborationTitileEdit->setPlainText(collaborations[i].getTitle());
-    } else {
+    }
+    else
+    {
         ui->collaborationCreationCollaborationDescriptionEdit->clear();
         ui->collaborationCreationCollaborationTitileEdit->clear();
         ui->collabsDeleteButton->setEnabled(false);
@@ -3787,7 +3883,7 @@ void MainWindow::on_collaborationCreationConfirmButton_clicked()
     {
         int publicationId = 0;
         Collaboration collab(0, title, description, userIdForCollabs, publicationId);
-        collab.create(collabsUsersToAdd);
+        collab.create(collabsUsersAdded);
     }
     else
     {
@@ -6592,12 +6688,3 @@ void MainWindow::toggleDarkMode(){
             );
     }
 }
-
-
-
-
-
-
-
-
-

@@ -118,6 +118,7 @@ private slots:
     void on_ReadCollabDesc_clicked();
     void on_collabsAddButton_clicked();
     void on_collabsRemoveButton_clicked();
+    void on_collabsMessageSendButton_clicked();
     //***********Collabs End*******************//
 
     //************PUBLICATION START***************************//
@@ -140,8 +141,6 @@ private slots:
     void on_previewSubmissionBtn_clicked();
     void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
     //************SUBMISSION END***************************//
-
-
 
 private:
     Ui::MainWindow *ui;
