@@ -1802,7 +1802,7 @@ void MainWindow::on_searchReviewBtn_clicked()
     loadReviews(reviewSortAscending, ui->searchReviewEdit->text());
 }
 
-void MainWindow::on_reviewSub_clicked() { ui->stackedWidget->setCurrentIndex(5); loadReviews(true, ""); }
+void MainWindow::on_reviewSub_clicked() { ui->stackedWidget->setCurrentIndex(5); loadReviews(true,""); }
 
 void MainWindow::on_review_clicked()
 {
