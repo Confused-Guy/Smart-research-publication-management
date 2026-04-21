@@ -102,9 +102,9 @@ MainWindow::MainWindow(QWidget *parent)
     //
     QString oldStatus;
 
-    QPixmap logo("logo.png");//logo stuff!
-    ui->loginLogo->setPixmap(logo);
-    ui->pic->setPixmap(logo);//logo stuff!
+    //QPixmap logo("logo.png");//logo stuff!
+    //ui->loginLogo->setPixmap(logo);
+    //ui->pic->setPixmap(logo);//logo stuff!
 
 
     //StyleSheet and default index
@@ -116,8 +116,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QPixmap chartt("pie_chart.png");
     ui->chart->setPixmap(chartt);
-    QPixmap bar("bar.png");
-    ui->bar->setPixmap(bar);
     QPixmap post("gallary.png");
     ui->postPicture->setPixmap(post);
     QPixmap drop("drop.png");
@@ -154,7 +152,7 @@ MainWindow::MainWindow(QWidget *parent)
     aiResultDisplay->show();
     qDebug() << "AI Result Display created and shown";
 
-    connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index) {
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=]() {
         //if (ui->tabWidget->widget(index) == ui->tab_7)
             loadReviewsReadOnly();
     });
@@ -4453,7 +4451,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
             if (confirm == QMessageBox::Yes) {
                 pubTmp.setPublicationID(pubId);
                 if (pubTmp.deletePublication()) {
-                    ui->statusLabel_2->setText(
+                    ui->deleteButton->setText( // this was changed because there was old ui using whatever this was mentioning before
                         "✔ Publication " + QString::number(pubId) + " deleted.");
                     loadPublications(ui->lineEdit_23->text());
                 } else {
@@ -4690,7 +4688,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
         bool ok = isEditing ? pubTmp.update() : pubTmp.create();
 
         if (ok) {
-            ui->statusLabel_2->setText(
+            ui->deleteButton->setText( // this was changed because there was old ui using whatever this was mentioning before
                 isEditing ? "✔ Publication updated successfully."
                           : "✔ Publication added successfully.");
             loadPublications(ui->lineEdit_23->text());
