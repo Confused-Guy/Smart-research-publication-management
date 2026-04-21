@@ -633,7 +633,7 @@ void MainWindow::on_exportUserPDF_clicked()
 }
 
 
-void MainWindow::on_linkFor_linkActivated(){ui->stackedWidget->setCurrentIndex(10);}
+
 
 //Arduino User
 void MainWindow::on_rfidLoginBtn_clicked()
@@ -6303,7 +6303,6 @@ void MainWindow::on_pushButton_8_clicked()
 
 
 //*****************HOME START****************************//
-void MainWindow::on_homeButton_clicked(){ ui->stackedWidget->setCurrentIndex(0);}
 
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
 

@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="page_5">
      <widget class="QLabel" name="chart">
@@ -494,10 +494,6 @@
       </property>
       <property name="text">
        <string>  Group Chat</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../../Smart-research-publication-management/icons/video.svg</normaloff>../../Smart-research-publication-management/icons/video.svg</iconset>
       </property>
      </widget>
     </widget>
@@ -1315,7 +1311,7 @@ QScrollArea &gt; QWidget {
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page_12">
        <widget class="QPushButton" name="reveiw4_2">
@@ -3984,10 +3980,6 @@ QTabBar::tab:hover {
          <property name="text">
           <string>  Group Chat</string>
          </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>icons/video.svg</normaloff>icons/video.svg</iconset>
-         </property>
         </widget>
         <widget class="QTextBrowser" name="collabsTextBrower_2">
          <property name="geometry">
@@ -4017,10 +4009,6 @@ QTabBar::tab:hover {
         </property>
         <property name="text">
          <string>Confirm</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>icons/save.svg</normaloff>icons/save.svg</iconset>
         </property>
        </widget>
        <widget class="QPushButton" name="collaborationCreationCancelButton_2">
@@ -5432,10 +5420,6 @@ QScrollArea &gt; QWidget {
               </property>
               <property name="text">
                <string>Save</string>
-              </property>
-              <property name="icon">
-               <iconset>
-                <normaloff>icons/save.svg</normaloff>icons/save.svg</iconset>
               </property>
              </widget>
             </item>
@@ -8160,6 +8144,13 @@ QTabBar::tab:hover {
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_features">
           <item>
+           <widget class="QPushButton" name="pubStatsBtn">
+            <property name="text">
+             <string>Show stats</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="export_2">
             <property name="text">
              <string>export to pdf</string>
@@ -9373,10 +9364,6 @@ QTabBar::tab:hover {
       </property>
       <property name="text">
        <string>Confirm</string>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>../../Smart-research-publication-management/icons/save.svg</normaloff>../../Smart-research-publication-management/icons/save.svg</iconset>
       </property>
      </widget>
      <widget class="QPushButton" name="collaborationCreationCancelButton">

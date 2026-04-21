@@ -34,8 +34,6 @@ public:
 
 private slots:
 
-    void on_homeButton_clicked();
-
     void on_collab_clicked();
 
     void on_profile_clicked();
@@ -49,8 +47,6 @@ private slots:
     void on_modeSwitch_clicked(){ toggleDarkMode();}
 
     void on_temp_clicked();
-
-    void on_linkFor_linkActivated();
 
     /*************************************** USER START *************************************************************/
 
