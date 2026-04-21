@@ -753,7 +753,7 @@ public:
         displaySpecialty_2->setGeometry(QRect(210, 120, 131, 19));
         temp2 = new QPushButton(page_3);
         temp2->setObjectName("temp2");
-        temp2->setGeometry(QRect(890, 20, 121, 41));
+        temp2->setGeometry(QRect(890, 20, 131, 41));
         mkUser = new QPushButton(page_3);
         mkUser->setObjectName("mkUser");
         mkUser->setGeometry(QRect(1040, 20, 141, 41));
@@ -767,7 +767,7 @@ public:
         reviewSub->setIcon(icon5);
         editUserPage = new QPushButton(page_3);
         editUserPage->setObjectName("editUserPage");
-        editUserPage->setGeometry(QRect(890, 90, 121, 41));
+        editUserPage->setGeometry(QRect(890, 90, 131, 41));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");

@@ -46,8 +46,6 @@ private slots:
 
     void on_modeSwitch_clicked(){ toggleDarkMode();}
 
-    void on_temp_clicked();
-
     /*************************************** USER START *************************************************************/
 
     void on_editUser_2_clicked();
@@ -176,6 +174,11 @@ private:
     bool reviewSortAscending = true;
     QSystemTrayIcon* m_trayIcon = nullptr;
     QString getManuscriptTextForSubmission(int submissionId);
+    // ─────────────────────────────────────────────────────────────────────────────
+    //  HELPER — local heuristic AI-content estimator (no network, no Ollama)
+    //  Scores 0–100 based on four text-analysis signals.
+    //  Returns -1 if text is too short to analyze.
+    // ─────────────────────────────────────────────────────────────────────────────
     int     detectAIContentPercentage(const QString& text);
 
     //Functions

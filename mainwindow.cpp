@@ -123,6 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
     QPixmap drop("drop.png");
     ui->dropPlace->setPixmap(drop);
 
+
     loadSubmissions();
     
     // Initialize Ollama integration
@@ -154,7 +155,7 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "AI Result Display created and shown";
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index) {
-        if (ui->tabWidget->widget(index) == ui->tab_7)
+        //if (ui->tabWidget->widget(index) == ui->tab_7)
             loadReviewsReadOnly();
     });
 
@@ -779,7 +780,7 @@ int MainWindow::detectAIContentPercentage(const QString& text)
         QRegularExpression("[.!?]+\\s*"), Qt::SkipEmptyParts);
 
     QVector<int> sentLens;
-    for (const QString& s : sentences) {
+    for (const QString& s : std::as_const(sentences)) {
         int wc = s.trimmed().split(
             QRegularExpression("\\s+"), Qt::SkipEmptyParts).size();
         if (wc >= 3) sentLens.append(wc);
@@ -6307,8 +6308,6 @@ void MainWindow::on_pushButton_8_clicked()
 void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
 
 void MainWindow::on_Research_clicked(){ ui->stackedWidget->setCurrentIndex(7);}
-
-void MainWindow::on_temp_clicked(){ui->stackedWidget->setCurrentIndex(0);}
 
 //New StyleSheet
 void MainWindow::toggleDarkMode(){
