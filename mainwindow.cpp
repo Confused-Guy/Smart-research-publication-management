@@ -89,6 +89,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //User password for hiding it
+    ui->passwordLogin_2->setEchoMode(QLineEdit::Password);
+    ui->password_reg->setEchoMode(QLineEdit::Password);
+
     this->resize({1280,720});
     mode=false;
 
@@ -339,6 +344,7 @@ void MainWindow::on_addUser_clicked/* ADD USER*/(){
 
     QString email = ui->email_reg->text();
     QString password = ui->password_reg->text();
+    //QString password = ui->password_reg->text();
     QString role = ui->role_reg->currentText();
     QString username = ui->username_reg->text();
     QString specialty = ui->specialty_reg->text();
@@ -379,8 +385,35 @@ void MainWindow::on_login_clicked()
         ui->displayUsername_2->setText(u.getUsername());
         ui->displaySpecialty_2->setText(u.getSpecialty());
     }
+    else
+        qDebug() << u.getId();
 
 }
+
+void MainWindow::on_logOut_clicked()
+{
+
+ User u;
+
+ if (u.logout())
+ {
+     u.saveID();
+     qDebug() << u.getId();
+
+     ui->sideBarStack->setCurrentIndex(0);
+     ui->sideBarStack->show();
+     ui->stackedWidget->setCurrentIndex(3);
+
+     ui->displayUsername_2->setText("[ Username ]");
+     ui->displaySpecialty_2->setText("[ Title / Specialty ]");
+
+ }else
+     qDebug() << "bs";
+
+
+}
+
+
 void MainWindow::on_editUser_2_clicked(){
 
     User u;
@@ -391,7 +424,7 @@ void MainWindow::on_editUser_2_clicked(){
 
     QString email = ui->email_edit_2->text();
     QString password = ui->password_edit_2->text();
-    QString role = ui->role_edit_2->text();
+    QString role = ui->role_edit_2->currentText();
     QString username = ui->username_edit_2->text();
     QString specialty = ui->specialty_edit_2->text();
 
@@ -583,10 +616,20 @@ void MainWindow::exportTableToPDF(const QString &fileName)
 }
 
 
-void MainWindow::on_exportUserPDF_clicked(){
 
-    exportTableToPDF("/");
+void MainWindow::on_exportUserPDF_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save PDF",
+        "",
+        "PDF Files (*.pdf)"
+    );
 
+    if (fileName.isEmpty())
+        return;
+
+    exportTableToPDF(fileName);
 }
 
 

@@ -73,6 +73,7 @@ private slots:
     void on_Researcher_checkStateChanged(const Qt::CheckState &state);
     void exportTableToPDF(const QString &fileName);
     void on_exportUserPDF_clicked();
+    void on_logOut_clicked();
 
     void onArduinoDataReceived();
     void on_rfidLoginBtn_clicked();

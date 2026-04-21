@@ -175,6 +175,18 @@ bool User::login(QString email, QString password){
 
 }
 
+bool User::logout(){
+
+    this->userID = -1;
+    if(userID == -1)
+    {
+        return true;
+    }
+    else return false;
+
+
+}
+
 QSqlQueryModel* User::search(QString string)
 {
     QSqlQueryModel* model = new QSqlQueryModel();

@@ -43,6 +43,7 @@ public:
     void saveID();
     void readSavedID();
     bool login(QString email, QString password);
+    bool logout();
     QSqlQueryModel* search(QString string);
     QSqlQueryModel* filter(int state);
     QSqlQueryModel* filter2(int state);
