@@ -182,6 +182,77 @@
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QWidget" name="dashboardPage" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>1131</width>
+        <height>701</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>9</y>
+         <width>1101</width>
+         <height>681</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QWidget" name="cardTotalSubmissions" native="true"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="cardCollaborations" native="true"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="cardConferences" native="true"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="cardPendingReviews" native="true"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QWidget" name="activityPanel" native="true"/>
+          </item>
+          <item>
+           <widget class="QCalendarWidget" name="dashCalendar">
+            <property name="minimumSize">
+             <size>
+              <width>2</width>
+              <height>3</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>350</width>
+              <height>250</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QWidget" name="chartPanel" native="true"/>
+          </item>
+          <item>
+           <widget class="QWidget" name="conferencesPanel" native="true"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="page"/>
     <widget class="QWidget" name="page_2">
@@ -540,8 +611,8 @@
        <widget class="QPushButton" name="pushButton_7">
         <property name="geometry">
          <rect>
-          <x>660</x>
-          <y>60</y>
+          <x>690</x>
+          <y>130</y>
           <width>31</width>
           <height>31</height>
          </rect>
@@ -560,8 +631,8 @@
        <widget class="QPushButton" name="pushButton_8">
         <property name="geometry">
          <rect>
-          <x>790</x>
-          <y>20</y>
+          <x>820</x>
+          <y>90</y>
           <width>111</width>
           <height>29</height>
          </rect>
@@ -576,8 +647,8 @@
        <widget class="QPushButton" name="pushButton_6">
         <property name="geometry">
          <rect>
-          <x>650</x>
-          <y>10</y>
+          <x>680</x>
+          <y>80</y>
           <width>51</width>
           <height>31</height>
          </rect>
@@ -596,8 +667,8 @@
        <widget class="QGroupBox" name="groupBox_12">
         <property name="geometry">
          <rect>
-          <x>720</x>
-          <y>60</y>
+          <x>750</x>
+          <y>130</y>
           <width>251</width>
           <height>191</height>
          </rect>
@@ -609,8 +680,8 @@
        <widget class="QTableWidget" name="submissionTableWidget">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>30</x>
+          <y>70</y>
           <width>631</width>
           <height>271</height>
          </rect>
@@ -3204,7 +3275,7 @@ QScrollArea &gt; QWidget {
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>161</width>
+      <width>151</width>
       <height>741</height>
      </rect>
     </property>
@@ -3216,8 +3287,8 @@ QScrollArea &gt; QWidget {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>350</y>
-        <width>141</width>
+        <y>390</y>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3233,15 +3304,18 @@ QScrollArea &gt; QWidget {
        <string>Conference</string>
       </property>
       <property name="text">
-       <string> Conference</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::DocumentOpenRecent"/>
       </property>
      </widget>
      <widget class="QPushButton" name="collab">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>440</y>
-        <width>141</width>
+        <y>470</y>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3257,15 +3331,18 @@ QScrollArea &gt; QWidget {
        <string>Collaborations</string>
       </property>
       <property name="text">
-       <string>Collaborations</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::ContactNew"/>
       </property>
      </widget>
      <widget class="QPushButton" name="profile">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>590</y>
-        <width>121</width>
+        <width>41</width>
         <height>41</height>
        </rect>
       </property>
@@ -3282,15 +3359,18 @@ QScrollArea &gt; QWidget {
        <string>User Page</string>
       </property>
       <property name="text">
-       <string> My Profile</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::AddressBookNew"/>
       </property>
      </widget>
      <widget class="QPushButton" name="review">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
-        <width>141</width>
+        <y>150</y>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3306,15 +3386,18 @@ QScrollArea &gt; QWidget {
        <string>Send to Research Reveiw</string>
       </property>
       <property name="text">
-       <string>Send to Review</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::MailSend"/>
       </property>
      </widget>
      <widget class="QPushButton" name="Research">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>170</y>
-        <width>141</width>
+        <y>230</y>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3330,14 +3413,17 @@ QScrollArea &gt; QWidget {
        <string>Add to Research</string>
       </property>
       <property name="text">
-       <string> Add Research</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::ListAdd"/>
       </property>
      </widget>
      <widget class="QPushButton" name="modeSwitch">
       <property name="geometry">
        <rect>
         <x>50</x>
-        <y>670</y>
+        <y>660</y>
         <width>51</width>
         <height>41</height>
        </rect>
@@ -3365,8 +3451,8 @@ QScrollArea &gt; QWidget {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>260</y>
-        <width>141</width>
+        <y>310</y>
+        <width>41</width>
         <height>31</height>
        </rect>
       </property>
@@ -3382,7 +3468,129 @@ QScrollArea &gt; QWidget {
        <string>Posts</string>
       </property>
       <property name="text">
-       <string> Publication</string>
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::DocumentPageSetup"/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="home">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Source Code Pro</family>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="toolTip">
+       <string>User Page</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset theme="QIcon::ThemeIcon::GoHome"/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>50</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Dashboard</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>160</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Send Review</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>240</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Research</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>320</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Publication</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>400</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Conference</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>480</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Collaboration</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>600</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Profile</string>
       </property>
      </widget>
     </widget>

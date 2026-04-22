@@ -95,7 +95,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->password_reg->setEchoMode(QLineEdit::Password);
 
     this->resize({1280,720});
-    mode=false;
+    mode=true;
+
+    loadDashboard();
 
     //notify
     initTrayIcon();
@@ -108,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //StyleSheet and default index
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(0);
     toggleDarkMode();
 
     QPixmap userPic("user.png"); //temporary until user gets an actual db
@@ -120,7 +122,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->postPicture->setPixmap(post);
     QPixmap drop("drop.png");
     ui->dropPlace->setPixmap(drop);
-
 
     loadSubmissions();
     
@@ -6307,6 +6308,397 @@ void MainWindow::on_profile_clicked(){ui->stackedWidget->setCurrentIndex(3);}
 
 void MainWindow::on_Research_clicked(){ ui->stackedWidget->setCurrentIndex(7);}
 
+void MainWindow::on_home_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+    loadDashboard();
+}
+
+void MainWindow::loadDashboard()
+{
+    bool dark = !mode;
+    const QString cardBg    = dark ? "#2a3142" : "#ffffff";
+    const QString pageBg    = dark ? "#1e2536" : "#f0f4f8";
+    const QString txtMain   = dark ? "#e0e7f1" : "#1f2937";
+    const QString txtSub    = dark ? "#8892a4" : "#6b7280";
+    const QString accent    = "#30b9bf";
+    const QString border    = dark ? "#3a4255" : "#e5e7eb";
+
+    QWidget* page = ui->stackedWidget->findChild<QWidget*>("dashboardPage");
+    if (!page) return;
+    page->setStyleSheet(QString("background-color: %1;").arg(pageBg));
+
+    // ── helper style a card and set its number + label ───────
+    auto populateCard = [&](const QString& name, const QString& label,
+                             const QString& value, const QString& color) {
+        QWidget* card = page->findChild<QWidget*>(name);
+        if (!card) return;
+
+        card->setStyleSheet(QString(
+            "QWidget { background: %1; border-radius: 12px;"
+            "border: 1px solid %2; }"
+        ).arg(cardBg, border));
+
+        // Clear old layout if reloading
+        if (card->layout()) {
+            QLayoutItem* item;
+            while ((item = card->layout()->takeAt(0)) != nullptr) {
+                delete item->widget();
+                delete item;
+            }
+            delete card->layout();
+        }
+
+        QVBoxLayout* cl = new QVBoxLayout(card);
+        cl->setContentsMargins(16, 14, 16, 14);
+        cl->setSpacing(4);
+
+        QLabel* numLabel = new QLabel(value, card);
+        numLabel->setStyleSheet(QString(
+            "font-size: 28px; font-weight: bold; color: %1;"
+            "background: transparent; border: none;"
+        ).arg(color));
+
+        QLabel* txtLabel = new QLabel(label, card);
+        txtLabel->setStyleSheet(QString(
+            "font-size: 11px; color: %1;"
+            "background: transparent; border: none;"
+        ).arg(txtSub));
+
+        cl->addWidget(numLabel);
+        cl->addWidget(txtLabel);
+        cl->addStretch();
+    };
+
+    // ── STAT CARDS query DB ───────────────────────────────────
+    QSqlQuery q;
+
+    // Total submissions
+    int totalSubs = 0;
+    q.exec("SELECT COUNT(*) FROM SUBMISSION");
+    if (q.next()) totalSubs = q.value(0).toInt();
+
+    // Pending reviews
+    int pendingReviews = 0;
+    q.exec("SELECT COUNT(*) FROM REVIEW WHERE STATUS = 'Pending'");
+    if (q.next()) pendingReviews = q.value(0).toInt();
+
+    // Active collaborations
+    int totalCollabs = 0;
+    q.exec("SELECT COUNT(*) FROM COLLABORATION");
+    if (q.next()) totalCollabs = q.value(0).toInt();
+
+    // Upcoming conferences
+    int upcomingConfs = 0;
+    q.exec("SELECT COUNT(*) FROM CONFERENCE WHERE CONF_DATE >= SYSDATE");
+    if (q.next()) upcomingConfs = q.value(0).toInt();
+
+    populateCard("cardTotalSubmissions", "Total Submissions",
+                 QString::number(totalSubs),    accent);
+    populateCard("cardPendingReviews",   "Pending Reviews",
+                 QString::number(pendingReviews), "#f59e0b");
+    populateCard("cardCollaborations",   "Collaborations",
+                 QString::number(totalCollabs),  "#8b5cf6");
+    populateCard("cardConferences",      "Upcoming Conferences",
+                 QString::number(upcomingConfs), "#10b981");
+
+    // ── CALENDAR highlight conference dates ───────────────────
+    QCalendarWidget* cal = page->findChild<QCalendarWidget*>("dashCalendar");
+    if (cal) {
+        cal->setStyleSheet(QString(
+            "QCalendarWidget { background: %1; border-radius: 12px;"
+            "  border: 1px solid %2; }"
+            "QCalendarWidget QAbstractItemView {"
+            "  background: %1; color: %3; selection-background-color: %4;"
+            "  selection-color: white; }"
+            "QCalendarWidget QWidget#qt_calendar_navigationbar {"
+            "  background: %4; border-radius: 8px; }"
+            "QCalendarWidget QToolButton { color: white; background: transparent; }"
+            "QCalendarWidget QSpinBox { color: white; background: transparent; }"
+        ).arg(cardBg, border, txtMain, accent));
+
+        // Highlight conference dates in teal
+        QTextCharFormat confFmt;
+        confFmt.setBackground(QColor(accent));
+        confFmt.setForeground(Qt::white);
+        confFmt.setFontWeight(QFont::Bold);
+
+        q.exec("SELECT CONF_DATE, TITLE FROM CONFERENCE WHERE CONF_DATE IS NOT NULL");
+        while (q.next()) {
+            QDate d = q.value(0).toDate();
+            if (d.isValid())
+                cal->setDateTextFormat(d, confFmt);
+        }
+    }
+
+    // ── ACTIVITY FEED last 5 submissions ─────────────────────
+    QWidget* actPanel = page->findChild<QWidget*>("activityPanel");
+    if (actPanel) {
+        actPanel->setStyleSheet(QString(
+            "QWidget { background: %1; border-radius: 12px;"
+            "border: 1px solid %2; }"
+        ).arg(cardBg, border));
+
+        if (actPanel->layout()) {
+            QLayoutItem* item;
+            while ((item = actPanel->layout()->takeAt(0)) != nullptr) {
+                delete item->widget(); delete item;
+            }
+            delete actPanel->layout();
+        }
+
+        QVBoxLayout* al = new QVBoxLayout(actPanel);
+        al->setContentsMargins(16, 14, 16, 14);
+        al->setSpacing(10);
+
+        QLabel* title = new QLabel("Recent Submissions", actPanel);
+        title->setStyleSheet(QString(
+            "font-size: 13px; font-weight: bold; color: %1;"
+            "background: transparent; border: none;"
+        ).arg(txtMain));
+        al->addWidget(title);
+
+        // Status badge colors
+        auto statusColor = [](const QString& s) -> QString {
+            if (s == "Accepted")         return "#10b981";
+            if (s == "Rejected")         return "#ef4444";
+            if (s == "Under Review")     return "#f59e0b";
+            if (s == "Revision Required")return "#f97316";
+            if (s == "Submitted")        return "#3b82f6";
+            return "#8892a4"; // Draft
+        };
+
+        q.exec(
+            "SELECT TITLE, STATUS, CREATEDAT FROM SUBMISSION "
+            "ORDER BY CREATEDAT DESC FETCH FIRST 5 ROWS ONLY"
+        );
+        while (q.next()) {
+            QString subTitle  = q.value(0).toString();
+            QString status    = q.value(1).toString();
+            QDate   created   = q.value(2).toDate();
+
+            QWidget* row = new QWidget(actPanel);
+            row->setStyleSheet("background: transparent; border: none;");
+            QHBoxLayout* rl = new QHBoxLayout(row);
+            rl->setContentsMargins(0,0,0,0);
+            rl->setSpacing(8);
+
+            QLabel* tl = new QLabel(subTitle, row);
+            tl->setStyleSheet(QString(
+                "font-size: 11px; color: %1; background: transparent; border: none;"
+            ).arg(txtMain));
+            tl->setMaximumWidth(160);
+            tl->setWordWrap(true);
+
+            QLabel* sl = new QLabel(status, row);
+            sl->setAlignment(Qt::AlignCenter);
+            sl->setStyleSheet(QString(
+                "font-size: 9px; font-weight: bold; color: white;"
+                "background: %1; border-radius: 8px; border: none;"
+                "padding: 2px 8px;"
+            ).arg(statusColor(status)));
+            sl->setFixedHeight(20);
+
+            QLabel* dl = new QLabel(created.toString("MMM d"), row);
+            dl->setStyleSheet(QString(
+                "font-size: 9px; color: %1; background: transparent; border: none;"
+            ).arg(txtSub));
+
+            rl->addWidget(tl, 1);
+            rl->addWidget(sl);
+            rl->addWidget(dl);
+            al->addWidget(row);
+        }
+        al->addStretch();
+    }
+
+    // ── CHART PANEL submission status breakdown ───────────────
+    QWidget* chartPanel = page->findChild<QWidget*>("chartPanel");
+    if (chartPanel) {
+        chartPanel->setStyleSheet(QString(
+            "QWidget { background: %1; border-radius: 12px;"
+            "border: 1px solid %2; }"
+        ).arg(cardBg, border));
+
+        if (chartPanel->layout()) {
+            QLayoutItem* item;
+            while ((item = chartPanel->layout()->takeAt(0)) != nullptr) {
+                delete item->widget(); delete item;
+            }
+            delete chartPanel->layout();
+        }
+
+        QVBoxLayout* vl = new QVBoxLayout(chartPanel);
+        vl->setContentsMargins(16, 14, 16, 14);
+        vl->setSpacing(8);
+
+        QLabel* hdr = new QLabel("Submissions by Status", chartPanel);
+        hdr->setStyleSheet(QString(
+            "font-size: 13px; font-weight: bold; color: %1;"
+            "background: transparent; border: none;"
+        ).arg(txtMain));
+        vl->addWidget(hdr);
+
+        // Query each status count
+        QStringList statuses = { "Draft","Submitted","Under Review",
+                                  "Revision Required","Accepted","Rejected" };
+        QList<QPair<QString,int>> statusData;
+        int maxVal = 1;
+
+        for (const QString& s : statuses) {
+            QSqlQuery sq;
+            sq.prepare("SELECT COUNT(*) FROM SUBMISSION WHERE STATUS = :s");
+            sq.bindValue(":s", s);
+            sq.exec();
+            int cnt = 0;
+            if (sq.next()) cnt = sq.value(0).toInt();
+            statusData.append({s, cnt});
+            maxVal = qMax(maxVal, cnt);
+        }
+
+        QList<QString> barColors = {
+            "#8892a4","#3b82f6","#f59e0b",
+            "#f97316","#10b981","#ef4444"
+        };
+
+        for (int i = 0; i < statusData.size(); i++) {
+            const auto& [label, val] = statusData[i];
+
+            QWidget* barRow = new QWidget(chartPanel);
+            barRow->setStyleSheet("background: transparent; border: none;");
+            QHBoxLayout* brl = new QHBoxLayout(barRow);
+            brl->setContentsMargins(0,0,0,0);
+            brl->setSpacing(8);
+
+            QLabel* lbl = new QLabel(label, barRow);
+            lbl->setFixedWidth(120);
+            lbl->setStyleSheet(QString(
+                "font-size: 10px; color: %1; background: transparent; border: none;"
+            ).arg(txtSub));
+
+            // Bar track
+            QWidget* track = new QWidget(barRow);
+            track->setFixedHeight(14);
+            track->setStyleSheet(QString(
+                "background: %1; border-radius: 7px; border: none;"
+            ).arg(dark ? "#3a4255" : "#e5e7eb"));
+
+            QWidget* fill = new QWidget(track);
+            fill->setFixedHeight(14);
+            int fillW = val > 0 ? qMax(14, (int)(180.0 * val / maxVal)) : 0;
+            fill->setFixedWidth(fillW);
+            fill->setStyleSheet(QString(
+                "background: %1; border-radius: 7px;"
+            ).arg(barColors[i]));
+
+            QLabel* numLbl = new QLabel(QString::number(val), barRow);
+            numLbl->setFixedWidth(24);
+            numLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            numLbl->setStyleSheet(QString(
+                "font-size: 10px; font-weight: bold; color: %1;"
+                "background: transparent; border: none;"
+            ).arg(txtMain));
+
+            brl->addWidget(lbl);
+            brl->addWidget(track, 1);
+            brl->addWidget(numLbl);
+            vl->addWidget(barRow);
+        }
+        vl->addStretch();
+    }
+
+    // ── CONFERENCES PANEL next 4 upcoming ────────────────────
+    QWidget* confPanel = page->findChild<QWidget*>("conferencesPanel");
+    if (confPanel) {
+        confPanel->setStyleSheet(QString(
+            "QWidget { background: %1; border-radius: 12px;"
+            "border: 1px solid %2; }"
+        ).arg(cardBg, border));
+
+        if (confPanel->layout()) {
+            QLayoutItem* item;
+            while ((item = confPanel->layout()->takeAt(0)) != nullptr) {
+                delete item->widget(); delete item;
+            }
+            delete confPanel->layout();
+        }
+
+        QVBoxLayout* vl = new QVBoxLayout(confPanel);
+        vl->setContentsMargins(16, 14, 16, 14);
+        vl->setSpacing(10);
+
+        QLabel* hdr = new QLabel("Upcoming Conferences", confPanel);
+        hdr->setStyleSheet(QString(
+            "font-size: 13px; font-weight: bold; color: %1;"
+            "background: transparent; border: none;"
+        ).arg(txtMain));
+        vl->addWidget(hdr);
+
+        q.exec(
+            "SELECT TITLE, LOCATION, CONF_DATE, PRICE FROM CONFERENCE "
+            "WHERE CONF_DATE >= SYSDATE "
+            "ORDER BY CONF_DATE ASC FETCH FIRST 4 ROWS ONLY"
+        );
+
+        while (q.next()) {
+            QString confTitle    = q.value(0).toString();
+            QString confLocation = q.value(1).toString();
+            QDate   confDate     = q.value(2).toDate();
+            double  confPrice    = q.value(3).toDouble();
+
+            QWidget* card = new QWidget(confPanel);
+            card->setStyleSheet(QString(
+                "QWidget { background: %1; border-radius: 8px;"
+                "border: 1px solid %2; }"
+            ).arg(dark ? "#323b52" : "#f8fafc", border));
+
+            QVBoxLayout* cl = new QVBoxLayout(card);
+            cl->setContentsMargins(12, 10, 12, 10);
+            cl->setSpacing(4);
+
+            QLabel* tl = new QLabel(confTitle, card);
+            tl->setStyleSheet(QString(
+                "font-size: 12px; font-weight: bold; color: %1;"
+                "background: transparent; border: none;"
+            ).arg(txtMain));
+            tl->setWordWrap(true);
+
+            QLabel* dl = new QLabel(
+                QString("📅 %1   💰 TND%2")
+                    .arg(confDate.toString("MMM d, yyyy"))
+                    .arg(confPrice, 0, 'f', 0),
+                card
+            );
+            dl->setStyleSheet(QString(
+                "font-size: 10px; color: %1; background: transparent; border: none;"
+            ).arg(txtSub));
+
+            // Map button
+            QPushButton* mapBtn = new QPushButton("📍 View on Map", card);
+            mapBtn->setFixedHeight(28);
+            mapBtn->setCursor(Qt::PointingHandCursor);
+            mapBtn->setStyleSheet(QString(
+                "QPushButton { background: transparent; color: %1;"
+                "border: 1px solid %1; border-radius: 6px;"
+                "font-size: 10px; font-weight: bold; }"
+                "QPushButton:hover { background: %1; color: white; }"
+            ).arg(accent));
+
+            QString loc   = confLocation;
+            QString cname = confTitle;
+            connect(mapBtn, &QPushButton::clicked, this, [=]() {
+                showConferenceMap(loc, cname);
+            });
+
+            cl->addWidget(tl);
+            cl->addWidget(dl);
+            cl->addWidget(mapBtn);
+            vl->addWidget(card);
+        }
+        vl->addStretch();
+    }
+}
+
 //New StyleSheet
 void MainWindow::toggleDarkMode(){
     mode = !mode;
@@ -6367,16 +6759,16 @@ void MainWindow::toggleDarkMode(){
             "}"
 
             "QPushButton { "
-            "    background-color: #e0efff; color: #1e3a8a;"
-            "    border: 1px solid #bfdbfe; border-radius: 10px;"
+            "    background-color: #5ba8e3; color: #ffffff;"
+            "    border: 1px solid #5ba8e3; border-radius: 10px;"
             "    padding: 10px 18px; font-size: 10pt; font-weight: 600;"
             "    min-height: 20px;"
             "}"
             "QPushButton:hover { "
-            "    background-color: #dbeafe; border-color: #93c5fd;"
-            "    color: #1e293b;"
+            "    background-color: #5b8de3; border-color: #5b8de3;"
+            "    color: #ffffff;"
             "}"
-            "QPushButton:pressed { background-color: #bfdbfe; }"
+            "QPushButton:pressed { background-color: #1e40af; }"
             "QPushButton:disabled { "
             "    background-color: #f1f5f9; color: #cbd5e1;"
             "    border-color: #e2e8f0;"
@@ -6503,6 +6895,7 @@ void MainWindow::toggleDarkMode(){
             "    background-color: #ffffff; border: 1px solid #e2e8f0;"
             "    border-radius: 12px;"
             "}"
+            "QLabel { border: none; background-color: transparent; }"
 
             "QGroupBox { "
             "    background-color: #ffffff; border: 1.5px solid #e2e8f0;"
@@ -6844,6 +7237,7 @@ void MainWindow::toggleDarkMode(){
             "    background-color: #252b3d; border: 1px solid #3e4859;"
             "    border-radius: 12px;"
             "}"
+            "QLabel { border: none; background-color: transparent; }"
 
             "QGroupBox { "
             "    background-color: #252b3d; border: 1.5px solid #3e4859;"
@@ -7005,4 +7399,5 @@ void MainWindow::toggleDarkMode(){
             "}"
             );
     }
+    loadDashboard();
 }

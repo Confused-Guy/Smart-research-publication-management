@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCalendarWidget>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
@@ -46,6 +47,20 @@ public:
     QStackedWidget *stackedWidget;
     QWidget *page_5;
     QLabel *chart;
+    QWidget *dashboardPage;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *verticalLayout_6;
+    QHBoxLayout *horizontalLayout_6;
+    QWidget *cardTotalSubmissions;
+    QWidget *cardCollaborations;
+    QWidget *cardConferences;
+    QWidget *cardPendingReviews;
+    QHBoxLayout *horizontalLayout_8;
+    QWidget *activityPanel;
+    QCalendarWidget *dashCalendar;
+    QHBoxLayout *horizontalLayout_7;
+    QWidget *chartPanel;
+    QWidget *conferencesPanel;
     QWidget *page;
     QWidget *page_2;
     QLabel *collaborationCreationCollaborationCreationLabel;
@@ -247,6 +262,14 @@ public:
     QPushButton *Research;
     QPushButton *modeSwitch;
     QPushButton *publication;
+    QPushButton *home;
+    QLabel *label;
+    QLabel *label_2;
+    QLabel *label_3;
+    QLabel *label_4;
+    QLabel *label_5;
+    QLabel *label_8;
+    QLabel *label_13;
     QWidget *page_25;
 
     void setupUi(QMainWindow *MainWindow)
@@ -291,6 +314,72 @@ public:
         chart->setGeometry(QRect(620, 60, 431, 271));
         chart->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/pie_chart.png")));
         chart->setScaledContents(true);
+        dashboardPage = new QWidget(page_5);
+        dashboardPage->setObjectName("dashboardPage");
+        dashboardPage->setGeometry(QRect(0, 10, 1131, 701));
+        verticalLayoutWidget = new QWidget(dashboardPage);
+        verticalLayoutWidget->setObjectName("verticalLayoutWidget");
+        verticalLayoutWidget->setGeometry(QRect(9, 9, 1101, 681));
+        verticalLayout_6 = new QVBoxLayout(verticalLayoutWidget);
+        verticalLayout_6->setObjectName("verticalLayout_6");
+        verticalLayout_6->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName("horizontalLayout_6");
+        cardTotalSubmissions = new QWidget(verticalLayoutWidget);
+        cardTotalSubmissions->setObjectName("cardTotalSubmissions");
+
+        horizontalLayout_6->addWidget(cardTotalSubmissions);
+
+        cardCollaborations = new QWidget(verticalLayoutWidget);
+        cardCollaborations->setObjectName("cardCollaborations");
+
+        horizontalLayout_6->addWidget(cardCollaborations);
+
+        cardConferences = new QWidget(verticalLayoutWidget);
+        cardConferences->setObjectName("cardConferences");
+
+        horizontalLayout_6->addWidget(cardConferences);
+
+        cardPendingReviews = new QWidget(verticalLayoutWidget);
+        cardPendingReviews->setObjectName("cardPendingReviews");
+
+        horizontalLayout_6->addWidget(cardPendingReviews);
+
+
+        verticalLayout_6->addLayout(horizontalLayout_6);
+
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setObjectName("horizontalLayout_8");
+        activityPanel = new QWidget(verticalLayoutWidget);
+        activityPanel->setObjectName("activityPanel");
+
+        horizontalLayout_8->addWidget(activityPanel);
+
+        dashCalendar = new QCalendarWidget(verticalLayoutWidget);
+        dashCalendar->setObjectName("dashCalendar");
+        dashCalendar->setMinimumSize(QSize(2, 3));
+        dashCalendar->setMaximumSize(QSize(350, 250));
+
+        horizontalLayout_8->addWidget(dashCalendar);
+
+
+        verticalLayout_6->addLayout(horizontalLayout_8);
+
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName("horizontalLayout_7");
+        chartPanel = new QWidget(verticalLayoutWidget);
+        chartPanel->setObjectName("chartPanel");
+
+        horizontalLayout_7->addWidget(chartPanel);
+
+        conferencesPanel = new QWidget(verticalLayoutWidget);
+        conferencesPanel->setObjectName("conferencesPanel");
+
+        horizontalLayout_7->addWidget(conferencesPanel);
+
+
+        verticalLayout_6->addLayout(horizontalLayout_7);
+
         stackedWidget->addWidget(page_5);
         page = new QWidget();
         page->setObjectName("page");
@@ -398,30 +487,30 @@ public:
         tab_7->setObjectName("tab_7");
         pushButton_7 = new QPushButton(tab_7);
         pushButton_7->setObjectName("pushButton_7");
-        pushButton_7->setGeometry(QRect(660, 60, 31, 31));
+        pushButton_7->setGeometry(QRect(690, 130, 31, 31));
         pushButton_7->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         QIcon icon;
         icon.addFile(QString::fromUtf8("icons/edit.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         pushButton_7->setIcon(icon);
         pushButton_8 = new QPushButton(tab_7);
         pushButton_8->setObjectName("pushButton_8");
-        pushButton_8->setGeometry(QRect(790, 20, 111, 29));
+        pushButton_8->setGeometry(QRect(820, 90, 111, 29));
         pushButton_8->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         pushButton_6 = new QPushButton(tab_7);
         pushButton_6->setObjectName("pushButton_6");
-        pushButton_6->setGeometry(QRect(650, 10, 51, 31));
+        pushButton_6->setGeometry(QRect(680, 80, 51, 31));
         pushButton_6->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         QIcon icon1;
         icon1.addFile(QString::fromUtf8("icons/trash-2.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         pushButton_6->setIcon(icon1);
         groupBox_12 = new QGroupBox(tab_7);
         groupBox_12->setObjectName("groupBox_12");
-        groupBox_12->setGeometry(QRect(720, 60, 251, 191));
+        groupBox_12->setGeometry(QRect(750, 130, 251, 191));
         submissionTableWidget = new QTableWidget(tab_7);
         if (submissionTableWidget->columnCount() < 5)
             submissionTableWidget->setColumnCount(5);
         submissionTableWidget->setObjectName("submissionTableWidget");
-        submissionTableWidget->setGeometry(QRect(0, 0, 631, 271));
+        submissionTableWidget->setGeometry(QRect(30, 70, 631, 271));
         submissionTableWidget->setRowCount(0);
         submissionTableWidget->setColumnCount(5);
         tabWidget->addTab(tab_7, QString());
@@ -1318,52 +1407,91 @@ public:
         stackedWidget->addWidget(page_50);
         sideBarStack = new QStackedWidget(centralwidget);
         sideBarStack->setObjectName("sideBarStack");
-        sideBarStack->setGeometry(QRect(0, 0, 161, 741));
+        sideBarStack->setGeometry(QRect(0, 0, 151, 741));
         page_24 = new QWidget();
         page_24->setObjectName("page_24");
         conf = new QPushButton(page_24);
         conf->setObjectName("conf");
-        conf->setGeometry(QRect(10, 350, 141, 31));
+        conf->setGeometry(QRect(10, 390, 41, 31));
         QFont font4;
         font4.setFamilies({QString::fromUtf8("Source Code Pro Medium")});
         conf->setFont(font4);
         conf->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        QIcon icon10(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpenRecent));
+        conf->setIcon(icon10);
         collab = new QPushButton(page_24);
         collab->setObjectName("collab");
-        collab->setGeometry(QRect(10, 440, 141, 31));
+        collab->setGeometry(QRect(10, 470, 41, 31));
         collab->setFont(font4);
         collab->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        QIcon icon11(QIcon::fromTheme(QIcon::ThemeIcon::ContactNew));
+        collab->setIcon(icon11);
         profile = new QPushButton(page_24);
         profile->setObjectName("profile");
-        profile->setGeometry(QRect(20, 590, 121, 41));
+        profile->setGeometry(QRect(10, 590, 41, 41));
         QFont font5;
         font5.setFamilies({QString::fromUtf8("Source Code Pro")});
         font5.setPointSize(8);
         profile->setFont(font5);
         profile->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        profile->setIcon(icon3);
         review = new QPushButton(page_24);
         review->setObjectName("review");
-        review->setGeometry(QRect(10, 80, 141, 31));
+        review->setGeometry(QRect(10, 150, 41, 31));
         review->setFont(font4);
         review->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        QIcon icon12(QIcon::fromTheme(QIcon::ThemeIcon::MailSend));
+        review->setIcon(icon12);
         Research = new QPushButton(page_24);
         Research->setObjectName("Research");
-        Research->setGeometry(QRect(10, 170, 141, 31));
+        Research->setGeometry(QRect(10, 230, 41, 31));
         Research->setFont(font4);
         Research->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        QIcon icon13(QIcon::fromTheme(QIcon::ThemeIcon::ListAdd));
+        Research->setIcon(icon13);
         modeSwitch = new QPushButton(page_24);
         modeSwitch->setObjectName("modeSwitch");
-        modeSwitch->setGeometry(QRect(50, 670, 51, 41));
+        modeSwitch->setGeometry(QRect(50, 660, 51, 41));
         modeSwitch->setFont(font4);
         modeSwitch->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        QIcon icon10;
-        icon10.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
-        modeSwitch->setIcon(icon10);
+        QIcon icon14;
+        icon14.addFile(QString::fromUtf8("icons/sun.svg"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        modeSwitch->setIcon(icon14);
         publication = new QPushButton(page_24);
         publication->setObjectName("publication");
-        publication->setGeometry(QRect(10, 260, 141, 31));
+        publication->setGeometry(QRect(10, 310, 41, 31));
         publication->setFont(font4);
         publication->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        QIcon icon15(QIcon::fromTheme(QIcon::ThemeIcon::DocumentPageSetup));
+        publication->setIcon(icon15);
+        home = new QPushButton(page_24);
+        home->setObjectName("home");
+        home->setGeometry(QRect(10, 40, 41, 21));
+        home->setFont(font5);
+        home->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        QIcon icon16(QIcon::fromTheme(QIcon::ThemeIcon::GoHome));
+        home->setIcon(icon16);
+        label = new QLabel(page_24);
+        label->setObjectName("label");
+        label->setGeometry(QRect(60, 50, 71, 16));
+        label_2 = new QLabel(page_24);
+        label_2->setObjectName("label_2");
+        label_2->setGeometry(QRect(60, 160, 71, 16));
+        label_3 = new QLabel(page_24);
+        label_3->setObjectName("label_3");
+        label_3->setGeometry(QRect(60, 240, 81, 16));
+        label_4 = new QLabel(page_24);
+        label_4->setObjectName("label_4");
+        label_4->setGeometry(QRect(60, 320, 81, 16));
+        label_5 = new QLabel(page_24);
+        label_5->setObjectName("label_5");
+        label_5->setGeometry(QRect(60, 400, 81, 16));
+        label_8 = new QLabel(page_24);
+        label_8->setObjectName("label_8");
+        label_8->setGeometry(QRect(60, 480, 81, 16));
+        label_13 = new QLabel(page_24);
+        label_13->setObjectName("label_13");
+        label_13->setGeometry(QRect(60, 600, 81, 16));
         sideBarStack->addWidget(page_24);
         page_25 = new QWidget();
         page_25->setObjectName("page_25");
@@ -1547,23 +1675,23 @@ public:
 #if QT_CONFIG(tooltip)
         conf->setToolTip(QCoreApplication::translate("MainWindow", "Conference", nullptr));
 #endif // QT_CONFIG(tooltip)
-        conf->setText(QCoreApplication::translate("MainWindow", " Conference", nullptr));
+        conf->setText(QString());
 #if QT_CONFIG(tooltip)
         collab->setToolTip(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
 #endif // QT_CONFIG(tooltip)
-        collab->setText(QCoreApplication::translate("MainWindow", "Collaborations", nullptr));
+        collab->setText(QString());
 #if QT_CONFIG(tooltip)
         profile->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
 #endif // QT_CONFIG(tooltip)
-        profile->setText(QCoreApplication::translate("MainWindow", " My Profile", nullptr));
+        profile->setText(QString());
 #if QT_CONFIG(tooltip)
         review->setToolTip(QCoreApplication::translate("MainWindow", "Send to Research Reveiw", nullptr));
 #endif // QT_CONFIG(tooltip)
-        review->setText(QCoreApplication::translate("MainWindow", "Send to Review", nullptr));
+        review->setText(QString());
 #if QT_CONFIG(tooltip)
         Research->setToolTip(QCoreApplication::translate("MainWindow", "Add to Research", nullptr));
 #endif // QT_CONFIG(tooltip)
-        Research->setText(QCoreApplication::translate("MainWindow", " Add Research", nullptr));
+        Research->setText(QString());
 #if QT_CONFIG(tooltip)
         modeSwitch->setToolTip(QCoreApplication::translate("MainWindow", "Mode Toggle", nullptr));
 #endif // QT_CONFIG(tooltip)
@@ -1571,7 +1699,18 @@ public:
 #if QT_CONFIG(tooltip)
         publication->setToolTip(QCoreApplication::translate("MainWindow", "Posts", nullptr));
 #endif // QT_CONFIG(tooltip)
-        publication->setText(QCoreApplication::translate("MainWindow", " Publication", nullptr));
+        publication->setText(QString());
+#if QT_CONFIG(tooltip)
+        home->setToolTip(QCoreApplication::translate("MainWindow", "User Page", nullptr));
+#endif // QT_CONFIG(tooltip)
+        home->setText(QString());
+        label->setText(QCoreApplication::translate("MainWindow", "Dashboard", nullptr));
+        label_2->setText(QCoreApplication::translate("MainWindow", "Send Review", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "Add Research", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "Publication", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "Conference", nullptr));
+        label_8->setText(QCoreApplication::translate("MainWindow", "Collaboration", nullptr));
+        label_13->setText(QCoreApplication::translate("MainWindow", "Profile", nullptr));
     } // retranslateUi
 
 };

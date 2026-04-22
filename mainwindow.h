@@ -42,6 +42,10 @@ private slots:
 
     void on_Research_clicked();
 
+    void on_home_clicked();
+
+    void loadDashboard();
+
     void toggleDarkMode();
 
     void on_modeSwitch_clicked(){ toggleDarkMode();}
