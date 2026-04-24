@@ -70,7 +70,7 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "on_exportUserPDF_clicked",
     "on_logOut_clicked",
     "onArduinoDataReceived",
-    "on_rfidLoginBtn_clicked",
+    "on_revokeAccessBtn_clicked",
     "on_addConferenceBtn_clicked",
     "on_sortConfBtn_clicked",
     "on_searchConfBtn_clicked",
@@ -360,7 +360,7 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onArduinoDataReceived'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_rfidLoginBtn_clicked'
+        // method 'on_revokeAccessBtn_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_addConferenceBtn_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
@@ -490,7 +490,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 26: _t->on_exportUserPDF_clicked(); break;
         case 27: _t->on_logOut_clicked(); break;
         case 28: _t->onArduinoDataReceived(); break;
-        case 29: _t->on_rfidLoginBtn_clicked(); break;
+        case 29: _t->on_revokeAccessBtn_clicked(); break;
         case 30: _t->on_addConferenceBtn_clicked(); break;
         case 31: _t->on_sortConfBtn_clicked(); break;
         case 32: _t->on_searchConfBtn_clicked(); break;

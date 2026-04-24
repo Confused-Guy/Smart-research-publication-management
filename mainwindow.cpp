@@ -101,7 +101,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //notify
     initTrayIcon();
-    //
     QString oldStatus;
 
     //QPixmap logo("logo.png");//logo stuff!
@@ -163,11 +162,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    clearArduinoLCD();  // Clear LCD before closing
+    // Revoke all lab access on app close
+       QSqlQuery query;
+       query.exec("UPDATE LABS SET ALLOWED = 0");
+       qDebug() << "All lab access revoked on app shutdown";
 
-        if (arduino) {
-            delete arduino;
-        }
+    clearArduinoLCD();  // Clear LCD before closing
 
     delete ui;
 }
@@ -179,52 +179,71 @@ void MainWindow::setupArduino()
 
     const auto ports = QSerialPortInfo::availablePorts();
 
-    // Try to find Arduino
-    for (const QSerialPortInfo &portInfo : ports) {
-        QString desc = portInfo.description().toLower();
-        QString mfg = portInfo.manufacturer().toLower();
+    // Sort: ports with Arduino in desc/mfg come first (The app kept taking COM1 even though the arduino was on COM3)
+    QList<QSerialPortInfo> sorted = ports;
+    std::sort(sorted.begin(), sorted.end(),
+        [](const QSerialPortInfo &a, const QSerialPortInfo &b) {
+            bool aIsArduino = a.description().toLower().contains("arduino") ||
+                              a.manufacturer().toLower().contains("arduino");
+            bool bIsArduino = b.description().toLower().contains("arduino") ||
+                              b.manufacturer().toLower().contains("arduino");
+            return aIsArduino > bIsArduino; // Arduino ports float to top
+        });
+
+    for (const QSerialPortInfo &portInfo : sorted) {
+        QString desc     = portInfo.description().toLower();
+        QString mfg      = portInfo.manufacturer().toLower();
         QString portName = portInfo.portName();
 
-        // Check if its Arduino or USB Serial
-        if (desc.contains("arduino") ||
-            mfg.contains("arduino") ||
-            portName.startsWith("ttyACM") ||
-            portName.startsWith("ttyUSB")) {
+        bool isArduino = desc.contains("arduino") || mfg.contains("arduino");
+        bool isSerial  = portName.startsWith("ttyACM") || portName.startsWith("ttyUSB");
 
-            qDebug() << "Attempting to connect to:" << portInfo.systemLocation();
+        // COM ports only match if theyre explicitly identified as Arduino
+        // This stops COM1/COM2 etc from being picked up
+        if (!isArduino && !isSerial) {
+            qDebug() << "Skipping" << portName << "(not identified as Arduino)";
+            continue;
+        }
 
-            arduino->setPortName(portInfo.portName());
-            arduino->setBaudRate(QSerialPort::Baud9600);
-            arduino->setDataBits(QSerialPort::Data8);
-            arduino->setParity(QSerialPort::NoParity);
-            arduino->setStopBits(QSerialPort::OneStop);
-            arduino->setFlowControl(QSerialPort::NoFlowControl);
+        qDebug() << "Trying" << portName << "-" << portInfo.description();
 
-            if (arduino->open(QIODevice::ReadWrite)) {
-                qDebug() << "Arduino connected on port:" << portInfo.systemLocation();
+        arduino->setPortName(portInfo.portName());
+        arduino->setBaudRate(QSerialPort::Baud9600);
+        arduino->setDataBits(QSerialPort::Data8);
+        arduino->setParity(QSerialPort::NoParity);
+        arduino->setStopBits(QSerialPort::OneStop);
+        arduino->setFlowControl(QSerialPort::NoFlowControl);
 
-                connect(arduino, &QSerialPort::readyRead, this, &MainWindow::onArduinoDataReceived);
+        if (arduino->open(QIODevice::ReadWrite)) {
+            qDebug() << "Arduino connected on" << portName
+                     << "(" << portInfo.description() << ")";
 
-                return;
-            } else {
-                qDebug() << "Failed to open:" << arduino->errorString();
-            }
+            connect(arduino, &QSerialPort::readyRead,
+                    this, &MainWindow::onArduinoDataReceived);
+
+            QTimer::singleShot(2000, this, [this]() {
+                qint64 written = arduino->write("RESET\n");
+                bool flushed   = arduino->flush();
+                qDebug() << "Bytes written:" << written << "| flush ok:" << flushed;
+            });
+            return;
+
+        } else {
+            qDebug() << "Failed to open" << portName << ":" << arduino->errorString();
         }
     }
 
-    qDebug() << "Arduino not found on any port!";
+    qDebug() << "Arduino not found!";
     QMessageBox::warning(this, "Arduino Not Found",
         "Could not connect to Arduino.\n\n"
-        "You may choose to ingnore this warning if the Arduino is not needed.\n\n"
-        "Check the Application Output for available ports.\n\n"
         "Make sure:\n"
         "• Arduino is plugged in\n"
         "• You uploaded the code to Arduino\n"
-        "• No other program (like Arduino IDE Serial Monitor) is using the port");
+        "• No other program is using the port (Arduino IDE)");
 }
 
-// ARDUINO RFID LOG IN
-// Read serial data from Arduino and handle RFID login
+// ARDUINO RFID
+// Read serial data from Arduino and handle RFID Reading
 void MainWindow::onArduinoDataReceived() {
     static QString buffer; // accumulates bytes until newline
 
@@ -240,50 +259,157 @@ void MainWindow::onArduinoDataReceived() {
 
         qDebug() << "Received from Arduino:" << line;
 
-        // Only handle RFID lines
-        if (line.startsWith("RFID:") && rfidLoginActive) {
+        // Handle RFID scans (always active)
+        if (line.startsWith("RFID:")) {
             QString uid = line.mid(5).trimmed(); // strip "RFID:" prefix
-            handleRFIDLogin(uid);
+            handleRFIDAccess(uid);
         }
-        // "TEMP:" and "MOTION:" handlers go here later for scenarios 2 & 3
     }
 }
 
-// Attempts login with the scanned RFID and updates the UI accordingly
-void MainWindow::handleRFIDLogin(const QString &rfidCode) {
 
-    rfidLoginActive = false;
+// Handle RFID card scan (Grant/Deny access)
+void MainWindow::handleRFIDAccess(const QString &cardUID) {
+    qDebug() << "RFID card scanned:" << cardUID;
 
-    User user;
+    // Check if user exists with this RFID
+    QSqlQuery query;
+    query.prepare("SELECT USERID, USERNAME, RFID_CODE FROM USERS WHERE RFID_CODE = ?");
+    query.bindValue(0, cardUID);
 
-    if (user.loginByRFID(rfidCode)) {
-        qDebug() << "RFID Login success for:" << user.getUsername();
-
-        // Send welcome message to Arduino LCD
-        QString msg = "LOGIN_OK:" + user.getUsername() + "\n";
-        arduino->write(msg.toUtf8());
+    if (!query.exec()) {
+        qDebug() << "Query error:" << query.lastError().text();
+        arduino->write("ACCESS_DENIED\n");
         arduino->flush();
+        return;
+    }
 
-        // Stop login mode on Arduino
-        arduino->write("STOP_LOGIN\n");
-        arduino->flush();
+    if (query.next()) {
+        // User found grants access
+        int userID = query.value(0).toInt();
+        QString username = query.value(1).toString();
 
-        // Go to home page
-        ui->sideBarStack->setCurrentIndex(0);
-        ui->sideBarStack->show();
-        ui->stackedWidget->setCurrentIndex(3);
+        qDebug() << "User found:" << username << "(ID:" << userID << ")";
 
-        ui->displayUsername_2->setText(user.getUsername());
-        ui->displaySpecialty_2->setText(user.getSpecialty());
+        // Grant access to default lab (ID = 1)
+        int labID = 1;  // Labid Placeholder
+
+        if (grantLabAccess(cardUID, labID)) {
+            // Send success to Arduino
+            QString message = "ACCESS_GRANTED:" + username + "\n";
+            arduino->write(message.toUtf8());
+            arduino->flush();
+
+            qDebug() << "Access granted to" << username << "- LABS.ALLOWED set to 1";
+
+        } else {
+            qDebug() << "✗ Failed to update database";
+            arduino->write("ACCESS_DENIED\n");
+            arduino->flush();
+
+            QMessageBox::critical(this, "Database Error",
+                "Failed to grant access. Please check database connection.");
+        }
 
     } else {
-        qDebug() << "RFID Login failed for UID:" << rfidCode;
+        // User not found denies access
+        qDebug() << "✗ RFID card not registered:" << cardUID;
 
-        arduino->write("LOGIN_FAIL\n");
+        arduino->write("ACCESS_DENIED\n");
         arduino->flush();
+    }
+}
 
-        // Re-enable so user can try again
-        rfidLoginActive = true;
+// Grant lab access (set ALLOWED = 1)
+bool MainWindow::grantLabAccess(const QString &rfidUID, int labID)
+{
+    QSqlQuery query;
+
+    query.prepare(
+        "UPDATE LABS SET "
+        "ALLOWED = 1, "
+        "LAST_ACCESS_TIME = SYSDATE, "
+        "LAST_USER_RFID = ? "
+        "WHERE LABID = ?"
+    );
+
+    query.bindValue(0, rfidUID);
+    query.bindValue(1, labID);
+
+    if (!query.exec()) {
+        qDebug() << "Update error:" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "Database updated: ALLOWED = 1 for Lab" << labID;
+    qDebug() << "Last access time:" << QDateTime::currentDateTime().toString();
+    qDebug() << "Last user RFID:" << rfidUID;
+
+    return true;
+}
+
+// Revoke lab access (set ALLOWED = 0)
+bool MainWindow::revokeLabAccess(int labID)
+{
+    //Query 1: get the last username
+    QSqlQuery selectQuery;
+    selectQuery.prepare(
+        "SELECT U.USERNAME FROM LABS L "
+        "JOIN USERS U ON L.LAST_USER_RFID = U.RFID_CODE "
+        "WHERE L.LABID = :labid"
+    );
+    selectQuery.bindValue(":labid", labID);
+
+    QString lastUsername = "";
+    if (selectQuery.exec() && selectQuery.next()) {
+        lastUsername = selectQuery.value(0).toString();
+    }
+
+    //Query 2: revoke access
+    QSqlQuery updateQuery;
+    updateQuery.prepare("UPDATE LABS SET ALLOWED = 0 WHERE LABID = :labid");
+    updateQuery.bindValue(":labid", labID);
+
+    if (!updateQuery.exec()) {
+        qDebug() << "Update error:" << updateQuery.lastError().text();
+        return false;
+    }
+
+    if (!arduino || !arduino->isOpen()) {
+        qDebug() << "Arduino not connected, skipping LCD update";
+        return true;  // DB succeeded even if Arduino is absent
+    }
+
+    //Notify Arduino
+    if (!lastUsername.isEmpty()) {
+        QString message = "ACCESS_REVOKED:" + lastUsername + "\n";
+        arduino->write(message.toUtf8());
+    } else {
+        arduino->write("RESET\n");
+    }
+    arduino->flush();
+
+    qDebug() << "Database updated: ALLOWED = 0 for Lab" << labID;
+    return true;
+}
+
+// Manual revoke button
+void MainWindow::on_revokeAccessBtn_clicked()
+{
+    int labID = 1;
+
+    QMessageBox::StandardButton reply = QMessageBox::question(this,
+        "Revoke Access",
+        "Are you sure you want to revoke lab access?\n\nThis will reset the access control system.",
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        if (revokeLabAccess(labID)) {
+            QMessageBox::information(this, "Access Revoked",
+                "Lab access has been revoked.\n\nSystem reset to DENIED state.");
+        } else {
+            QMessageBox::warning(this, "Error", "Failed to revoke access.");
+        }
     }
 }
 
@@ -295,27 +421,17 @@ void MainWindow::clearArduinoLCD()
         return;
     }
 
-    qDebug() << "Sending goodbye message to Arduino...";
-
-    // Send goodbye message
     arduino->write("GOODBYE\n");
     arduino->flush();
 
-    // Wait for Arduino to display message
-    QEventLoop loop;
-    QTimer::singleShot(500, &loop, &QEventLoop::quit);
-    loop.exec();
+    { QEventLoop l; QTimer::singleShot(500, &l, &QEventLoop::quit); l.exec(); }
 
-    // Then clear
     arduino->write("CLEAR\n");
     arduino->flush();
 
-    QTimer::singleShot(200, &loop, &QEventLoop::quit);
-    loop.exec();
+    { QEventLoop l; QTimer::singleShot(200, &l, &QEventLoop::quit); l.exec(); }
 
     arduino->close();
-
-    qDebug() << "Arduino LCD cleared and port closed";
 }
 
 /*********************************************************** USER START ***********************************************************************************/
@@ -630,26 +746,6 @@ void MainWindow::on_exportUserPDF_clicked()
         return;
 
     exportTableToPDF(fileName);
-}
-
-
-
-
-//Arduino User
-void MainWindow::on_rfidLoginBtn_clicked()
-{
-    if (!arduino || !arduino->isOpen()) {
-        QMessageBox::warning(this, "Arduino Not Connected",
-            "Cannot use RFID login: Arduino is not connected.");
-        return;
-    }
-
-    rfidLoginActive = true;
-    qDebug() << "Sending START_LOGIN...";
-    arduino->write("START_LOGIN\n");
-    arduino->flush();
-
-    qDebug() << "RFID login mode started";
 }
 
 /********************************************************** USER END *************************************************************************************/
@@ -2043,7 +2139,7 @@ void MainWindow::loadReviewsReadOnly()
                     QString("font-size: 14pt; font-weight: 700; color: %1; border: none;")
                         .arg(colour)
                 );
-                aiCheckBtn->setText("Done ✓");
+                aiCheckBtn->setText("Done");
                 // Button stays disabled — result is final
             } else {
                 // Text too short or other issue
@@ -2128,6 +2224,36 @@ void MainWindow::loadConferences(bool ascending, QString searchFilter)
         QPushButton* deleteBtn = new QPushButton("Delete");
         QPushButton* mapBtn    = new QPushButton("Map");
         QPushButton* pdfBtn    = new QPushButton("Export PDF");
+
+        QString btnBase   = "#3664c9";
+        QString btnHover  = "#3871cf";
+        QString btnBorder = "#3664c9";
+
+        QString deleteBase   = "#ba2d2d";
+        QString deleteHover  = "#d13d3d";
+
+        QString mapBase   = "#15998d";
+        QString mapHover  = "#18ad9d";
+
+        QString pdfBase   = "#733dd1";
+        QString pdfHover  = "#7d56d6";
+
+        auto btnStyle = [&](const QString& base, const QString& hover) {
+            return QString(
+                "QPushButton {"
+                "    background-color: %1; color: white;"
+                "    border: none; border-radius: 8px;"
+                "    padding: 7px 14px; font-size: 9pt; font-weight: 600;"
+                "}"
+                "QPushButton:hover { background-color: %2; }"
+                "QPushButton:pressed { background-color: %2; opacity: 0.85; }"
+            ).arg(base, hover);
+        };
+
+        editBtn->setStyleSheet(btnStyle(btnBase, btnHover));
+        deleteBtn->setStyleSheet(btnStyle(deleteBase, deleteHover));
+        mapBtn->setStyleSheet(btnStyle(mapBase, mapHover));
+        pdfBtn->setStyleSheet(btnStyle(pdfBase, pdfHover));
 
         btnLayout->addWidget(editBtn);
         btnLayout->addWidget(deleteBtn);
@@ -6015,7 +6141,7 @@ void MainWindow::showReviewTrackerDialog(int submissionId)
 
             reviewLayout->addWidget(resolveBtn);
         } else {
-            QLabel *resolvedLabel = new QLabel("✓ This issue has been resolved");
+            QLabel *resolvedLabel = new QLabel("This issue has been resolved");
             resolvedLabel->setStyleSheet(QString("color: #22c55e; font-weight: 600;"));
             reviewLayout->addWidget(resolvedLabel);
         }
@@ -6267,7 +6393,7 @@ void MainWindow::on_pushButton_8_clicked()
 
     if (percentage >= 0) {
         // Update status
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #00ff00;'>✓ Analysis complete!</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #00ff00;'>Analysis complete!</span>");
         
         // Display result in the result display widget
         QString resultText = QString::number(percentage) + "%";

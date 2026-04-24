@@ -1,158 +1,337 @@
 #include <SPI.h>
+
 #include <MFRC522.h>
+
 #include <Wire.h>
+
 #include <LiquidCrystal_I2C.h>
 
 #define RST_PIN 9
+
 #define SS_PIN 10
 
 MFRC522 rfid(SS_PIN, RST_PIN);
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 unsigned long lastCardRead = 0;
-const unsigned long CARD_TIMEOUT = 3000;  // 3 seconds between reads
-bool loginMode = false;
+
+const unsigned long CARD_TIMEOUT = 3000;  // 3 seconds between reads
 
 void setup() {
-  Serial.begin(9600);
-  SPI.begin();
-  rfid.PCD_Init();
-  
-  lcd.init();
-  lcd.backlight();
-  
-  lcd.setCursor(0, 0);
-  lcd.print("Peerly Research");
-  lcd.setCursor(0, 1);
-  lcd.print("System Ready");
-  
-  delay(2000);
-  lcd.clear();
-  Serial.println("READY");
+
+  Serial.begin(9600);
+
+  SPI.begin();
+
+  rfid.PCD_Init();
+
+  
+
+  lcd.init();
+
+  lcd.backlight();
+
+  
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Peerly Research");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("Lab Access");
+
+  
+
+  delay(2000);
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Ready to scan");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("Status: DENIED");
+
+  
+
+  Serial.println("READY");
+
 }
 
 void loop() {
-  // Handle commands from Qt app
-  if (Serial.available() > 0) {
-    String command = Serial.readStringUntil('\n');
-    command.trim();
-    
-    if (command == "START_LOGIN") {
-      loginMode = true;
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("RFID Login");
-      lcd.setCursor(0, 1);
-      lcd.print("Scan your card");
-    }
-    else if (command == "STOP_LOGIN") {
-      loginMode = false;
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Peerly Research");
-      lcd.setCursor(0, 1);
-      lcd.print("System Ready");
-    }
-    else if (command.startsWith("LOGIN_OK:")) {
-      String username = command.substring(9);
-      displayLoginSuccess(username);
-    }
-    else if (command == "LOGIN_FAIL") {
-      displayLoginFailed();
-    }
-    else if (command == "CLEAR") {
-      lcd.clear();
-    }
-    else if (command == "GOODBYE") {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Peerly Research");
-      lcd.setCursor(0, 1);
-      lcd.print("Goodbye!");
-      delay(2000);
-      lcd.clear();
-    }
-  }
-  
-  // Check for RFID card when in login mode
-  if (loginMode && rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
-    
-    // Prevent reading same card multiple times
-    if (millis() - lastCardRead < CARD_TIMEOUT) {
-      rfid.PICC_HaltA();
-      return;
-    }
-    lastCardRead = millis();
-    
-    // Read UID
-    String cardUID = "";
-    for (byte i = 0; i < rfid.uid.size; i++) {
-      if (rfid.uid.uidByte[i] < 0x10) cardUID += "0";
-      cardUID += String(rfid.uid.uidByte[i], HEX);
-    }
-    cardUID.toUpperCase();
-    
-    // Display scanning message
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Card detected");
-    lcd.setCursor(0, 1);
-    lcd.print("Verifying...");
-    
-    // Send UID to Qt app
-    Serial.print("RFID:");
-    Serial.println(cardUID);
-    
-    rfid.PICC_HaltA();
-    rfid.PCD_StopCrypto1();
-  }
+
+  // Handle commands from Qt app
+
+  handleSerialCommands();
+
+  
+
+  // Always check for RFID cards
+
+  checkRFIDCard();
+
 }
 
-void displayLoginSuccess(String username) {
-  loginMode = false;
-  
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Welcome!");
-  lcd.setCursor(0, 1);
-  
-  // Truncate username if too long
-  if (username.length() > 16) {
-    username = username.substring(0, 13) + "...";
-  }
-  lcd.print(username);
-  
-  // Clear after 3 seconds
-  delay(3000);
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Peerly Research");
-  lcd.setCursor(0, 1);
-  lcd.print("System Ready");
+void handleSerialCommands() {
+
+  if (Serial.available() > 0) {
+
+    String command = Serial.readStringUntil('\n');
+
+    command.trim();
+
+    
+
+    if (command.startsWith("ACCESS_GRANTED:")) {
+
+      // Format: ACCESS_GRANTED:Username
+
+      String username = command.substring(15);
+
+      displayAccessGranted(username);
+
+    }
+
+    else if (command == "ACCESS_DENIED") {
+
+      displayAccessDenied();
+
+    }
+
+    else if (command.startsWith("ACCESS_REVOKED:")) {
+
+      // Format: ACCESS_REVOKED:Username
+
+      String username = command.substring(15);
+
+      displayAccessRevoked(username);
+
+    }
+
+    else if (command == "CLEAR") {
+
+      lcd.clear();
+
+    }
+
+    else if (command == "GOODBYE") {
+
+      lcd.clear();
+
+      lcd.setCursor(0, 0);
+
+      lcd.print("System");
+
+      lcd.setCursor(0, 1);
+
+      lcd.print("Shutdown");
+
+      delay(2000);
+
+      lcd.clear();
+
+    }
+
+    else if (command == "RESET") {
+
+      lcd.clear();
+
+      lcd.setCursor(0, 0);
+
+      lcd.print("Ready to scan");
+
+      lcd.setCursor(0, 1);
+
+      lcd.print("Status: DENIED");
+
+    }
+
+  }
+
 }
 
-void displayLoginFailed() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Access Denied!");
-  lcd.setCursor(0, 1);
-  lcd.print("Unknown card");
-  
-  // Flash backlight
-  delay(500);
-  lcd.noBacklight();
-  delay(200);
-  lcd.backlight();
-  delay(500);
-  lcd.noBacklight();
-  delay(200);
-  lcd.backlight();
-  
-  // Return to scan prompt
-  delay(1500);
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("RFID Login");
-  lcd.setCursor(0, 1);
-  lcd.print("Scan your card");
+void checkRFIDCard() {
+
+  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+
+    
+
+    // Prevent reading same card multiple times
+
+    if (millis() - lastCardRead < CARD_TIMEOUT) {
+
+      rfid.PICC_HaltA();
+
+      return;
+
+    }
+
+    lastCardRead = millis();
+
+    
+
+    // Read UID
+
+    String cardUID = "";
+
+    for (byte i = 0; i < rfid.uid.size; i++) {
+
+      if (rfid.uid.uidByte[i] < 0x10) cardUID += "0";
+
+      cardUID += String(rfid.uid.uidByte[i], HEX);
+
+    }
+
+    cardUID.toUpperCase();
+
+    
+
+    // Display scanning message
+
+    lcd.clear();
+
+    lcd.setCursor(0, 0);
+
+    lcd.print("Card detected");
+
+    lcd.setCursor(0, 1);
+
+    lcd.print("Verifying...");
+
+    
+
+    // Send UID to Qt app
+
+    Serial.print("RFID:");
+
+    Serial.println(cardUID);
+
+    
+
+    rfid.PICC_HaltA();
+
+    rfid.PCD_StopCrypto1();
+
+  }
+
+}
+
+void displayAccessGranted(String username) {
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Welcome!");
+
+  lcd.setCursor(0, 1);
+
+  
+
+  // Truncate username if too long
+
+  if (username.length() > 16) {
+
+    username = username.substring(0, 13) + "...";
+
+  }
+
+  lcd.print(username);
+
+  
+
+  // Keep displayed (no auto-clear)
+
+}
+
+void displayAccessDenied() {
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Access DENIED!");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("Unknown card");
+
+  
+
+  // Flash backlight
+
+  delay(300);
+
+  lcd.noBacklight();
+
+  delay(150);
+
+  lcd.backlight();
+
+  delay(300);
+
+  lcd.noBacklight();
+
+  delay(150);
+
+  lcd.backlight();
+
+  
+
+  // Return to ready state after 2 seconds
+
+  delay(2000);
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Ready to scan");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("Status: DENIED");
+
+}
+
+void displayAccessRevoked(String username) {
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Access revoked");
+
+  lcd.setCursor(0, 1);
+
+  
+
+  if (username.length() > 16) {
+
+    username = username.substring(0, 13) + "...";
+
+  }
+
+  lcd.print(username);
+
+  
+
+  delay(3000);
+
+  
+
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+
+  lcd.print("Ready to scan");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("Status: DENIED");
+
 }

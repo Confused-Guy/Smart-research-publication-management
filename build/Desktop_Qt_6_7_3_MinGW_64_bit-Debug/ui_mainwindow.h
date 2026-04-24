@@ -116,6 +116,7 @@ public:
     QPushButton *searchUserBTN;
     QPushButton *reviewSub;
     QPushButton *editUserPage;
+    QPushButton *revokeAccessBtn;
     QWidget *page_4;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
@@ -195,7 +196,6 @@ public:
     QPushButton *login;
     QPushButton *backLoginBTN_2;
     QLineEdit *emailLogin_2;
-    QPushButton *rfidLoginBtn;
     QWidget *page_10;
     QFrame *frame_8;
     QGroupBox *groupBox_5;
@@ -668,6 +668,10 @@ public:
         editUserPage->setObjectName("editUserPage");
         editUserPage->setGeometry(QRect(860, 80, 111, 31));
         editUserPage->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        revokeAccessBtn = new QPushButton(page_3);
+        revokeAccessBtn->setObjectName("revokeAccessBtn");
+        revokeAccessBtn->setGeometry(QRect(690, 80, 161, 31));
+        revokeAccessBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         stackedWidget->addWidget(page_3);
         page_4 = new QWidget();
         page_4->setObjectName("page_4");
@@ -699,12 +703,42 @@ public:
         searchConfBtn = new QPushButton(widget);
         searchConfBtn->setObjectName("searchConfBtn");
         searchConfBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        searchConfBtn->setStyleSheet(QString::fromUtf8("QPushButton { \n"
+"                background-color: #5ba8e3; color: #ffffff;\n"
+"                border: 1px solid #5ba8e3; border-radius: 10px;\n"
+"                padding: 10px 18px; font-size: 10pt; font-weight: 600;\n"
+"                min-height: 20px;\n"
+"            }\n"
+"            QPushButton:hover { \n"
+"                background-color: #5b8de3; border-color: #5b8de3;\n"
+"                color: #ffffff;\n"
+"            }\n"
+"            QPushButton:pressed { background-color: #1e40af; }\n"
+"            QPushButton:disabled { \n"
+"                background-color: #f1f5f9; color: #cbd5e1;\n"
+"                border-color: #e2e8f0;\n"
+"            }"));
 
         horizontalLayout_4->addWidget(searchConfBtn);
 
         sortConfBtn = new QPushButton(widget);
         sortConfBtn->setObjectName("sortConfBtn");
         sortConfBtn->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        sortConfBtn->setStyleSheet(QString::fromUtf8("QPushButton { \n"
+"                background-color: #5ba8e3; color: #ffffff;\n"
+"                border: 1px solid #5ba8e3; border-radius: 10px;\n"
+"                padding: 10px 18px; font-size: 10pt; font-weight: 600;\n"
+"                min-height: 20px;\n"
+"            }\n"
+"            QPushButton:hover { \n"
+"                background-color: #5b8de3; border-color: #5b8de3;\n"
+"                color: #ffffff;\n"
+"            }\n"
+"            QPushButton:pressed { background-color: #1e40af; }\n"
+"            QPushButton:disabled { \n"
+"                background-color: #f1f5f9; color: #cbd5e1;\n"
+"                border-color: #e2e8f0;\n"
+"            }"));
 
         horizontalLayout_4->addWidget(sortConfBtn);
 
@@ -1112,7 +1146,7 @@ public:
         passwordLogin_2->setGeometry(QRect(120, 270, 211, 41));
         login = new QPushButton(groupBox_2);
         login->setObjectName("login");
-        login->setGeometry(QRect(180, 350, 121, 60));
+        login->setGeometry(QRect(270, 350, 121, 60));
         login->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #3498db;\n"
 "    border-radius: 20px;\n"
@@ -1123,7 +1157,7 @@ public:
 ""));
         backLoginBTN_2 = new QPushButton(groupBox_2);
         backLoginBTN_2->setObjectName("backLoginBTN_2");
-        backLoginBTN_2->setGeometry(QRect(20, 350, 131, 61));
+        backLoginBTN_2->setGeometry(QRect(80, 350, 131, 61));
         backLoginBTN_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #3498db;\n"
 "    border-radius: 20px;\n"
@@ -1135,17 +1169,6 @@ public:
         emailLogin_2 = new QLineEdit(groupBox_2);
         emailLogin_2->setObjectName("emailLogin_2");
         emailLogin_2->setGeometry(QRect(120, 220, 211, 41));
-        rfidLoginBtn = new QPushButton(groupBox_2);
-        rfidLoginBtn->setObjectName("rfidLoginBtn");
-        rfidLoginBtn->setGeometry(QRect(330, 350, 121, 60));
-        rfidLoginBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    background-color: #3498db;\n"
-"    border-radius: 20px;\n"
-"    border: 2px solid #3498db;\n"
-"    min-height: 40px;\n"
-"    color: white;\n"
-"}\n"
-""));
         stackedWidget->addWidget(page_8);
         page_10 = new QWidget();
         page_10->setObjectName("page_10");
@@ -1500,7 +1523,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(6);
+        stackedWidget->setCurrentIndex(3);
         tabWidget->setCurrentIndex(0);
         sideBarStack->setCurrentIndex(0);
 
@@ -1555,6 +1578,7 @@ public:
         searchUserBTN->setText(QCoreApplication::translate("MainWindow", "Search user", nullptr));
         reviewSub->setText(QCoreApplication::translate("MainWindow", "Review Submissions", nullptr));
         editUserPage->setText(QCoreApplication::translate("MainWindow", "Edit User", nullptr));
+        revokeAccessBtn->setText(QCoreApplication::translate("MainWindow", "Revoke Access", nullptr));
         searchConfEdit->setText(QString());
         searchConfEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Search for something...", nullptr));
         searchConfBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
@@ -1613,7 +1637,6 @@ public:
         backLoginBTN_2->setText(QCoreApplication::translate("MainWindow", "Back", nullptr));
         emailLogin_2->setText(QString());
         emailLogin_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "Email", nullptr));
-        rfidLoginBtn->setText(QCoreApplication::translate("MainWindow", "RFID LOGIN", nullptr));
         groupBox_5->setTitle(QCoreApplication::translate("MainWindow", "User Rigester", nullptr));
         addUser->setText(QCoreApplication::translate("MainWindow", "Create User", nullptr));
         specialty_reg->setText(QString());

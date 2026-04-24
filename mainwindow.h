@@ -73,8 +73,9 @@ private slots:
     void on_exportUserPDF_clicked();
     void on_logOut_clicked();
 
+    //ARDUINO SC1
     void onArduinoDataReceived();
-    void on_rfidLoginBtn_clicked();
+    void on_revokeAccessBtn_clicked();
     /***************************************   USER END   **********************************************************/
 
 
@@ -149,8 +150,10 @@ private:
     QSerialPort *arduino;
     void setupArduino();
     void clearArduinoLCD();
-    void handleRFIDLogin(const QString &rfidCode);
-    bool rfidLoginActive = false;
+    //Senario 1
+    void handleRFIDAccess(const QString &cardUID);
+    bool grantLabAccess(const QString &rfidUID, int labID);
+    bool revokeLabAccess(int labID);
     //************ARDUINO END*****************************//
 
     //************CONFERENCE START***************************//
