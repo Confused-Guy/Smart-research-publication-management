@@ -1,0 +1,116 @@
+#define _DEBUG
+//#define USING_BUZZER
+
+//temperature sensor stuff
+#include <DHT.h>
+
+const int DHTPIN = 2;
+const int LED_YELLOW_PIN = 7;
+const int LED_BLUE_PIN = 5;
+float maxTemp = 20.f;
+
+DHT dht(DHTPIN, DHT11);
+void initTemperature();
+void updateTemperature(float *_temp);
+
+//motor stuff
+bool lastState = false; 
+const int FAN_OUTPUT = 3;
+
+void initMotor();
+void updateMotor(float temp);
+
+//buzzer stuff
+#if defined (USING_BUZZER)
+const int BUZZER_OUTPUT = 4;
+#endif
+
+//debuggin stuff
+#if defined (_DEBUG)
+  const int TEST_PIN = 13;
+#endif
+
+void setup() 
+{
+  Serial.begin(9600);
+  initTemperature();
+  initMotor();
+#if defined(USING_BUZZER)
+  pinMode(BUZZER_OUTPUT, OUTPUT);
+#endif
+}
+
+void loop() 
+{
+  float temp = 0.f;
+  updateTemperature(&temp);
+  updateMotor(temp);
+
+  delay(1000);
+}
+
+void initTemperature()
+{
+  dht.begin();
+  pinMode(LED_YELLOW_PIN, OUTPUT);
+  pinMode(LED_BLUE_PIN, OUTPUT);
+}
+void updateTemperature(float *_temp)
+{
+  *_temp = dht.readTemperature();
+  String tempFromQt = Serial.readStringUntil('\n');
+  if(tempFromQt != NULL)
+  {
+    maxTemp = tempFromQt.toFloat();
+    Serial.println(maxTemp);
+  }
+
+  if (isnan(*_temp)) 
+  {
+    *_temp = 0.f;
+  }
+
+  if(*_temp > maxTemp)
+  {
+    digitalWrite(LED_YELLOW_PIN, 1);
+    digitalWrite(LED_BLUE_PIN, 0);
+  }
+  else 
+  {
+    digitalWrite(LED_YELLOW_PIN, 0);
+    digitalWrite(LED_BLUE_PIN, 1);
+  }
+
+  Serial.print("TEMP: ");
+  Serial.println(*_temp);
+}
+
+void initMotor()
+{
+#if defined (_DEBUG)
+  pinMode(TEST_PIN, INPUT);
+#endif
+  pinMode(FAN_OUTPUT, OUTPUT);
+}
+void updateMotor(float temp)
+{
+  if(temp > maxTemp)
+  {
+    digitalWrite(FAN_OUTPUT, 1);
+
+#if defined (USING_BUZZER)
+    digitalWrite(BUZZER_OUTPUT, 1);
+#endif
+  }
+  else
+  {
+    digitalWrite(FAN_OUTPUT, 0);
+
+#if defined (USING_BUZZER)
+    digitalWrite(BUZZER_OUTPUT, 0);
+#endif
+  }
+}
+
+
+
