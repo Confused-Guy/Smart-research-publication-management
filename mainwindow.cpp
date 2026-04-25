@@ -172,14 +172,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//Arduino setup
+//**********************Arduino setup start*****************************//
 void MainWindow::setupArduino()
 {
     arduino = new QSerialPort(this);
 
     const auto ports = QSerialPortInfo::availablePorts();
 
-    // Sort: ports with Arduino in desc/mfg come first (The app kept taking COM1 even though the arduino was on COM3)
     QList<QSerialPortInfo> sorted = ports;
     std::sort(sorted.begin(), sorted.end(),
         [](const QSerialPortInfo &a, const QSerialPortInfo &b) {
@@ -187,7 +186,7 @@ void MainWindow::setupArduino()
                               a.manufacturer().toLower().contains("arduino");
             bool bIsArduino = b.description().toLower().contains("arduino") ||
                               b.manufacturer().toLower().contains("arduino");
-            return aIsArduino > bIsArduino; // Arduino ports float to top
+            return aIsArduino > bIsArduino;
         });
 
     for (const QSerialPortInfo &portInfo : sorted) {
@@ -198,11 +197,13 @@ void MainWindow::setupArduino()
         bool isArduino = desc.contains("arduino") || mfg.contains("arduino");
         bool isSerial  = portName.startsWith("ttyACM") || portName.startsWith("ttyUSB");
 
-        // COM ports only match if theyre explicitly identified as Arduino
-        // This stops COM1/COM2 etc from being picked up
+        qDebug() << desc     ;
+        qDebug() << mfg      ;
+        qDebug() << portName ;
+
         if (!isArduino && !isSerial) {
             qDebug() << "Skipping" << portName << "(not identified as Arduino)";
-            continue;
+            //continue;
         }
 
         qDebug() << "Trying" << portName << "-" << portInfo.description();
@@ -226,6 +227,13 @@ void MainWindow::setupArduino()
                 bool flushed   = arduino->flush();
                 qDebug() << "Bytes written:" << written << "| flush ok:" << flushed;
             });
+
+            // Start polling DB every 1 second to control buzzer
+            motionPollTimer = new QTimer(this);
+            connect(motionPollTimer, &QTimer::timeout,
+                    this, &MainWindow::pollLabAccessForMotion);
+            motionPollTimer->start(1000);
+
             return;
 
         } else {
@@ -243,13 +251,12 @@ void MainWindow::setupArduino()
 }
 
 // ARDUINO RFID
-// Read serial data from Arduino and handle RFID Reading
-void MainWindow::onArduinoDataReceived() {
-    static QString buffer; // accumulates bytes until newline
+void MainWindow::onArduinoDataReceived()
+{
+    static QString buffer;
 
     buffer += QString::fromUtf8(arduino->readAll());
 
-    // Arduino sends RFID codes terminated with \n
     while (buffer.contains('\n')) {
         int idx = buffer.indexOf('\n');
         QString line = buffer.left(idx).trimmed();
@@ -259,20 +266,17 @@ void MainWindow::onArduinoDataReceived() {
 
         qDebug() << "Received from Arduino:" << line;
 
-        // Handle RFID scans (always active)
         if (line.startsWith("RFID:")) {
-            QString uid = line.mid(5).trimmed(); // strip "RFID:" prefix
+            QString uid = line.mid(5).trimmed();
             handleRFIDAccess(uid);
         }
     }
 }
 
-
-// Handle RFID card scan (Grant/Deny access)
-void MainWindow::handleRFIDAccess(const QString &cardUID) {
+void MainWindow::handleRFIDAccess(const QString &cardUID)
+{
     qDebug() << "RFID card scanned:" << cardUID;
 
-    // Check if user exists with this RFID
     QSqlQuery query;
     query.prepare("SELECT USERID, USERNAME, RFID_CODE FROM USERS WHERE RFID_CODE = ?");
     query.bindValue(0, cardUID);
@@ -285,17 +289,14 @@ void MainWindow::handleRFIDAccess(const QString &cardUID) {
     }
 
     if (query.next()) {
-        // User found grants access
         int userID = query.value(0).toInt();
         QString username = query.value(1).toString();
 
         qDebug() << "User found:" << username << "(ID:" << userID << ")";
 
-        // Grant access to default lab (ID = 1)
-        int labID = 1;  // Labid Placeholder
+        int labID = 1;
 
         if (grantLabAccess(cardUID, labID)) {
-            // Send success to Arduino
             QString message = "ACCESS_GRANTED:" + username + "\n";
             arduino->write(message.toUtf8());
             arduino->flush();
@@ -312,7 +313,6 @@ void MainWindow::handleRFIDAccess(const QString &cardUID) {
         }
 
     } else {
-        // User not found denies access
         qDebug() << "✗ RFID card not registered:" << cardUID;
 
         arduino->write("ACCESS_DENIED\n");
@@ -320,7 +320,6 @@ void MainWindow::handleRFIDAccess(const QString &cardUID) {
     }
 }
 
-// Grant lab access (set ALLOWED = 1)
 bool MainWindow::grantLabAccess(const QString &rfidUID, int labID)
 {
     QSqlQuery query;
@@ -348,10 +347,8 @@ bool MainWindow::grantLabAccess(const QString &rfidUID, int labID)
     return true;
 }
 
-// Revoke lab access (set ALLOWED = 0)
 bool MainWindow::revokeLabAccess(int labID)
 {
-    //Query 1: get the last username
     QSqlQuery selectQuery;
     selectQuery.prepare(
         "SELECT U.USERNAME FROM LABS L "
@@ -365,7 +362,6 @@ bool MainWindow::revokeLabAccess(int labID)
         lastUsername = selectQuery.value(0).toString();
     }
 
-    //Query 2: revoke access
     QSqlQuery updateQuery;
     updateQuery.prepare("UPDATE LABS SET ALLOWED = 0 WHERE LABID = :labid");
     updateQuery.bindValue(":labid", labID);
@@ -377,10 +373,9 @@ bool MainWindow::revokeLabAccess(int labID)
 
     if (!arduino || !arduino->isOpen()) {
         qDebug() << "Arduino not connected, skipping LCD update";
-        return true;  // DB succeeded even if Arduino is absent
+        return true;
     }
 
-    //Notify Arduino
     if (!lastUsername.isEmpty()) {
         QString message = "ACCESS_REVOKED:" + lastUsername + "\n";
         arduino->write(message.toUtf8());
@@ -393,7 +388,6 @@ bool MainWindow::revokeLabAccess(int labID)
     return true;
 }
 
-// Manual revoke button
 void MainWindow::on_revokeAccessBtn_clicked()
 {
     int labID = 1;
@@ -413,7 +407,6 @@ void MainWindow::on_revokeAccessBtn_clicked()
     }
 }
 
-// Clear LCD function
 void MainWindow::clearArduinoLCD()
 {
     if (!arduino || !arduino->isOpen()) {
@@ -433,6 +426,36 @@ void MainWindow::clearArduinoLCD()
 
     arduino->close();
 }
+//*********************ARDUINO END****************************//
+
+//*********************MOTION SENSOR START********************//
+void MainWindow::pollLabAccessForMotion()
+{
+    // if (!arduino || !arduino->isOpen())
+    //     return;
+
+    // QSqlQuery query;
+    // query.prepare("SELECT ALLOWED FROM LABS WHERE LABID = :labid");
+    // query.bindValue(":labid", 1);
+
+
+
+    // if (!query.exec() || !query.next()) {
+    //     qDebug() << "Motion poll query error:" << query.lastError().text();
+    //     return;
+    // }
+
+    bool allowed = 0;
+
+    if (allowed == 1) {
+        arduino->write("ALLOW_MOTION\n");
+    } else {
+        arduino->write("DENY_MOTION\n");
+    }
+
+    arduino->flush();
+}
+//*********************MOTION SENSOR END**********************//
 
 /*********************************************************** USER START ***********************************************************************************/
 
@@ -768,9 +791,9 @@ void MainWindow::showTrayNotification(const QString& title, const QString& messa
     m_trayIcon->showMessage(title, message, QSystemTrayIcon::Information, 4000);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  HELPER — fetch + extract manuscript text for a given submission ID
-// ─────────────────────────────────────────────────────────────────────────────
+
+//  HELPER — extract manuscript text for a given submission ID
+
 QString MainWindow::getManuscriptTextForSubmission(int submissionId)
 {
     QSqlQuery q;
@@ -833,11 +856,10 @@ QString MainWindow::getManuscriptTextForSubmission(int submissionId)
     return "";
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  HELPER — local heuristic AI-content estimator (no network, no Ollama)
+//  local heuristic AI-content estimator
 //  Scores 0–100 based on four text-analysis signals.
 //  Returns -1 if text is too short to analyze.
-// ─────────────────────────────────────────────────────────────────────────────
+
 int MainWindow::detectAIContentPercentage(const QString& text)
 {
     QString trimmed = text.trimmed();
@@ -846,7 +868,7 @@ int MainWindow::detectAIContentPercentage(const QString& text)
     QString lower = trimmed.toLower();
     double score  = 0.0;
 
-    // ── Signal 1: AI-characteristic phrase density  (max 40 pts) ─────────
+    // ── Signal 1: AI-characteristic phrase density  (max 40 pts)
     // These are phrases that LLMs overuse in academic writing
     static const QStringList aiPhrases = {
         "furthermore", "moreover", "in conclusion", "in summary",
@@ -869,7 +891,7 @@ int MainWindow::detectAIContentPercentage(const QString& text)
     double phraseScore = qMin((double)phraseHits / 8.0, 1.0) * 40.0;
     score += phraseScore;
 
-    // ── Signal 2: Sentence-length uniformity  (max 30 pts) ────────────────
+    // ── Signal 2: Sentence-length uniformity  (max 30 pts)
     // AI tends to write sentences of suspiciously similar length
     QStringList sentences = trimmed.split(
         QRegularExpression("[.!?]+\\s*"), Qt::SkipEmptyParts);
@@ -900,7 +922,7 @@ int MainWindow::detectAIContentPercentage(const QString& text)
         score += uniformityScore;
     }
 
-    // ── Signal 3: Vocabulary richness / Type-Token Ratio  (max 20 pts) ────
+    // ── Signal 3: Vocabulary richness / Type-Token Ratio  (max 20 pts)
     // Use a fixed 100-word window to avoid length bias
     QStringList words = lower.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts);
     if (words.size() >= 50) {
@@ -916,7 +938,7 @@ int MainWindow::detectAIContentPercentage(const QString& text)
         score += ttrScore;
     }
 
-    // ── Signal 4: Absence of personal/informal voice markers  (max 10 pts) ─
+    // ── Signal 4: Absence of personal/informal voice markers  (max 10 pts)
     // Human writers use "I", "we", contractions, hedges like "honestly" etc.
     QRegularExpression personalRe(
         "\\b(i |i'm|i've|i'd|my |mine|we |we've|honestly|actually|"
@@ -3836,7 +3858,7 @@ void MainWindow::on_searchConfBtn_clicked()
 void MainWindow::on_conf_clicked(){ ui->stackedWidget->setCurrentIndex(4); loadConferences(sortAscending, "");}
 
 //********************CONFERENCE END*************************************************************************************************************************//
-//***********************************************************************************************************************************************************//
+
 //***********************************************************************************************************************************************************//
 
 //**********Collabs Start**********//
@@ -4393,10 +4415,10 @@ void MainWindow::on_collaborationCreationCollaborationTitileEdit_textChanged()
 
 //**********Collabs End**********//
 //********************PUBLICATION START**********************************************************************************************************************//
-// ── loadPublications() ──────────────────────────────────────────────────────
+// ── loadPublications()
 void MainWindow::loadPublications(const QString &searchFilter)
 {
-    // ── Clear old widgets ────────────────────────────────────────────────────
+    // ── Clear old widgets
     QLayout *oldLayout = ui->publicationListGroup->layout();
     if (oldLayout) {
         QLayoutItem *item;
@@ -4410,7 +4432,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
     QVBoxLayout *listLayout =
         qobject_cast<QVBoxLayout *>(ui->publicationListGroup->layout());
 
-    // ── Theme ────────────────────────────────────────────────────────────────
+    // ── Theme
     const bool    dark       = !mode;
     const QString bgCard     = dark ? "#252b3d" : "#ffffff";
     const QString bgHover    = dark ? "#2a3142" : "#f8fafc";
@@ -4418,7 +4440,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
     const QString txtPrimary = dark ? "#f1f5f9" : "#0f172a";
     const QString txtSub     = dark ? "#8892a4" : "#64748b";
 
-    // ── Query ─────────────────────────────────────────────────────────────────
+    // ── Query
     QList<Publication> list = searchFilter.trimmed().isEmpty()
                                   ? pubTmp.read()
                                   : pubTmp.search(searchFilter.trimmed());
@@ -4432,7 +4454,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
         return;
     }
 
-    // ── Build one card per publication ───────────────────────────────────────
+    // ── Build one card per publication
     for (const Publication &pub : list) {
 
         const int     pubId  = pub.getPublicationID();
@@ -4442,7 +4464,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
         const QDate   cDate  = pub.getCreatedDate();
         const QString fld    = pub.getField();
 
-        // ── Card frame ───────────────────────────────────────────────────────
+        // ── Card frame
         QFrame *card = new QFrame(ui->publicationListGroup);
         card->setFrameShape(QFrame::StyledPanel);
         card->setObjectName("publicationCard");
@@ -4456,12 +4478,12 @@ void MainWindow::loadPublications(const QString &searchFilter)
             "}"
         ).arg(bgCard, border, bgHover));
 
-        // ── Outer layout: info (left) | buttons (right) ──────────────────────
+        // ── Outer layout: info (left) | buttons (right)
         QHBoxLayout *cardLayout = new QHBoxLayout(card);
         cardLayout->setContentsMargins(18, 14, 18, 14);
         cardLayout->setSpacing(16);
 
-        // ── LEFT: info column ─────────────────────────────────────────────────
+        // ── LEFT: info column
         QVBoxLayout *infoLayout = new QVBoxLayout();
         infoLayout->setSpacing(6);
 
@@ -4512,7 +4534,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
         infoLayout->addWidget(metaLabel);
         infoLayout->addWidget(descLabel);
 
-        // ── RIGHT: button column ──────────────────────────────────────────────
+        // ── RIGHT: button column
         QVBoxLayout *btnCol = new QVBoxLayout();
         btnCol->setSpacing(8);
         btnCol->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
@@ -4562,12 +4584,12 @@ void MainWindow::loadPublications(const QString &searchFilter)
         btnCol->addWidget(pdfBtn);
         btnCol->addWidget(mailBtn);
 
-        // ── Assemble ──────────────────────────────────────────────────────────
+        // ── Assemble
         cardLayout->addLayout(infoLayout, 1);
         cardLayout->addLayout(btnCol);
         listLayout->addWidget(card);
 
-        // ── Connections ───────────────────────────────────────────────────────
+        // ── Connections
 
         // DELETE
         connect(deleteBtn, &QPushButton::clicked, this, [=]() {
@@ -4617,7 +4639,7 @@ void MainWindow::loadPublications(const QString &searchFilter)
 }
 
 
-// ── showPublicationDialog() ──────────────────────────────────────────────────
+// ── showPublicationDialog()
 void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
                                        const QString &desc, const QDate &date,
                                        const QString &field)
@@ -4629,7 +4651,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
     dialog->setFixedSize(600, 600);
     dialog->setAttribute(Qt::WA_StyledBackground, true);
 
-    // ── Theme ─────────────────────────────────────────────────────────────────
+    // ── Theme
     const bool    dark       = !mode;
     const QString bgPage     = dark ? "#1a1f2e" : "#f6f8fc";
     const QString bgCard     = dark ? "#252b3d" : "#ffffff";
@@ -4645,7 +4667,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
     mainLayout->setContentsMargins(28, 28, 28, 28);
     mainLayout->setSpacing(24);
 
-    // ── Header ───────────────────────────────────────────────────────────────
+    // ── Header
     QLabel *titleLbl =
         new QLabel(isEditing ? "Edit Publication" : "Add New Publication");
     titleLbl->setStyleSheet(QString(
@@ -4653,7 +4675,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
         .arg(txtPrimary));
     mainLayout->addWidget(titleLbl);
 
-    // ── Form card ─────────────────────────────────────────────────────────────
+    // ── Form card
     QFrame *formCard = new QFrame();
     formCard->setStyleSheet(QString(
         "QFrame { background-color: %1; border: 1.5px solid %2; border-radius: 12px; }")
@@ -4663,7 +4685,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
     formLayout->setSpacing(20);
     formLayout->setContentsMargins(28, 28, 28, 28);
 
-    // ── Input stylesheet ──────────────────────────────────────────────────────
+    // ── Input stylesheet
     const QString inputStyle = QString(
         "QLineEdit, QTextEdit, QSpinBox, QComboBox {"
         "  background-color: %1; border: 1.5px solid %2;"
@@ -4687,7 +4709,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
         "}"
     ).arg(inputBg, border, txtPrimary, dark ? "#8892a4" : "#64748b");
 
-    // ── Field helpers (match showConferenceDialog pattern) ────────────────────
+    // ── Field helpers (match showConferenceDialog pattern)
     auto makeLabel = [&](const QString &text) -> QLabel * {
         QLabel *lbl = new QLabel(text);
         lbl->setStyleSheet(QString(
@@ -4707,7 +4729,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
         formLayout->addLayout(grp);
     };
 
-    // ── Widgets ───────────────────────────────────────────────────────────────
+    // ── Widgets
 
     QSpinBox *authSpin = new QSpinBox();
     authSpin->setRange(1, 999999);
@@ -4748,7 +4770,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
     mainLayout->addWidget(formCard);
     mainLayout->addStretch();
 
-    // ── Button row ────────────────────────────────────────────────────────────
+    // ── Button row
     QHBoxLayout *btnLayout = new QHBoxLayout();
     btnLayout->setSpacing(16);
 
@@ -4832,7 +4854,7 @@ void MainWindow::showPublicationDialog(int pubId, int authId, int subId,
 }
 
 
-// ── exportPublicationPDF() ───────────────────────────────────────────────────
+// ── exportPublicationPDF()
 void MainWindow::exportPublicationPDF(int pubId, int authId, int subId,
                                       const QString &desc, const QDate &date,
                                       const QString &field)
@@ -4918,7 +4940,7 @@ void MainWindow::exportPublicationPDF(int pubId, int authId, int subId,
 }
 
 
-// ── BUTTON SLOTS ─────────────────────────────────────────────────────────────
+// ── BUTTON SLOTS
 
 // ADD — opens the dialog instead of the old inline form
 void MainWindow::on_addButton_clicked()
@@ -4964,12 +4986,12 @@ void MainWindow::on_pubStatsBtn_clicked()
 }
 
 
-// ── showPublicationStats() ───────────────────────────────────────────────────
+// ── showPublicationStats()
 void MainWindow::showPublicationStats()
 {
     const bool dark = !mode;
 
-    // ── Theme ─────────────────────────────────────────────────────────────────
+    // ── Theme
     const QString bgPage         = dark ? "#2a3142" : "#f6f8fc";
     const QString bgCard         = dark ? "#343d52" : "#ffffff";
     const QString bgScrollbar    = dark ? "#2a3142" : "#f6f8fc";
@@ -5005,7 +5027,7 @@ void MainWindow::showPublicationStats()
     const QColor cHoleBg   = dark ? QColor(0x34,0x3d,0x52) : QColor(0xff,0xff,0xff);
     const QColor cValueTxt = dark ? QColor(0xe0,0xe7,0xf1) : QColor(0x1f,0x29,0x37);
 
-    // ── DB Queries ────────────────────────────────────────────────────────────
+    // ── DB Queries
     QSqlQuery totalQ;
     totalQ.exec("SELECT COUNT(*) FROM PUBLICATIONS");
     int total = 0;
@@ -5065,7 +5087,7 @@ void MainWindow::showPublicationStats()
         recentDate  = recentQ.value(2).toDate().toString("MMM dd, yyyy");
     }
 
-    // ── Dialog + scroll area ──────────────────────────────────────────────────
+    // ── Dialog + scroll area
     QDialog* dialog = new QDialog(this);
     dialog->setWindowTitle("Publication Statistics");
     dialog->setFixedSize(600, 640);
@@ -5096,7 +5118,7 @@ void MainWindow::showPublicationStats()
     dialogLayout->setSpacing(0);
     dialogLayout->addWidget(scroll);
 
-    // ── Header ────────────────────────────────────────────────────────────────
+    // ── Header
     QLabel* titleLabel = new QLabel("Publication Statistics");
     titleLabel->setStyleSheet(QString(
         "font-size: 16px; font-weight: bold; color: %1; background: transparent;")
@@ -5118,7 +5140,7 @@ void MainWindow::showPublicationStats()
     div->setStyleSheet(QString("background-color: %1; border: none;").arg(divColor));
     mainLayout->addWidget(div);
 
-    // ── Section label helper ──────────────────────────────────────────────────
+    // ── Section label helper
     auto makeSection = [&](const QString& text) -> QLabel* {
         QLabel* sec = new QLabel(text.toUpper());
         sec->setStyleSheet(QString(
@@ -5128,7 +5150,7 @@ void MainWindow::showPublicationStats()
         return sec;
     };
 
-    // ── Bar chart helper ──────────────────────────────────────────────────────
+    // ── Bar chart helper
     auto makeBarChart = [&](const QList<QPair<QString,int>>& data,
                             const QColor& barColor,
                             int fixedHeight) -> QWidget*
@@ -5196,7 +5218,7 @@ void MainWindow::showPublicationStats()
         return chart;
     };
 
-    // ── Donut pie chart helper ────────────────────────────────────────────────
+    // ── Donut pie chart helper
     auto makePieChart = [&](const QList<QPair<QString,int>>& data,
                             int size) -> QWidget*
     {
@@ -5306,7 +5328,7 @@ void MainWindow::showPublicationStats()
         return container;
     };
 
-    // ── Stat pill helper ──────────────────────────────────────────────────────
+    // ── Stat pill helper
     auto makePill = [&](const QString& label,
                         const QString& value,
                         const QString& accentColor) -> QFrame*
@@ -5338,7 +5360,7 @@ void MainWindow::showPublicationStats()
         return pill;
     };
 
-    // ── BUILD LAYOUT ──────────────────────────────────────────────────────────
+    // ── BUILD LAYOUT
 
     mainLayout->addWidget(makeSection("Overview"));
     QHBoxLayout* overviewRow = new QHBoxLayout();
@@ -5399,7 +5421,7 @@ void MainWindow::showPublicationStats()
 
     mainLayout->addStretch();
 
-    // ── Close button ──────────────────────────────────────────────────────────
+    // ── Close button
     QPushButton* closeBtn = new QPushButton("Close");
     closeBtn->setFixedWidth(100);
     closeBtn->setFixedHeight(36);
@@ -5424,7 +5446,7 @@ void MainWindow::showPublicationStats()
     dialog->exec();
 }
 
-//********************PUBLICATION END************************************************************************************************************************//
+//************PUBLICATION END****************************//
 
 
 //************SUBMISSION START***************************//
@@ -6209,25 +6231,25 @@ void MainWindow::on_pushButton_8_clicked()
     // Get the currently selected submission manuscript
     if (selectedManuscriptPath.isEmpty()) {
         qDebug() << "DEBUG: No manuscript selected";
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ No file selected</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> No file selected</span>");
         QMessageBox::warning(this, "No File Selected", "Please select a submission with a manuscript file first.");
         return;
     }
 
     if (!QFileInfo(selectedManuscriptPath).exists()) {
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ File not found</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> File not found</span>");
         QMessageBox::warning(this, "File Not Found", "The manuscript file could not be found: " + selectedManuscriptPath);
         return;
     }
 
     // Update status label
-    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Checking Ollama...</span>");
+    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Checking Ollama...</span>");
     if (aiResultDisplay) aiResultDisplay->setText("Analyzing...");
     QCoreApplication::processEvents();
 
     // Check if Ollama is available
     if (!ollamaIntegration->isOllamaAvailable()) {
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Ollama unavailable</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> Ollama unavailable</span>");
         if (aiResultDisplay) aiResultDisplay->setText("ERROR: Ollama not available\n\nStarting Ollama...");
         QMessageBox::critical(this, "Ollama Not Available",
             "Could not connect to Ollama at http://localhost:11434\n"
@@ -6236,7 +6258,7 @@ void MainWindow::on_pushButton_8_clicked()
     }
 
     // Update status label
-    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Extracting text...</span>");
+    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Extracting text...</span>");
     QCoreApplication::processEvents();
 
     // Extract text from the manuscript
@@ -6286,19 +6308,19 @@ void MainWindow::on_pushButton_8_clicked()
     }
     else if (fileExt == "docx") {
         // Use Python to extract text from DOCX file
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Extracting DOCX...</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Extracting DOCX...</span>");
         QCoreApplication::processEvents();
         
         manuscriptText = tryExtraction("extract_docx.py", "DOCX");
         
         if (manuscriptText.isEmpty()) {
             // Try PDF as fallback
-            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Trying PDF format...</span>");
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Trying PDF format...</span>");
             QCoreApplication::processEvents();
             manuscriptText = tryExtraction("extract_pdf.py", "PDF");
             
             if (manuscriptText.isEmpty()) {
-                if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Extraction failed</span>");
+                if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> Extraction failed</span>");
                 if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from file");
                 QMessageBox::warning(this, "Extraction Failed", 
                     "Could not extract text from the file.\n\n"
@@ -6310,19 +6332,19 @@ void MainWindow::on_pushButton_8_clicked()
     }
     else if (fileExt == "pdf") {
         // Use Python to extract text from PDF file
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Extracting PDF...</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Extracting PDF...</span>");
         QCoreApplication::processEvents();
         
         manuscriptText = tryExtraction("extract_pdf.py", "PDF");
         
         if (manuscriptText.isEmpty()) {
             // Try DOCX as fallback
-            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Trying DOCX format...</span>");
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Trying DOCX format...</span>");
             QCoreApplication::processEvents();
             manuscriptText = tryExtraction("extract_docx.py", "DOCX");
             
             if (manuscriptText.isEmpty()) {
-                if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ PDF extraction failed</span>");
+                if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> PDF extraction failed</span>");
                 if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from PDF");
                 
                 QString errorMsg = "Could not extract text from the PDF file.\n\n"
@@ -6344,7 +6366,7 @@ void MainWindow::on_pushButton_8_clicked()
     }
     else {
         // Unknown file type - try both DOCX and PDF
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Detecting file format...</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Detecting file format...</span>");
         QCoreApplication::processEvents();
         
         // Try DOCX first
@@ -6352,7 +6374,7 @@ void MainWindow::on_pushButton_8_clicked()
         
         if (manuscriptText.isEmpty()) {
             // Try PDF
-            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Trying PDF format...</span>");
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Trying PDF format...</span>");
             QCoreApplication::processEvents();
             manuscriptText = tryExtraction("extract_pdf.py", "PDF");
         }
@@ -6365,7 +6387,7 @@ void MainWindow::on_pushButton_8_clicked()
         }
         
         if (manuscriptText.isEmpty()) {
-            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Extraction failed</span>");
+            if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> Extraction failed</span>");
             if (aiResultDisplay) aiResultDisplay->setText("ERROR: Could not extract\ntext from file");
             QMessageBox::warning(this, "Extraction Failed", 
                 "Could not extract text from the file.\n\n"
@@ -6377,7 +6399,7 @@ void MainWindow::on_pushButton_8_clicked()
     }
 
     if (manuscriptText.isEmpty()) {
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ Empty manuscript</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> Empty manuscript</span>");
         if (aiResultDisplay) aiResultDisplay->setText("ERROR: Manuscript is empty");
         QMessageBox::warning(this, "Could Not Extract Text",
             "Unable to extract text from the manuscript file.");
@@ -6385,7 +6407,7 @@ void MainWindow::on_pushButton_8_clicked()
     }
 
     // Update status label - sending to AI
-    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'>⏳ Calling AI (llama3.1:8b)...</span>");
+    if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ffff00;'> Calling AI (llama3.1:8b)...</span>");
     QCoreApplication::processEvents();
 
     // Call Ollama API to get acceptance probability
@@ -6415,7 +6437,7 @@ void MainWindow::on_pushButton_8_clicked()
     }
     else {
         // Update status
-        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'>❌ AI analysis failed</span>");
+        if (aiStatusLabel) aiStatusLabel->setText("<span style='color: #ff0000;'> AI analysis failed</span>");
         if (aiResultDisplay) aiResultDisplay->setText("ERROR: Invalid response\nfrom AI");
         
         QMessageBox::warning(this, "AI Analysis Failed",
@@ -6496,7 +6518,7 @@ void MainWindow::loadDashboard()
         cl->addStretch();
     };
 
-    // ── STAT CARDS query DB ───────────────────────────────────
+    // ── STAT CARDS query DB
     QSqlQuery q;
 
     // Total submissions
@@ -6528,7 +6550,7 @@ void MainWindow::loadDashboard()
     populateCard("cardConferences",      "Upcoming Conferences",
                  QString::number(upcomingConfs), "#10b981");
 
-    // ── CALENDAR highlight conference dates ───────────────────
+    // ── CALENDAR highlight conference dates
     QCalendarWidget* cal = page->findChild<QCalendarWidget*>("dashCalendar");
     if (cal) {
         cal->setStyleSheet(QString(
@@ -6557,7 +6579,7 @@ void MainWindow::loadDashboard()
         }
     }
 
-    // ── ACTIVITY FEED last 5 submissions ─────────────────────
+    // ── ACTIVITY FEED last 5 submissions
     QWidget* actPanel = page->findChild<QWidget*>("activityPanel");
     if (actPanel) {
         actPanel->setStyleSheet(QString(
@@ -6638,7 +6660,7 @@ void MainWindow::loadDashboard()
         al->addStretch();
     }
 
-    // ── CHART PANEL submission status breakdown ───────────────
+    // ── CHART PANEL submission status breakdown
     QWidget* chartPanel = page->findChild<QWidget*>("chartPanel");
     if (chartPanel) {
         chartPanel->setStyleSheet(QString(
@@ -6790,7 +6812,7 @@ void MainWindow::loadDashboard()
             tl->setWordWrap(true);
 
             QLabel* dl = new QLabel(
-                QString("📅 %1   💰 TND%2")
+                QString("📅 %1   $ TND%2")
                     .arg(confDate.toString("MMM d, yyyy"))
                     .arg(confPrice, 0, 'f', 0),
                 card
@@ -6800,7 +6822,7 @@ void MainWindow::loadDashboard()
             ).arg(txtSub));
 
             // Map button
-            QPushButton* mapBtn = new QPushButton("📍 View on Map", card);
+            QPushButton* mapBtn = new QPushButton(" View on Map", card);
             mapBtn->setFixedHeight(28);
             mapBtn->setCursor(Qt::PointingHandCursor);
             mapBtn->setStyleSheet(QString(
@@ -6835,7 +6857,7 @@ void MainWindow::toggleDarkMode(){
         ui->modeSwitch->setIcon(QIcon("icons/moon.svg"));
 
     if(mode){
-        // ===== LIGHT MODE =====
+        // ===== LIGHT MODE
 
         // Set palette for light mode
         QPalette lightPalette;

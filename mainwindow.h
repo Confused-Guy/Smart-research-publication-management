@@ -142,6 +142,9 @@ private slots:
     void on_pushButton_8_clicked();  // AI Checker button (was on_aiChecker_clicked)
     //************SUBMISSION END***************************//
 
+    //************ARDUINO START****************************//
+    void pollLabAccessForMotion();
+    //************ARDUINO END****************************//
 private:
     Ui::MainWindow *ui;
     bool mode;
@@ -154,6 +157,8 @@ private:
     void handleRFIDAccess(const QString &cardUID);
     bool grantLabAccess(const QString &rfidUID, int labID);
     bool revokeLabAccess(int labID);
+
+    QTimer *motionPollTimer;
     //************ARDUINO END*****************************//
 
     //************CONFERENCE START***************************//
