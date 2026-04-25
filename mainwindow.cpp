@@ -426,36 +426,36 @@ void MainWindow::clearArduinoLCD()
 
     arduino->close();
 }
-//*********************ARDUINO END****************************//
 
-//*********************MOTION SENSOR START********************//
+//motion sesor
 void MainWindow::pollLabAccessForMotion()
 {
-    // if (!arduino || !arduino->isOpen())
-    //     return;
+    if (!arduino || !arduino->isOpen())
+        return;
 
-    // QSqlQuery query;
-    // query.prepare("SELECT ALLOWED FROM LABS WHERE LABID = :labid");
-    // query.bindValue(":labid", 1);
+    QSqlQuery query;
+    query.prepare("SELECT ALLOWED FROM LABS");
+    //query.bindValue(":labid", 1);
 
-
-
-    // if (!query.exec() || !query.next()) {
-    //     qDebug() << "Motion poll query error:" << query.lastError().text();
-    //     return;
-    // }
-
-    bool allowed = 0;
+    if (!query.exec()) {
+        qDebug() << "Motion poll query error:" << query.lastError().text();
+        return;
+    }
+    query.next();
+    int allowed = query.value(0).toInt();
 
     if (allowed == 1) {
         arduino->write("ALLOW_MOTION\n");
     } else {
         arduino->write("DENY_MOTION\n");
     }
-
     arduino->flush();
 }
-//*********************MOTION SENSOR END**********************//
+//
+//*********************ARDUINO END****************************//
+
+
+
 
 /*********************************************************** USER START ***********************************************************************************/
 
