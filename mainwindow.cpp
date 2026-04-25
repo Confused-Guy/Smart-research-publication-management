@@ -254,7 +254,6 @@ void MainWindow::setupArduino()
 void MainWindow::onArduinoDataReceived()
 {
     static QString buffer;
-
     buffer += QString::fromUtf8(arduino->readAll());
 
     while (buffer.contains('\n')) {
@@ -264,12 +263,51 @@ void MainWindow::onArduinoDataReceived()
 
         if (line.isEmpty()) continue;
 
-        qDebug() << "Received from Arduino:" << line;
+        //qDebug() << "Received from Arduino:" << line;
 
+        // Handle RFID scans (always active)
         if (line.startsWith("RFID:")) {
-            QString uid = line.mid(5).trimmed();
+            QString uid = line.mid(5).trimmed(); // strip "RFID:" prefix
             handleRFIDAccess(uid);
         }
+        //handle temperature sensor
+        else if(line.startsWith("TEMP:"))
+        {
+            //do temp stuff
+            float temperature = line.mid(5).trimmed().toFloat();
+            handleTemperature(temperature);
+
+        }
+    }
+}
+
+void MainWindow::handleTemperature(float _temp)
+{
+    qDebug() << "Current Temp" << _temp << '\n';
+    static bool sentTemperatureData = false;
+    if(true)//!sentTemperatureData)
+    {
+        sentTemperatureData = true;
+
+        QSqlQuery query;
+        query.prepare("SELECT * FROM LABS WHERE LABID = ?");
+        int labId = 1;
+        query.addBindValue(labId);
+
+        if(!query.exec())
+        {
+            qDebug() << query.lastError().text() << '\n';
+            return;
+        }
+
+        float temp = 0.f;
+        while(query.next())
+        {
+            temp = query.value(2).toFloat();
+        }
+        temp = 10;
+        arduino->write(std::to_string(temp).c_str());
+        qDebug() << "Temp sent to arduino: " << temp << '\n';
     }
 }
 

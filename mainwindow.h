@@ -158,6 +158,9 @@ private:
     bool grantLabAccess(const QString &rfidUID, int labID);
     bool revokeLabAccess(int labID);
 
+    //Temperature Scenario
+    void handleTemperature(float _temp);
+
     QTimer *motionPollTimer;
     //************ARDUINO END*****************************//
 
