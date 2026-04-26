@@ -97,16 +97,17 @@ MainWindow::MainWindow(QWidget *parent)
     this->resize({1280,720});
     mode=true;
 
+    //Loading data
     loadDashboard();
+    loadSubmissions();
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=]() {
+        //if (ui->tabWidget->widget(index) == ui->tab_7)
+            loadReviewsReadOnly();
+    });
 
     //notify
     initTrayIcon();
     QString oldStatus;
-
-    //QPixmap logo("logo.png");//logo stuff!
-    //ui->loginLogo->setPixmap(logo);
-    //ui->pic->setPixmap(logo);//logo stuff!
-
 
     //StyleSheet and default index
     ui->stackedWidget->setCurrentIndex(0);
@@ -114,15 +115,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     QPixmap userPic("user.png"); //temporary until user gets an actual db
     ui->userPic->setPixmap(userPic);
-
-    QPixmap chartt("pie_chart.png");
-    ui->chart->setPixmap(chartt);
-    QPixmap post("gallary.png");
-    ui->postPicture->setPixmap(post);
-    QPixmap drop("drop.png");
-    ui->dropPlace->setPixmap(drop);
-
-    loadSubmissions();
     
     // Initialize Ollama integration
     ollamaIntegration = new OllamaIntegration(this);
@@ -152,27 +144,18 @@ MainWindow::MainWindow(QWidget *parent)
     aiResultDisplay->show();
     qDebug() << "AI Result Display created and shown";
 
-    connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=]() {
-        //if (ui->tabWidget->widget(index) == ui->tab_7)
-            loadReviewsReadOnly();
-    });
-
     setupArduino();
 }
 
 MainWindow::~MainWindow()
 {
-    // Revoke all lab access on app close
-       QSqlQuery query;
-       query.exec("UPDATE LABS SET ALLOWED = 0");
-       qDebug() << "All lab access revoked on app shutdown";
-
     clearArduinoLCD();  // Clear LCD before closing
 
     delete ui;
 }
 
-//**********************Arduino setup start*****************************//
+//******************************************************** ARDUINO START ************************************************************************//
+// ARDUIO SETUP
 void MainWindow::setupArduino()
 {
     arduino = new QSerialPort(this);
@@ -203,7 +186,7 @@ void MainWindow::setupArduino()
 
         if (!isArduino && !isSerial) {
             qDebug() << "Skipping" << portName << "(not identified as Arduino)";
-            //continue;
+            //continue; //!!!!DETECTS RANDOM STUFF WHEN ARDUINO NOT CONNECTED
         }
 
         qDebug() << "Trying" << portName << "-" << portInfo.description();
@@ -228,7 +211,7 @@ void MainWindow::setupArduino()
                 qDebug() << "Bytes written:" << written << "| flush ok:" << flushed;
             });
 
-            // Start polling DB every 1 second to control buzzer
+            // Start polling DB every 1 second to control buzzer (MOTION SENSOR)
             motionPollTimer = new QTimer(this);
             connect(motionPollTimer, &QTimer::timeout,
                     this, &MainWindow::pollLabAccessForMotion);
@@ -250,7 +233,7 @@ void MainWindow::setupArduino()
         "• No other program is using the port (Arduino IDE)");
 }
 
-// ARDUINO RFID
+// ARDUINO DATA RECEPTION
 void MainWindow::onArduinoDataReceived()
 {
     static QString buffer;
@@ -265,52 +248,21 @@ void MainWindow::onArduinoDataReceived()
 
         //qDebug() << "Received from Arduino:" << line;
 
-        // Handle RFID scans (always active)
+        // Handle RFID scans
         if (line.startsWith("RFID:")) {
-            QString uid = line.mid(5).trimmed(); // strip "RFID:" prefix
+            QString uid = line.mid(5).trimmed();
             handleRFIDAccess(uid);
         }
-        //handle temperature sensor
+        // Handle temperature sensor
         else if(line.startsWith("TEMP:"))
         {
-            //do temp stuff
             float temperature = line.mid(5).trimmed().toFloat();
             handleTemperature(temperature);
-
         }
     }
 }
 
-void MainWindow::handleTemperature(float _temp)
-{
-    qDebug() << "Current Temp" << _temp << '\n';
-    static bool sentTemperatureData = false;
-    if(true)//!sentTemperatureData)
-    {
-        sentTemperatureData = true;
-
-        QSqlQuery query;
-        query.prepare("SELECT * FROM LABS WHERE LABID = ?");
-        int labId = 1;
-        query.addBindValue(labId);
-
-        if(!query.exec())
-        {
-            qDebug() << query.lastError().text() << '\n';
-            return;
-        }
-
-        float temp = 0.f;
-        while(query.next())
-        {
-            temp = query.value(2).toFloat();
-        }
-        temp = 10;
-        arduino->write(std::to_string(temp).c_str());
-        qDebug() << "Temp sent to arduino: " << temp << '\n';
-    }
-}
-
+// ARDUINO RFID
 void MainWindow::handleRFIDAccess(const QString &cardUID)
 {
     qDebug() << "RFID card scanned:" << cardUID;
@@ -445,35 +397,66 @@ void MainWindow::on_revokeAccessBtn_clicked()
     }
 }
 
-void MainWindow::clearArduinoLCD()
+// ARDUINO TEMPERATURE CONTROL
+void MainWindow::handleTemperature(float _temp)
 {
-    if (!arduino || !arduino->isOpen()) {
-        qDebug() << "Arduino not connected, skipping LCD clear";
-        return;
+    qDebug() << "Current Temp" << _temp << '\n';
+    static bool sentTemperatureData = false;
+    if(true)//!sentTemperatureData)
+    {
+        sentTemperatureData = true;
+
+        QSqlQuery query;
+        query.prepare("SELECT * FROM LABS WHERE LABID = ?");
+        int labId = 1;
+        query.addBindValue(labId);
+
+        if(!query.exec())
+        {
+            qDebug() << query.lastError().text() << '\n';
+            return;
+        }
+
+        float temp = 0.f;
+        while(query.next())
+        {
+            temp = query.value(2).toFloat();
+        }
+        temp = 10;
+        arduino->write(std::to_string(temp).c_str());
+        qDebug() << "Temp sent to arduino: " << temp << '\n';
     }
 
-    arduino->write("GOODBYE\n");
+    /*ANOTHER WAY
+    qDebug() << "Current temp:" << _temp;
+
+    if (!arduino || !arduino->isOpen()) return;
+
+    QSqlQuery query;
+    query.prepare("SELECT NORMAL_TEMP FROM LABS WHERE LABID = ?");
+    query.addBindValue(1); //Placeholder
+
+    float threshold = 0.f;  // safe default
+    if (query.exec() && query.next()) {
+        threshold = query.value(0).toFloat();
+    }
+
+    // Use SETTEMP: prefix so Arduino parser handles it correctly
+    QString msg = QString("SETTEMP:%1\n").arg(threshold);
+    arduino->write(msg.toUtf8());
     arduino->flush();
-
-    { QEventLoop l; QTimer::singleShot(500, &l, &QEventLoop::quit); l.exec(); }
-
-    arduino->write("CLEAR\n");
-    arduino->flush();
-
-    { QEventLoop l; QTimer::singleShot(200, &l, &QEventLoop::quit); l.exec(); }
-
-    arduino->close();
+    */
 }
 
-//motion sesor
+// ARDUINO MOTION AENSOR
 void MainWindow::pollLabAccessForMotion()
 {
     if (!arduino || !arduino->isOpen())
         return;
 
     QSqlQuery query;
-    query.prepare("SELECT ALLOWED FROM LABS");
-    //query.bindValue(":labid", 1);
+    query.prepare("SELECT ALLOWED FROM LABS WHERE LABID = :labid");
+    query.bindValue(":labid", 1);
 
     if (!query.exec()) {
         qDebug() << "Motion poll query error:" << query.lastError().text();
@@ -489,11 +472,34 @@ void MainWindow::pollLabAccessForMotion()
     }
     arduino->flush();
 }
-//
-//*********************ARDUINO END****************************//
 
+// ARDUINO CLEAR SCREEN
+void MainWindow::clearArduinoLCD()
+{
+    if (!arduino || !arduino->isOpen()) {
+        qDebug() << "Arduino not connected, skipping LCD clear";
+        return;
+    }
 
+    // Revoke all lab access on app close
+    QSqlQuery query;
+    query.exec("UPDATE LABS SET ALLOWED = 0");
+    qDebug() << "All lab access revoked on app shutdown";
 
+    arduino->write("GOODBYE\n");
+    arduino->flush();
+
+    { QEventLoop l; QTimer::singleShot(500, &l, &QEventLoop::quit); l.exec(); }
+
+    arduino->write("CLEAR\n");
+    arduino->flush();
+
+    { QEventLoop l; QTimer::singleShot(200, &l, &QEventLoop::quit); l.exec(); }
+
+    arduino->close();
+}
+
+//********************************************************** ARDUINO END ************************************************************************//
 
 /*********************************************************** USER START ***********************************************************************************/
 

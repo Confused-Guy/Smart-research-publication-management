@@ -1,0 +1,18 @@
+| Pin  | Component                          | Connection              |
+|------|------------------------------------|-------------------------|
+| D2   | DHT11                              | DATA                    |
+| D3   | Fan / motor                        | IN (PWM)                |
+| D4   | PIR sensor                         | OUT                     |
+| D5   | LED blue                           | Anode via 220Ω resistor |
+| D6   | Buzzer                             | Positive leg            |
+| D7   | LED yellow                         | Anode via 220Ω resistor |
+| D9   | RFID RC522                         | RST                     |
+| D10  | RFID RC522                         | SDA / SS                |
+| D11  | RFID RC522                         | MOSI                    |
+| D12  | RFID RC522                         | MISO                    |
+| D13  | RFID RC522                         | SCK                     |
+| A4   | LCD I2C                            | SDA                     |
+| A5   | LCD I2C                            | SCL                     |
+| 3.3V | RFID RC522                         | VCC — use 3.3V, not 5V  |
+| 5V   | DHT11, PIR, LCD, LEDs, Buzzer, Fan | VCC                     |
+| GND  | All components                     | GND                     |

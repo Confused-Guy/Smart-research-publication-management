@@ -1,0 +1,225 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <DHT.h>
+
+// ── Pin definitions ──────────────────────────────────────
+#define RST_PIN       9
+#define SS_PIN        10
+#define DHTPIN        2
+#define PIR_PIN       4   // moved from 2 (was conflicting with DHT)
+#define FAN_PIN       3   // PWM
+#define BUZZER_PIN    6   // moved from 3 (was conflicting with fan)
+#define LED_YELLOW    7
+#define LED_BLUE      5
+
+// ── Peripherals ──────────────────────────────────────────
+MFRC522 rfid(SS_PIN, RST_PIN);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+DHT dht(DHTPIN, DHT11);
+
+// ── State ────────────────────────────────────────────────
+float    maxTemp        = 25.0f;
+bool     motionAllowed  = false;   // set by Qt: ALLOW_MOTION / DENY_MOTION
+unsigned long lastCardRead = 0;
+const unsigned long CARD_TIMEOUT = 3000;
+
+// ── Forward declarations ──────────────────────────────────
+void handleSerialCommands();
+void checkRFIDCard();
+void updateTemperature();
+void updateMotionBuzzer();
+void displayAccessGranted(String username);
+void displayAccessDenied();
+void displayAccessRevoked(String username);
+
+// ─────────────────────────────────────────────────────────
+void setup()
+{
+    Serial.begin(9600);
+
+    // RFID
+    SPI.begin();
+    rfid.PCD_Init();
+
+    // DHT
+    dht.begin();
+
+    // LCD
+    lcd.init();
+    lcd.backlight();
+    lcd.setCursor(0, 0); lcd.print("Peerly Research");
+    lcd.setCursor(0, 1); lcd.print("Lab Access");
+    delay(2000);
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Ready to scan");
+    lcd.setCursor(0, 1); lcd.print("Status: DENIED");
+
+    // Outputs
+    pinMode(FAN_PIN,    OUTPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
+    pinMode(LED_YELLOW, OUTPUT);
+    pinMode(LED_BLUE,   OUTPUT);
+    pinMode(PIR_PIN,    INPUT);
+
+    Serial.println("READY");
+}
+
+// ─────────────────────────────────────────────────────────
+void loop()
+{
+    handleSerialCommands();
+    checkRFIDCard();
+    updateTemperature();
+    updateMotionBuzzer();
+    delay(200);   // short yield — keeps serial responsive
+}
+
+// ── Serial command handler ────────────────────────────────
+void handleSerialCommands()
+{
+    while (Serial.available() > 0)
+    {
+        String command = Serial.readStringUntil('\n');
+        command.trim();
+        if (command.isEmpty()) continue;
+
+        if (command.startsWith("ACCESS_GRANTED:")) {
+            displayAccessGranted(command.substring(15));
+
+        } else if (command == "ACCESS_DENIED") {
+            displayAccessDenied();
+
+        } else if (command.startsWith("ACCESS_REVOKED:")) {
+            displayAccessRevoked(command.substring(15));
+
+        } else if (command == "ALLOW_MOTION") {
+            motionAllowed = true;
+
+        } else if (command == "DENY_MOTION") {
+            motionAllowed = false;
+
+        } else if (command.startsWith("SETTEMP:")) {
+            // Qt sends "SETTEMP:25.0\n" to update threshold
+            maxTemp = command.substring(8).toFloat();
+
+        } else if (command == "RESET") {
+            lcd.clear();
+            lcd.setCursor(0, 0); lcd.print("Ready to scan");
+            lcd.setCursor(0, 1); lcd.print("Status: DENIED");
+
+        } else if (command == "GOODBYE") {
+            lcd.clear();
+            lcd.setCursor(0, 0); lcd.print("System");
+            lcd.setCursor(0, 1); lcd.print("Shutdown");
+            delay(2000);
+            lcd.clear();
+
+        } else if (command == "CLEAR") {
+            lcd.clear();
+        }
+    }
+}
+
+// ── RFID ─────────────────────────────────────────────────
+void checkRFIDCard()
+{
+    if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial())
+        return;
+
+    if (millis() - lastCardRead < CARD_TIMEOUT) {
+        rfid.PICC_HaltA();
+        return;
+    }
+    lastCardRead = millis();
+
+    String cardUID = "";
+    for (byte i = 0; i < rfid.uid.size; i++) {
+        if (rfid.uid.uidByte[i] < 0x10) cardUID += "0";
+        cardUID += String(rfid.uid.uidByte[i], HEX);
+    }
+    cardUID.toUpperCase();
+
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Card detected");
+    lcd.setCursor(0, 1); lcd.print("Verifying...");
+
+    Serial.print("RFID:");
+    Serial.println(cardUID);
+
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
+}
+
+// ── Temperature ───────────────────────────────────────────
+void updateTemperature()
+{
+    static unsigned long lastTempRead = 0;
+    if (millis() - lastTempRead < 2000) return;  // DHT11 needs 2s between reads
+    lastTempRead = millis();
+
+    float temp = dht.readTemperature();
+    if (isnan(temp)) return;
+
+    bool hot = (temp > maxTemp);
+    digitalWrite(LED_YELLOW, hot ? HIGH : LOW);
+    digitalWrite(LED_BLUE,   hot ? LOW  : HIGH);
+    digitalWrite(FAN_PIN,    hot ? HIGH : LOW);
+
+    Serial.print("TEMP:");
+    Serial.println(temp);
+}
+
+// ── Motion / buzzer ───────────────────────────────────────
+void updateMotionBuzzer()
+{
+    if (motionAllowed) {
+        // Access granted — silence buzzer regardless of PIR
+        digitalWrite(BUZZER_PIN, LOW);
+    } else {
+        // Access denied — buzzer follows PIR
+        int motion = digitalRead(PIR_PIN);
+        digitalWrite(BUZZER_PIN, motion == HIGH ? HIGH : LOW);
+    }
+}
+
+// ── LCD helpers ───────────────────────────────────────────
+void displayAccessGranted(String username)
+{
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Welcome!");
+    if (username.length() > 16) username = username.substring(0, 13) + "...";
+    lcd.setCursor(0, 1); lcd.print(username);
+}
+
+void displayAccessDenied()
+{
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Access DENIED!");
+    lcd.setCursor(0, 1); lcd.print("Unknown card");
+
+    for (int i = 0; i < 2; i++) {
+        delay(300); lcd.noBacklight();
+        delay(150); lcd.backlight();
+    }
+
+    delay(2000);
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Ready to scan");
+    lcd.setCursor(0, 1); lcd.print("Status: DENIED");
+}
+
+void displayAccessRevoked(String username)
+{
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Access revoked");
+    if (username.length() > 16) username = username.substring(0, 13) + "...";
+    lcd.setCursor(0, 1); lcd.print(username);
+
+    delay(3000);
+
+    lcd.clear();
+    lcd.setCursor(0, 0); lcd.print("Ready to scan");
+    lcd.setCursor(0, 1); lcd.print("Status: DENIED");
+}

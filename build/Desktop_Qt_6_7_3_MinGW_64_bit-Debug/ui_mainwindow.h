@@ -46,7 +46,6 @@ public:
     QWidget *centralwidget;
     QStackedWidget *stackedWidget;
     QWidget *page_5;
-    QLabel *chart;
     QWidget *dashboardPage;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout_6;
@@ -95,7 +94,6 @@ public:
     QGroupBox *publicationListGroup;
     QVBoxLayout *verticalLayout_list;
     QFrame *frame_2;
-    QLabel *postPicture;
     QLabel *label_22;
     QLabel *label_23;
     QLabel *label_24;
@@ -180,7 +178,6 @@ public:
     QPushButton *searchbt;
     QWidget *page_7;
     QGroupBox *groupBox_3;
-    QLabel *dropPlace;
     QPushButton *deleteSubmissionBtn;
     QPushButton *addSubmissionBtn;
     QPushButton *searchSubmissionBtn;
@@ -309,11 +306,6 @@ public:
         stackedWidget->setLineWidth(0);
         page_5 = new QWidget();
         page_5->setObjectName("page_5");
-        chart = new QLabel(page_5);
-        chart->setObjectName("chart");
-        chart->setGeometry(QRect(620, 60, 431, 271));
-        chart->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/pie_chart.png")));
-        chart->setScaledContents(true);
         dashboardPage = new QWidget(page_5);
         dashboardPage->setObjectName("dashboardPage");
         dashboardPage->setGeometry(QRect(0, 10, 1131, 701));
@@ -530,11 +522,6 @@ public:
         frame_2->setFrameShape(QFrame::Shape::NoFrame);
         frame_2->setFrameShadow(QFrame::Shadow::Raised);
         frame_2->setLineWidth(0);
-        postPicture = new QLabel(frame_2);
-        postPicture->setObjectName("postPicture");
-        postPicture->setGeometry(QRect(10, -20, 191, 191));
-        postPicture->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/gallary.png")));
-        postPicture->setScaledContents(true);
         label_22 = new QLabel(frame_2);
         label_22->setObjectName("label_22");
         label_22->setGeometry(QRect(30, 180, 131, 19));
@@ -1047,42 +1034,6 @@ public:
 #endif
         groupBox_3->setPalette(palette1);
         groupBox_3->setStyleSheet(QString::fromUtf8(""));
-        dropPlace = new QLabel(groupBox_3);
-        dropPlace->setObjectName("dropPlace");
-        dropPlace->setGeometry(QRect(290, 400, 531, 101));
-        QPalette palette2;
-        palette2.setBrush(QPalette::Active, QPalette::WindowText, brush2);
-        QBrush brush6(QColor(0, 0, 0, 0));
-        brush6.setStyle(Qt::SolidPattern);
-        palette2.setBrush(QPalette::Active, QPalette::Button, brush6);
-        palette2.setBrush(QPalette::Active, QPalette::Text, brush2);
-        palette2.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
-        palette2.setBrush(QPalette::Active, QPalette::Base, brush6);
-        palette2.setBrush(QPalette::Active, QPalette::Window, brush6);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette::Active, QPalette::PlaceholderText, brush5);
-#endif
-        palette2.setBrush(QPalette::Inactive, QPalette::WindowText, brush2);
-        palette2.setBrush(QPalette::Inactive, QPalette::Button, brush6);
-        palette2.setBrush(QPalette::Inactive, QPalette::Text, brush2);
-        palette2.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
-        palette2.setBrush(QPalette::Inactive, QPalette::Base, brush6);
-        palette2.setBrush(QPalette::Inactive, QPalette::Window, brush6);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette::Inactive, QPalette::PlaceholderText, brush5);
-#endif
-        palette2.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
-        palette2.setBrush(QPalette::Disabled, QPalette::Button, brush6);
-        palette2.setBrush(QPalette::Disabled, QPalette::Text, brush2);
-        palette2.setBrush(QPalette::Disabled, QPalette::ButtonText, brush2);
-        palette2.setBrush(QPalette::Disabled, QPalette::Base, brush6);
-        palette2.setBrush(QPalette::Disabled, QPalette::Window, brush6);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette::Disabled, QPalette::PlaceholderText, brush5);
-#endif
-        dropPlace->setPalette(palette2);
-        dropPlace->setPixmap(QPixmap(QString::fromUtf8("build/Desktop_Qt_6_7_3-Debug/drop.png")));
-        dropPlace->setScaledContents(false);
         deleteSubmissionBtn = new QPushButton(groupBox_3);
         deleteSubmissionBtn->setObjectName("deleteSubmissionBtn");
         deleteSubmissionBtn->setGeometry(QRect(410, 50, 171, 29));
@@ -1523,8 +1474,8 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(3);
-        tabWidget->setCurrentIndex(0);
+        stackedWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
         sideBarStack->setCurrentIndex(0);
 
 
@@ -1534,7 +1485,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        chart->setText(QString());
         collaborationCreationCollaborationCreationLabel->setText(QCoreApplication::translate("MainWindow", "Collaboration Creation", nullptr));
         label_17->setText(QCoreApplication::translate("MainWindow", "Collaborations: ", nullptr));
         collabsDeleteButton->setText(QCoreApplication::translate("MainWindow", "Delete ", nullptr));
@@ -1559,7 +1509,6 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_7), QCoreApplication::translate("MainWindow", "Submissions Draft", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(ReviewT), QCoreApplication::translate("MainWindow", "Review status", nullptr));
         publicationListGroup->setTitle(QString());
-        postPicture->setText(QString());
         label_22->setText(QCoreApplication::translate("MainWindow", "[ Appeal Text ]", nullptr));
         label_23->setText(QCoreApplication::translate("MainWindow", "[ The research sources ]", nullptr));
         label_24->setText(QCoreApplication::translate("MainWindow", "[The research ]", nullptr));
@@ -1622,7 +1571,6 @@ public:
         lineEdit_23->setPlaceholderText(QCoreApplication::translate("MainWindow", "search ", nullptr));
         searchbt->setText(QCoreApplication::translate("MainWindow", "search", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("MainWindow", "Research Information", nullptr));
-        dropPlace->setText(QString());
         deleteSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Delete submission", nullptr));
         addSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Add submission", nullptr));
         searchSubmissionBtn->setText(QCoreApplication::translate("MainWindow", "Search submission", nullptr));
