@@ -1,0 +1,37 @@
+const int pirPin = 2;
+const int buzzPin = 3;
+
+void setup()
+{
+    pinMode(pirPin, INPUT);
+    pinMode(buzzPin, OUTPUT);
+    Serial.begin(9600);
+}
+
+void loop()
+{
+    // Listen for commands from Qt
+    if (Serial.available() > 0)
+    {
+        String cmd = Serial.readStringUntil('\n');
+        cmd.trim();
+
+        if (cmd == "ALLOW_MOTION")
+        {
+            // Access granted: silence buzzer regardless of PIR
+            digitalWrite(buzzPin, LOW);
+        }
+        else if (cmd == "DENY_MOTION")
+        {
+            // Access denied: buzzer follows PIR
+            int motion = digitalRead(pirPin);
+            digitalWrite(buzzPin, motion == HIGH ? HIGH : LOW);
+        }
+    }
+    else
+    {
+        // No command yet — default behavior driven by last known state
+        // Qt polls every second so this is a fallback
+    }
+
+
