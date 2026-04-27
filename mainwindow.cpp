@@ -149,6 +149,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    // Revoke all lab access on app close
+    QSqlQuery query;
+    query.exec("UPDATE LABS SET ALLOWED = 0");
+    qDebug() << "All lab access revoked on app shutdown";
     clearArduinoLCD();  // Clear LCD before closing
 
     delete ui;
@@ -480,11 +484,6 @@ void MainWindow::clearArduinoLCD()
         qDebug() << "Arduino not connected, skipping LCD clear";
         return;
     }
-
-    // Revoke all lab access on app close
-    QSqlQuery query;
-    query.exec("UPDATE LABS SET ALLOWED = 0");
-    qDebug() << "All lab access revoked on app shutdown";
 
     arduino->write("GOODBYE\n");
     arduino->flush();
